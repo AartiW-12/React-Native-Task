@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/LeagueSpartan-Regular.ttf",
+      "sha1": "f730d7be4d7a50427e86f0575eb1e513d3a2babe"
+    },
+    {
+      "path": "src/assets/fonts/LeagueSpartan-SemiBold.ttf",
+      "sha1": "151804c69d2ae1d6d01e4208a84cac9afeb6412e"
+    }
+  ]
+}
