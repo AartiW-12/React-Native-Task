@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
+
 function Login() {
     //hoooks to store and update the state 
     const [inputValue, setInputValue] = useState("")
@@ -17,10 +20,6 @@ function Login() {
         console.log("Forget Password")
     }
 
-    const handleBack = () => {
-        console.log("Handle Back")
-    }
-
     // array of icons
     const icons = [
         { id: 1, image: require('../assets/images/Ellipse35.png') },
@@ -30,14 +29,6 @@ function Login() {
 
     return (
         <View style={styles.container}>
-            <Pressable
-                onPress={() => handleBack()}
-            >
-                <Image 
-                    source={require('../assets/images/BackIcon.png')}
-                />
-            </Pressable>
-            <Text style={styles.header}>Log In</Text>
             <Text style={styles.header2}>Welcome</Text>
             <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
             <Text style={styles.label}>Email or Mobile Number</Text>
@@ -87,90 +78,89 @@ function Login() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff',
-        paddingTop: verticalScale(50),
-        width: scale(299),
-        marginLeft: scale(20)
-    },
-    header: {
-        fontFamily: 'LeagueSpartan-SemiBold',
-        fontSize: moderateScale(24),
-        fontWeight: '600',
-        color: '#2260FF',
-        alignSelf: 'center'
-    },
-    header2: {
-        fontFamily: 'LeagueSpartan-SemiBold',
-        fontSize: moderateScale(24),
-        fontWeight: '600',
-        color: '#2260FF',
-        alignSelf: 'flex-start',
-        marginTop: scale(10)
-    },
-    text: {
-        width: '100%',
-        height: verticalScale(50),
-        textAlign: 'center',
-        color: '#070707',
-        fontSize: moderateScale(12),
-        fontWeight: '300',
-        fontFamily: 'LeagueSpartan-Regular',
-    },
-    label: {
-        fontSize: moderateScale(20),
-        fontFamily: 'LeagueSpartan-Medium',
-        fontWeight: '500',
-        color: '#000',
-        marginBottom: verticalScale(5),
-        marginTop: verticalScale(20),
-    },
-    input : {
-        paddingHorizontal: 10,
-        paddingLeft:15,
-        fontSize: 16
-    },
-    link: {
-        color: '#2260FF',
-        fontSize: moderateScale(12),
-        fontWeight: '500',
-        alignSelf: 'flex-end',
-        padding: 10
-    },
-    btnContainer: {
-        width: scale(207),
-        height: verticalScale(45),
-        marginTop: verticalScale(20),
-        alignSelf: 'center'
-    },
-    signUpOptionsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: verticalScale(14),
-        gap: scale(12),
-    },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.screenBackground,
+    paddingTop: verticalScale(20),
+    paddingHorizontal: scale(20),
+  },
 
-    socialButton: {
-        width: scale(40),
-        height: scale(40),
-        borderRadius: scale(20),
-        backgroundColor: '#CAD6FF',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+  header2: {
+    fontFamily: Fonts.semiBold,
+    fontSize: moderateScale(24),
+    fontWeight: '600',
+    color: Colors.primary,
+    alignSelf: 'flex-start',
+    marginTop: verticalScale(10),
+  },
 
-    socialIcon: {
-        width: scale(24),
-        height: scale(24),
-    },
-    footer : {
-        marginTop: verticalScale(30),
-        textAlign: 'center',
-        fontSize: moderateScale(12),
-        fontFamily: 'LeagueSpartan-Regular',
-        color: '#070707',
-    }
+  text: {
+    width: '100%',
+    textAlign: 'center',
+    color: '#070707',
+    fontSize: moderateScale(12),
+    fontWeight: '300',
+    fontFamily: Fonts.regular,
+    marginTop: verticalScale(10),
+    lineHeight: moderateScale(18),
+  },
 
-})
+  label: {
+    fontSize: moderateScale(20),
+    fontFamily: Fonts.medium,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: verticalScale(5),
+    marginTop: verticalScale(20),
+  },
+
+  input: {
+    paddingHorizontal: scale(15),
+    fontSize: moderateScale(16),
+  },
+
+  link: {
+    color: Colors.primary,
+    fontSize: moderateScale(12),
+    fontWeight: '500',
+    alignSelf: 'flex-end',
+    marginTop: verticalScale(8),
+  },
+
+  btnContainer: {
+    width: '70%',
+    alignSelf: 'center',
+    marginTop: verticalScale(20),
+  },
+
+  signUpOptionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: verticalScale(20),
+  },
+
+  socialButton: {
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
+    backgroundColor: Colors.socialButtonBackground,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: scale(6),
+  },
+
+  socialIcon: {
+    width: scale(24),
+    height: scale(24),
+  },
+
+  footer: {
+    marginTop: verticalScale(30),
+    textAlign: 'center',
+    fontSize: moderateScale(12),
+    fontFamily: Fonts.regular,
+    color: '#070707',
+  },
+});
 export default Login

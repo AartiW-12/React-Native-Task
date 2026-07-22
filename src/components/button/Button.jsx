@@ -1,17 +1,19 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
-
+import Colors from '../style/Colors'
 function Button({
     varient='primary',
     text,
-    onPress
+    onPress,
+    style
 }) {
   return (
     <Pressable 
         onPress={onPress}
         style={[
             styles.btn,
-            varient === 'primary' ? styles.primary : styles.secondary
+            varient === 'primary' ? styles.primary : styles.secondary,
+            style
         ]}
     >
         <Text style={[
@@ -31,10 +33,10 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     primary : {
-        backgroundColor:'#2260FF',
+        backgroundColor:Colors.primary,
     },
     secondary : {
-        backgroundColor:'#CAD6FF',
+        backgroundColor:Colors.socialButtonBackground,
     },
     text : {
         fontFamily:'League Spartan',
@@ -42,10 +44,10 @@ const styles = StyleSheet.create({
         fontSize:20,
     },
     primaryText : {
-        color : '#fff'
+        color : Colors.screenBackground
     },
     secondaryText: {
-        color : '#2260FF'
+        color : Colors.primary
     }
 })
 export default Button

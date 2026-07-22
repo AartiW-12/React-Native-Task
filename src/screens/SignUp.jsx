@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
+
 function SignUp() {
 
     //hoooks to store and update the state 
@@ -34,13 +37,7 @@ function SignUp() {
                 keyboardShouldPersistTaps='handled'
             >
                 <View style={styles.container}>
-                    <Pressable
-                        onPress={() => handleBack()}
-                    >
-                        <Image
-                            source={require('../assets/images/BackIcon.png')}
-                        />
-                    </Pressable>
+ 
                     <Text style={styles.header}>New Account</Text>
 
                     <View style={styles.signUpSection}>
@@ -134,20 +131,20 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
         paddingBottom: verticalScale(30),
-        backgroundColor: '#fff',
+        backgroundColor: Colors.screenBackground,
     },
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors.screenBackgroundFFF,
         paddingHorizontal: scale(30),
     },
 
     header: {
-        marginTop: verticalScale(50),
+        marginTop: verticalScale(10),
         alignSelf: 'center',
         fontSize: moderateScale(24),
-        color: '#2260FF',
-        fontFamily: 'LeagueSpartan-SemiBold',
+        color: Colors.primary,
+        fontFamily: Fonts.semiBold,
     },
 
     signUpSection: {
@@ -156,7 +153,7 @@ const styles = StyleSheet.create({
 
     label: {
         fontSize: moderateScale(20),
-        fontFamily: 'LeagueSpartan-Medium',
+        fontFamily: Fonts.medium,
         fontWeight: '500',
         color: '#000',
         marginBottom: verticalScale(5),
@@ -179,7 +176,7 @@ const styles = StyleSheet.create({
     terms: {
         textAlign: 'center',
         fontSize: moderateScale(12),
-        fontFamily: 'LeagueSpartan-Regular',
+        fontFamily: Fonts.regular,
         color: '#070707',
         lineHeight: moderateScale(16),
     },
@@ -194,7 +191,7 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(16),
         textAlign: 'center',
         fontSize: moderateScale(12),
-        fontFamily: 'LeagueSpartan-Regular',
+        fontFamily: Fonts.regular,
         color: '#070707',
     },
 
@@ -210,7 +207,7 @@ const styles = StyleSheet.create({
         width: scale(40),
         height: scale(40),
         borderRadius: scale(20),
-        backgroundColor: '#CAD6FF',
+        backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -224,12 +221,12 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(30),
         textAlign: 'center',
         fontSize: moderateScale(12),
-        fontFamily: 'LeagueSpartan-Regular',
+        fontFamily: Fonts.regular,
         color: '#070707',
     },
     link: {
-        color: '#2260FF',
-        fontFamily: 'LeagueSpartan-SemiBold',
+        color: Colors.primary,
+        fontFamily: Fonts.semiBold,
     },
 });
 export default SignUp

@@ -10,22 +10,21 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-// import SplashScreen from './src/screens/SplashScreen'
-import Register from './src/screens/Register'
-import SignUp from './src/screens/SignUp'
-import Login from './src/screens/Login'
-import SetPassword from './src/screens/SetPassword'
-function App() {
 
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './src/navigation/AppNavigator'
+
+import Doctors from './src/components/doctor/Doctors'
+import Home from './src/screens/Home';
+function App() {
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        {/* <Text>Helllo</Text> */}
-        {/* <SplashScreen /> */}
-        {/* <Register /> */}
-        {/* <SignUp /> */}
-        {/* <Login /> */}
-        <SetPassword />
+      <View style={{flex:1}}>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+        {/* <Doctors /> */}
+        {/* <Home /> */}
       </View>
     </SafeAreaProvider>
   );
@@ -34,7 +33,7 @@ function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
   },
 });
 

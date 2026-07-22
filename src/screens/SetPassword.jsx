@@ -3,7 +3,8 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
 function SetPassword() {
 
     const [password , setPassword] = useState("")
@@ -55,16 +56,16 @@ function SetPassword() {
 const styles = StyleSheet.create({
     container : {
         flex:1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.screenBackground,
         paddingTop: verticalScale(50),
         width: scale(299),
         marginLeft: scale(20)
     },
     header: {
-        fontFamily: 'LeagueSpartan-SemiBold',
+        fontFamily: Fonts.semiBold,
         fontSize: moderateScale(24),
         fontWeight: '600',
-        color: '#2260FF',
+        color: Colors.primary,
         alignSelf: 'center'
     },
     text: {
@@ -74,12 +75,12 @@ const styles = StyleSheet.create({
         color: '#070707',
         fontSize: moderateScale(12),
         fontWeight: '300',
-        fontFamily: 'LeagueSpartan-Regular',
+        fontFamily: Fonts.regular,
         marginTop:verticalScale(20)
     },
     label: {
         fontSize: moderateScale(20),
-        fontFamily: 'LeagueSpartan-Medium',
+        fontFamily: Fonts.medium,
         fontWeight: '500',
         color: '#000',
         marginBottom: verticalScale(5),

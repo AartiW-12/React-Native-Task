@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-
+import Colors from '../components/style/Colors';
+import Fonts from '../components/style/Fonts'
 function SplashScreen() {
   return (
     <View style={styles.container}>
@@ -24,7 +25,7 @@ function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2260FF',
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -47,15 +48,15 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 48,
     fontWeight: '700',
-    color: '#fff',
-    fontFamily:'LeagueSpartan-Regular',
+    color: Colors.screenBackground,
+    fontFamily:Fonts.regular,
   },
 
   text: {
     marginTop: 10,
-    color: '#fff',
+    color: Colors.screenBackground,
     fontSize: 16,
-    fontFamily:'LeagueSpartan-Bold'
+    fontFamily:Fonts.bold
   },
 });
 

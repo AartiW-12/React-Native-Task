@@ -2,13 +2,17 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
 
-function Register() {
+function Register({ navigation }) {
+
+  console.log("Register called")
     const handleLogin = () => {
-        console.log("Login")
+        navigation.navigate('Login')
     }
     const handleSignUp = () => {
-        console.log("Signup")
+        navigation.navigate("SignUp")
     }
     return (
         <View style={styles.container}>
@@ -36,6 +40,7 @@ function Register() {
                     onPress={handleSignUp}
                 />
             </View>
+            {/* <Text style={{flex:1 }}>HELLO</Text> */}
         </View>
     )
 }
@@ -43,10 +48,9 @@ function Register() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.screenBackground,
     alignItems: 'center',
     justifyContent:'center',
-    paddingTop: verticalScale(120),
   },
   imageContainer : {
     height:verticalScale(251),
@@ -61,18 +65,18 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    fontFamily:'LeagueSpartan-Regular',
+    fontFamily:Fonts.regular,
     fontSize: moderateScale(48),
     lineHeight: moderateScale(44),
-    color: '#2260FF',
+    color: Colors.primary,
     fontWeight:100
   },
 
   subTitle: {
     marginTop: verticalScale(10),
-    fontFamily: 'LeagueSpartan-SemiBold',
+    fontFamily: Fonts.semiBold,
     fontSize: moderateScale(12),
-    color: '#2260FF',
+    color: Colors.primary,
     fontWeight:'600',
   },
 
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     color: '#070707',
     fontSize: moderateScale(12),
     lineHeight: moderateScale(16),
-    fontFamily:'LeagueSpartan-Regular',
+    fontFamily:Fonts.regular,
     top:verticalScale(57)
   },
 
