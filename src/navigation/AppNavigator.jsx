@@ -1,6 +1,7 @@
 import React from 'react'
 import BottomTabNavigator from './BottomTabNavigator'
 import AuthNavigator from './AuthNavigator'
+import StackNavigator from './StackNavigator'
 
 function AppNavigator() {
     console.log("APP Navigator")
@@ -9,7 +10,7 @@ function AppNavigator() {
         <>
             {
                 userToken ?
-                    <BottomTabNavigator />
+                    <StackNavigator />
                     :
                     <AuthNavigator />
             }

@@ -33,6 +33,10 @@ android/.gradle/
 android/app/build/
 android/build/
 
+# Android APK / AAB
+*.apk
+*.aab
+
 # iOS / Xcode
 build/
 DerivedData/
@@ -58,9 +62,13 @@ vendor/bundle/
 
 # Metro
 .metro-health-check*
-
+# Metro cache
+.metro/
 # Bundle output
 *.jsbundle
+
+# React Native logs
+react-native.log
 
 # Yarn
 .yarn/*
@@ -89,3 +97,22 @@ temp/
 
 # Ruby Bundler
 .bundle/
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Logs
+*.log
+
+# npm cache
+.npm/
+
+# React Native generated
+android/app/.cxx/
+
+# Crashlytics / Firebase (if you use them later)
+firebase-debug.log
+
+# Misc
+*.orig

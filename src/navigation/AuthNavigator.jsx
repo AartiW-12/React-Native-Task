@@ -29,7 +29,6 @@ function AuthNavigator() {
         component={SetPassword}
       />
     </Stack.Navigator>
-    // <Text>AUTH NAV</Text>
   )
 }
 

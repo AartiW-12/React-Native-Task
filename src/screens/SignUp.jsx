@@ -5,8 +5,9 @@ import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
+import Header from '../components/header/Header'
 
-function SignUp() {
+function SignUp({ navigation }) {
 
     //hoooks to store and update the state 
     const [name, setName] = useState("")
@@ -17,7 +18,7 @@ function SignUp() {
 
     // sign up function 
     const handleSignUp = () => {
-        console.log("SIGN UP")
+
     }
 
     // array of icons
@@ -38,7 +39,7 @@ function SignUp() {
             >
                 <View style={styles.container}>
  
-                    <Text style={styles.header}>New Account</Text>
+                    <Header text="New Account" />
 
                     <View style={styles.signUpSection}>
                         <Text style={styles.label}>Full name</Text>
@@ -54,7 +55,7 @@ function SignUp() {
                             value={password}
                             onChangeText={setPassword}
                             style={styles.inputBox}
-                            rightIcon={require('../assets/images/Vector.png')}
+                            secureTextEntry={true}
                         />
                         <Text style={styles.label}>Email</Text>
                         <Input
@@ -117,7 +118,10 @@ function SignUp() {
                     </View>
                     <Text style={styles.footer}>
                         already have an account?{' '}
-                        <Text style={styles.link}>
+                        <Text 
+                            style={styles.link}
+                            onPress={() => navigation.navigate("Login")}
+                        >
                             Log in
                         </Text>
                     </Text>
@@ -137,14 +141,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.screenBackgroundFFF,
         paddingHorizontal: scale(30),
-    },
-
-    header: {
-        marginTop: verticalScale(10),
-        alignSelf: 'center',
-        fontSize: moderateScale(24),
-        color: Colors.primary,
-        fontFamily: Fonts.semiBold,
     },
 
     signUpSection: {

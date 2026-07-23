@@ -56,6 +56,8 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>LeagueSpartan-Bold.ttf</string>
+		<string>LeagueSpartan-Medium.ttf</string>
 		<string>LeagueSpartan-Regular.ttf</string>
 		<string>LeagueSpartan-SemiBold.ttf</string>
 	</array>

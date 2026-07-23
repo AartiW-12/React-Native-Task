@@ -6,75 +6,79 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 
-function Login() {
-    //hoooks to store and update the state 
-    const [inputValue, setInputValue] = useState("")
-    const [password, setPassword] = useState("")
+function Login({ navigation }) {
+  //hoooks to store and update the state 
+  const [inputValue, setInputValue] = useState("")
+  const [password, setPassword] = useState("")
 
-    // functions 
-    const handleLogin = () => {
-        console.log("Login Sucessfull")
-    }
+  // functions 
+  const handleLogin = () => {
+    console.log("Login Sucessfull")
+  }
 
-    const handleForgetPassword = () => {
-        console.log("Forget Password")
-    }
+  const handleForgetPassword = () => {
+    console.log("Forget Password")
+  }
 
-    // array of icons
-    const icons = [
-        { id: 1, image: require('../assets/images/Ellipse35.png') },
-        { id: 2, image: require('../assets/images/Group98.png') },
-        { id: 3, image: require('../assets/images/Vector164.png') },
-    ];
+  // array of icons
+  const icons = [
+    { id: 1, image: require('../assets/images/Ellipse35.png') },
+    { id: 2, image: require('../assets/images/Group98.png') },
+    { id: 3, image: require('../assets/images/Vector164.png') },
+  ];
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.header2}>Welcome</Text>
-            <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
-            <Text style={styles.label}>Email or Mobile Number</Text>
-            <Input
-                placeholder="example@example.com"
-                value={inputValue}
-                onChangeText={setInputValue}
-                style={styles.input}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header2}>Welcome</Text>
+      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
+      <Text style={styles.label}>Email or Mobile Number</Text>
+      <Input
+        placeholder="example@example.com"
+        value={inputValue}
+        onChangeText={setInputValue}
+        style={styles.input}
 
+      />
+      <Text style={styles.label}>Password</Text>
+      <Input
+        placeholder='*************'
+        value={password}
+        onChangeText={setPassword}
+        style={styles.input}
+        secureTextEntry={true}
+      />
+      <Text style={styles.link} onPress={() => handleForgetPassword()}>Forget Password</Text>
+      <View style={styles.btnContainer}>
+        <Button
+          varient='primary'
+          text="Log In"
+          onPress={handleLogin}
+        />
+      </View>
+      <View style={styles.signUpOptionsContainer}>
+        {icons.map((item) => (
+          <Pressable
+            key={item.id}
+            style={styles.socialButton}
+          >
+            <Image
+              source={item.image}
+              style={styles.socialIcon}
+              resizeMode="contain"
             />
-            <Text style={styles.label}>Password</Text>
-            <Input
-                placeholder='*************'
-                value={password}
-                onChangeText={setPassword}
-                style={styles.input}
-            />
-            <Text style={styles.link} onPress={() => handleForgetPassword()}>Forget Password</Text>
-            <View style={styles.btnContainer}>
-                <Button
-                    varient='primary'
-                    text="Log In"
-                    onPress={handleLogin}
-                />
-            </View>
-            <View style={styles.signUpOptionsContainer}>
-                {icons.map((item) => (
-                    <Pressable
-                        key={item.id}
-                        style={styles.socialButton}
-                    >
-                        <Image
-                            source={item.image}
-                            style={styles.socialIcon}
-                            resizeMode="contain"
-                        />
-                    </Pressable>
-                ))}
-            </View>
-            <Text style={styles.footer}>Don’t have an account? {' '}
-                <Text style={styles.link}>
-                    Sign Up
-                </Text>
-            </Text>
-        </View>
-    )
+          </Pressable>
+        ))}
+      </View>
+      <Text style={styles.footer}>Don’t have an account? {' '}
+        <Text
+          style={styles.link}
+          onPress={() => navigation.navigate("SignUp")}
+        >
+          Sign Up
+        </Text>
+      </Text>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
   text: {
     width: '100%',
     textAlign: 'center',
-    color: '#070707',
+    color: Colors.black,
     fontSize: moderateScale(12),
     fontWeight: '300',
     fontFamily: Fonts.regular,
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(20),
     fontFamily: Fonts.medium,
     fontWeight: '500',
-    color: '#000',
+    color: Colors.black,
     marginBottom: verticalScale(5),
     marginTop: verticalScale(20),
   },
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: moderateScale(12),
     fontFamily: Fonts.regular,
-    color: '#070707',
+    color: Colors.black,
   },
 });
 export default Login

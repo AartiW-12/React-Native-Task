@@ -1,32 +1,60 @@
-import React from 'react'
-import { StyleSheet, TextInput } from 'react-native'
+import React from 'react';
+import { StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+import Colors from '../style/Colors';
+
+import EyeIcon from '../../assets/images/svg/EyeIcon'
 
 function Input({
-    placeholder,
-    value,
-    onChangeText,
-    keyboardType = 'default',
-    style,
-    rightIcon
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType = 'default',
+  style,
+  secureTextEntry = false,
 }) {
   return (
-    <TextInput 
+    <View style={[styles.container, style]}>
+      <TextInput
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
-        placeholderTextColor='#809CFF'
+        placeholderTextColor="#809CFF"
         keyboardType={keyboardType}
-        style={[styles.input , style]}
-    />
-  )
+        secureTextEntry={secureTextEntry}
+        style={styles.input}
+      />
+
+      {secureTextEntry && (
+        <TouchableOpacity style={styles.iconContainer} activeOpacity={0.8}>
+          <EyeIcon width={20} height={20} />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    input : {
-        width: '100%',
-        height: 45,
-        borderRadius: 13,
-        backgroundColor: '#ECF1FF'
-    }
-})
-export default Input
+  container: {
+    width: '100%',
+    height: 45,
+    borderRadius: 13,
+    backgroundColor: Colors.inputBackground,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  input: {
+    flex: 1,
+    height: '100%',
+    paddingHorizontal: 15,
+    color: Colors.black,
+  },
+
+  iconContainer: {
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default Input;

@@ -5,6 +5,7 @@ import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
+import Header from '../components/header/Header'
 function SetPassword() {
 
     const [password , setPassword] = useState("")
@@ -26,13 +27,14 @@ function SetPassword() {
                     source={require('../assets/images/BackIcon.png')}
                 />
             </Pressable>
-            <Text style={styles.header}>Set Password</Text>
+            <Header text="Set Password"/>
             <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
             <Text style={styles.label}>Password</Text>
             <Input 
                 placeholder="*************"
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry={true}
                 style={styles.input}
             />
             <Text style={styles.label}>Confirm Password</Text>
@@ -41,6 +43,7 @@ function SetPassword() {
                 value={cnfmPass}
                 onChangeText={setCnfmPass}
                 style={styles.input}
+                secureTextEntry={true}
             />
             <View style={styles.btnContainer}>
                 <Button 
@@ -60,13 +63,6 @@ const styles = StyleSheet.create({
         paddingTop: verticalScale(50),
         width: scale(299),
         marginLeft: scale(20)
-    },
-    header: {
-        fontFamily: Fonts.semiBold,
-        fontSize: moderateScale(24),
-        fontWeight: '600',
-        color: Colors.primary,
-        alignSelf: 'center'
     },
     text: {
         width: '100%',

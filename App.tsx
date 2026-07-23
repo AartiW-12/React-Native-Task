@@ -16,6 +16,8 @@ import AppNavigator from './src/navigation/AppNavigator'
 
 import Doctors from './src/components/doctor/Doctors'
 import Home from './src/screens/Home';
+import DoctorInfo from './src/components/doctor/DoctorInfo'
+
 function App() {
   return (
     <SafeAreaProvider>
@@ -24,12 +26,12 @@ function App() {
           <AppNavigator />
         </NavigationContainer>
         {/* <Doctors /> */}
+        {/* <DoctorInfo doctor={{ id: 2, name: "Dr. Michael Davidson, M.D.", specialization: 'Solar Dermatology', avatar: require("./src/assets/images/doctors/Michael.png"), rating: 4, comments: 30, favorite: false, experience:12 , availableTime:'11:00 AM' }} /> */}
         {/* <Home /> */}
       </View>
     </SafeAreaProvider>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
