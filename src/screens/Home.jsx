@@ -12,6 +12,51 @@ import FilledHeart from '../assets/images/svg/FilledHeart.svg';
 import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import Comments from '../assets/images/svg/Comments.svg';
 
+const calendarData = [
+    {
+        id: 1,
+        date: '10',
+        day: 'Tue',
+        active: false,
+    },
+    {
+        id: 2,
+        date: '11',
+        day: 'Wed',
+        active: true, // Selected date
+    },
+    {
+        id: 3,
+        date: '12',
+        day: 'Thu',
+        active: false,
+    },
+    {
+        id: 4,
+        date: '13',
+        day: 'Fri',
+        active: false,
+    },
+    {
+        id: 5,
+        date: '14',
+        day: 'Sat',
+        active: false,
+    },
+    {
+        id: 6,
+        date: '15',
+        day: 'Sun',
+        active: false,
+    },
+    {
+        id: 7,
+        date: '16',
+        day: 'Mon',
+        active: false,
+    },
+];
+
 import doctorsList from '../components/doctor/doctorsList'
 function Home({ navigation }) {
 
@@ -58,7 +103,7 @@ function Home({ navigation }) {
                         style={styles.sectionIcons}
                         resizeMode='contain'
                     />
-                    <Text 
+                    <Text
                         style={styles.link}
                         onPress={() => navigation.navigate("Doctors")}
                     >Doctors</Text>
@@ -79,6 +124,64 @@ function Home({ navigation }) {
                         searchIcon={require('../assets/images/searchIcon.png')}
                         leftIcon={require('../assets/images/seachLeft.png')}
                     />
+                </View>
+            </View>
+            <View style={styles.calendarContainer}>
+                <FlatList
+                    horizontal
+                    data={calendarData}
+                    keyExtractor={(item) => item.id.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.calendarList}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={[
+                                styles.dateCard,
+                                item.active && styles.activeDateCard,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.dateNumber,
+                                    item.active && styles.activeText,
+                                ]}
+                            >
+                                {item.date}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.dateDay,
+                                    item.active && styles.activeText,
+                                ]}
+                            >
+                                {item.day}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                />
+                <View style={styles.appointmentCard}>
+                    <Text style={styles.appointmentDate}>
+                        11 Wednesday - Today
+                    </Text>
+                    <View style={styles.appointmentInfo}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.doctorName}>
+                                Dr. Olivia Turner, M.D.
+                            </Text>
+                            <Text style={styles.doctorDesc}>
+                                Treatment and prevention of{"\n"}
+                                skin photodermatitis.
+                            </Text>
+                        </View>
+                        <View style={styles.statusContainer}>
+                            <View style={styles.statusCircle}>
+                                <Text style={styles.statusText}>✓</Text>
+                            </View>
+                            <View style={styles.statusCircle}>
+                                <Text style={styles.statusText}>✕</Text>
+                            </View>
+                        </View>
+                    </View>
                 </View>
             </View>
             <View style={styles.doctorsList}>
@@ -162,7 +265,6 @@ const styles = StyleSheet.create({
     welcome: {
         color: Colors.primary,
         fontFamily: Fonts.regular,
-
     },
     headerName: {
         fontSize: moderateScale(18),
@@ -255,13 +357,13 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: moderateScale(14),
         color: Colors.primary,
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.medium,
         fontWeight: '500'
     },
     specialization: {
         marginTop: verticalScale(2),
         fontSize: moderateScale(11),
-        color:Colors.black,
+        color: Colors.black,
         fontFamily: Fonts.regular,
     },
     bottomRow: {
@@ -302,9 +404,105 @@ const styles = StyleSheet.create({
     question: {
         color: Colors.primary
     },
-    iconStyle  : {
-        height:verticalScale(12),
-        width:scale(12)
-    }
+    iconStyle: {
+        height: verticalScale(12),
+        width: scale(12)
+    },
+    calendarContainer: {
+        minWidth:scale(360),
+        backgroundColor: Colors.socialButtonBackground,
+        marginTop: verticalScale(18),
+        paddingVertical: verticalScale(18),
+    },
+    calendarList: {
+        paddingHorizontal: scale(18),
+    },
+    dateCard: {
+        width: scale(42),
+        height: verticalScale(64),
+        borderRadius: moderateScale(22),
+        backgroundColor: Colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: scale(12),
+    },
+    activeDateCard: {
+        backgroundColor: Colors.primary,
+    },
+    dateNumber: {
+        fontSize: moderateScale(24),
+        color: Colors.black,
+        fontFamily: Fonts.bold,
+    },
+
+    dateDay: {
+        marginTop: verticalScale(4),
+        fontSize: moderateScale(11),
+        color: Colors.black,
+        fontFamily: Fonts.regular,
+    },
+
+    activeText: {
+        color: Colors.white,
+    },
+
+    appointmentCard: {
+        minWidth:scale(299),
+        marginHorizontal: scale(18),
+        marginTop: verticalScale(18),
+        backgroundColor: Colors.white,
+        borderRadius: moderateScale(22),
+        padding: moderateScale(16),
+    },
+
+    appointmentDate: {
+        alignSelf: 'flex-end',
+        color: Colors.primary,
+        fontSize: moderateScale(13),
+        fontFamily: Fonts.medium,
+    },
+
+    appointmentInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: Colors.socialButtonBackground,
+        borderRadius: moderateScale(16),
+        padding: moderateScale(14),
+    },
+
+    doctorName: {
+        color: Colors.primary,
+        fontSize: moderateScale(16),
+        fontFamily: Fonts.bold,
+    },
+
+    doctorDesc: {
+        marginTop: verticalScale(4),
+        color: Colors.black,
+        fontSize: moderateScale(12),
+        fontFamily: Fonts.regular,
+        lineHeight: moderateScale(18),
+    },
+
+    statusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    statusCircle: {
+        width: scale(24),
+        height: scale(24),
+        borderRadius: scale(12),
+        backgroundColor: Colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: scale(8),
+    },
+
+    statusText: {
+        color: Colors.primary,
+        fontSize: moderateScale(12),
+        fontWeight: '700',
+    },
 })
 export default Home

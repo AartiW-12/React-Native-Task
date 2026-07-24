@@ -14,6 +14,7 @@ import CalendarIconWhite from '../assets/images/svg/CalenderIconWhite.svg';
 import Colors from '../components/style/Colors';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { StyleSheet } from 'react-native';
+import MyProfile from '../screens/MyProfile';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,8 +57,8 @@ export default function BottomTabNavigator() {
       />
 
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="MyProfile"
+        component={MyProfile}
         options={{
           tabBarIcon: ({ focused }) => (
             <ProfileIcon

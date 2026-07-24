@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -9,6 +9,8 @@ import Fonts from '../style/Fonts'
 import Button from '../button/Button'
 
 import RenderDoctor from './RenderDoctor'
+import doctorList from './doctorsList'
+import Header from '../header/Header'
 
 //importing SVG
 import EmptyStar from '../../assets/images/svg/EmptyStar.svg'
@@ -16,24 +18,59 @@ import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
 import FemaleIcon from '../../assets/images/svg/FemaleIcon.svg'
 import MaleIcon from '../../assets/images/svg/MaleIcon.svg'
 
-import doctorList from './doctorsList'
-import Header from '../header/Header'
+
 
 const Doctors = ({ navigation }) => {
 
+    const [sortOrder, setSortOrder] = useState(null);
+    const [genderFilter, setGenderFilter] = useState(null);
+
+    const handleSortAZ = () => {
+        setSortOrder(prev => prev === "asc" ? null : "asc");
+    };
+
+    const handleRatingSort = () => {
+        // setSortOrder(prev => prev === "rating" ? null : "rating");
+        navigation.navigate("DoctorRating")
+    };
+
+    const handleMaleFilter = () => {
+        setGenderFilter(prev => prev === "male" ? null : "male");
+    };
+
+    const handleFemaleFilter = () => {
+        setGenderFilter(prev => prev === "female" ? null : "female");
+    };
+    // const handleFavourite= () => {navigation.navigate("Favourite");
+    // };
+
+    const filteredDoctors = useMemo(() => {
+        let data = [...doctorList];
+
+        if (genderFilter) {
+            data = data.filter(
+                doctor => doctor.gender.toLowerCase() === genderFilter.toLowerCase()
+            );
+        }
+        if (sortOrder === 'asc') {
+            data.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        if (sortOrder === 'rating') {
+            data.sort((a, b) => b.rating - a.rating);
+        }
+        return data;
+    }, [doctorList, sortOrder, genderFilter]);
+
     const viewInfo = (doctor) => {
-        navigation.navigate("DoctorInfo", { 
+        navigation.navigate("DoctorInfo", {
             doctor
         })
     }
 
-    const handleSort = () => {
-        console.log("SORT")
-    }
 
     return (
         <View style={styles.container}>
-            <Header text={'Doctors'}/>
+            <Header text={'Doctors'} />
 
             <View style={styles.headerRow}>
                 <Text style={styles.headerContent}>Sort By</Text>
@@ -42,26 +79,38 @@ const Doctors = ({ navigation }) => {
                     <Button
                         varient="primary"
                         text="A→Z"
-                        onPress={handleSort}
+                        onPress={handleSortAZ}
                         style={styles.sortBtn}
                     />
                 </View>
-                <TouchableOpacity style={styles.circleButton}>
+                <TouchableOpacity
+                    style={styles.circleButton}
+                    onPress={handleRatingSort}
+                >
                     <EmptyStar style={styles.iconStyle} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.circleButton}>
+                {/* <TouchableOpacity 
+                    style={styles.circleButton}
+                    onPress={handleFavourite}    
+                >
                     <EmptyHeart style={styles.iconStyle} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.circleButton}>
+                </TouchableOpacity> */}
+                <TouchableOpacity
+                    style={styles.circleButton}
+                    onPress={handleFemaleFilter}
+                >
                     <FemaleIcon style={styles.iconStyle} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.circleButton}>
+                <TouchableOpacity
+                    style={styles.circleButton}
+                    onPress={handleMaleFilter}
+                >
                     <MaleIcon style={styles.iconStyle} />
                 </TouchableOpacity>
             </View>
             <View style={styles.doctorsList}>
                 <FlatList
-                    data={doctorList}
+                    data={filteredDoctors}
                     keyExtractor={(item) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
@@ -94,7 +143,7 @@ const styles = StyleSheet.create({
         flex: 1,
         fontFamily: Fonts.regular,
         marginTop: verticalScale(35),
-        marginBottom:scale(50)
+        marginBottom: scale(50)
     },
     heading: {
         alignSelf: 'center',

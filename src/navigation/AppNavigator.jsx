@@ -5,7 +5,7 @@ import StackNavigator from './StackNavigator'
 
 function AppNavigator() {
     console.log("APP Navigator")
-    const userToken = "1234"
+    const userToken = "a"
     return (
         <>
             {

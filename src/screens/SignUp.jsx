@@ -151,14 +151,14 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(20),
         fontFamily: Fonts.medium,
         fontWeight: '500',
-        color: '#000',
+        color: Colors.black,
         marginBottom: verticalScale(5),
         marginTop: verticalScale(10),
     },
 
     inputBox: {
         height: verticalScale(45),
-        backgroundColor: '#ECF1FF',
+        backgroundColor: Colors.inputBackground,
         borderRadius: moderateScale(13),
         paddingHorizontal: scale(14),
     },

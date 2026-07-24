@@ -17,7 +17,7 @@ function Login({ navigation }) {
   }
 
   const handleForgetPassword = () => {
-    console.log("Forget Password")
+    navigation.navigate("SetPassword")
   }
 
   // array of icons
@@ -47,7 +47,7 @@ function Login({ navigation }) {
         style={styles.input}
         secureTextEntry={true}
       />
-      <Text style={styles.link} onPress={() => handleForgetPassword()}>Forget Password</Text>
+      <Text style={styles.link} onPress={handleForgetPassword}>Forget Password</Text>
       <View style={styles.btnContainer}>
         <Button
           varient='primary'

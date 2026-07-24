@@ -28,14 +28,11 @@ import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
 
 
 const DoctorInfo = ({ doctor }) => {
-    console.log(doctor)
     return (
         <SafeAreaView style={styles.container}>
             <Header text="Doctor Info" />
 
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContainer}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.infoContainer}>
