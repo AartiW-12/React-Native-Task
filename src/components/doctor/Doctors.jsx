@@ -4,6 +4,8 @@ import React, { useMemo, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 
+import { useNavigation } from '@react-navigation/native'
+
 import Colors from '../style/Colors'
 import Fonts from '../style/Fonts'
 import Button from '../button/Button'
@@ -20,10 +22,12 @@ import MaleIcon from '../../assets/images/svg/MaleIcon.svg'
 
 
 
-const Doctors = ({ navigation }) => {
+const Doctors = () => {
 
     const [sortOrder, setSortOrder] = useState(null);
     const [genderFilter, setGenderFilter] = useState(null);
+
+    const navigation = useNavigation()
 
     const handleSortAZ = () => {
         setSortOrder(prev => prev === "asc" ? null : "asc");

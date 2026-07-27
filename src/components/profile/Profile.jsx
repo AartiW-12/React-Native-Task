@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
-
+import { useNavigation } from '@react-navigation/native'
 import Input from '../input/Input'
 import Button from '../button/Button'
 
@@ -17,6 +17,8 @@ const Profile = () => {
     const [email, setEmail] = useState("Johndoe@example.com")
     const [dob, setDOB] = useState("")
 
+    const navigation = useNavigation()
+
     const handleUpdateProfile = () => {
         console.log("Update Profile")
     }
@@ -29,7 +31,7 @@ const Profile = () => {
                     <Header text="Profile" />
                 </View>
                 <TouchableOpacity
-                    onPress={() => Alert.alert("Setting")}
+                    onPress={() => navigation.navigate('Settings')}
                     style={styles.blueCircleBtn}
                 >
                     <SettingIcon width={12} height={12} />

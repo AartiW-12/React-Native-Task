@@ -5,6 +5,7 @@ import SearchBar from '../components/searchbar/SearchBar'
 import Colors from '../components/style/Colors';
 import Fonts from '../components/style/Fonts'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 import FilledStar from '../assets/images/svg/FilledStar.svg';
 import EmptyStar from '../assets/images/svg/EmptyStar.svg';
@@ -58,9 +59,11 @@ const calendarData = [
 ];
 
 import doctorsList from '../components/doctor/doctorsList'
-function Home({ navigation }) {
+function Home() {
 
     const [search, setSearch] = useState("")
+
+    const navigation = useNavigation()
 
     return (
         <SafeAreaView style={styles.container}>
@@ -79,6 +82,7 @@ function Home({ navigation }) {
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
                         style={styles.iconButton}
+                        // onPress={}
                     >
                         <Image
                             source={require('../assets/images/Notification.png')}
@@ -87,7 +91,9 @@ function Home({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.iconButton}>
+                        style={styles.iconButton}
+                        onPress={() => navigation.navigate("Settings") }    
+                    >
                         <Image
                             source={require('../assets/images/settings.png')}
                             style={styles.image}
@@ -97,17 +103,17 @@ function Home({ navigation }) {
                 </View>
             </View>
             <View style={styles.sectionContainer}>
-                <View style={styles.sectionLeftContainer}>
+                <TouchableOpacity
+                    style={styles.sectionLeftContainer}
+                    onPress={() => navigation.navigate('Doctors')}
+                >
                     <Image
                         source={require('../assets/images/stethoscope.png')}
                         style={styles.sectionIcons}
-                        resizeMode='contain'
+                        resizeMode="contain"
                     />
-                    <Text
-                        style={styles.link}
-                        onPress={() => navigation.navigate("Doctors")}
-                    >Doctors</Text>
-                </View>
+                    <Text style={styles.link}>Doctors</Text>
+                </TouchableOpacity>
                 <View style={styles.sectionLeftContainer}>
                     <Image
                         source={require('../assets/images/favourite.png')}
@@ -409,7 +415,7 @@ const styles = StyleSheet.create({
         width: scale(12)
     },
     calendarContainer: {
-        minWidth:scale(360),
+        minWidth: scale(360),
         backgroundColor: Colors.socialButtonBackground,
         marginTop: verticalScale(18),
         paddingVertical: verticalScale(18),
@@ -447,7 +453,7 @@ const styles = StyleSheet.create({
     },
 
     appointmentCard: {
-        minWidth:scale(299),
+        minWidth: scale(299),
         marginHorizontal: scale(18),
         marginTop: verticalScale(18),
         backgroundColor: Colors.white,

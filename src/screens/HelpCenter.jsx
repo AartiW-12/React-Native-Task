@@ -9,6 +9,8 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Fonts from '../components/style/Fonts'
 import Button from '../components/button/Button'
 
+import TabSwitcher from '../components/tab-switcher/TabSwitcher'
+
 // import SearchIcon from '../assets/images/svg/profile/Search.svg'
 
 import FAQ from '../components/profile/FAQ'
@@ -17,6 +19,17 @@ import ContactUs from '../components/profile/ContactUs'
 const HelpCenter = () => {
     const [search, setSearch] = useState("")
     const [help, setHelp] = useState("FAQ")
+
+    const helpTabs = [
+  {
+    label: 'FAQ',
+    value: 'FAQ',
+  },
+  {
+    label: 'Contact Us',
+    value: 'ContactUs',
+  },
+];
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -30,7 +43,7 @@ const HelpCenter = () => {
                 />
             </View>
             <View style={styles.sectionContainer}>
-                <View style={styles.btnContainer}>
+                {/* <View style={styles.btnContainer}>
                     <Button
                     varient={help ==="FAQ" ? "primary" : "secondary"}
                     text={'FAQ'}
@@ -46,11 +59,20 @@ const HelpCenter = () => {
                     onPress={() => setHelp("ContactUs")}
                     textStyle={styles.btnText}
                 />
-                </View>
+                </View> */}
             </View>
-            <View style={styles.contentContainer}>
+            {/* <View style={styles.contentContainer}>
                 {help==="FAQ" ? <FAQ /> : <ContactUs />}
                         
+            </View> */}
+            <TabSwitcher 
+                tabs={helpTabs}
+                activeTab={help}
+                onTabPress={setHelp}
+                containerStyle={styles.sectionContainer}
+            />
+            <View style={styles.contentContainer}>
+                {help === 'FAQ' ? <FAQ /> : <ContactUs />}
             </View>
         </SafeAreaView>
     )
