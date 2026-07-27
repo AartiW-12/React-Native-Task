@@ -11,10 +11,13 @@ import Profile from '../components/profile/Profile'
 import Settings from '../screens/Settings'
 import NotificationSettings from '../screens/NotificationSettings'
 import PasswordManager from '../screens/PasswordManager'
+import PrivacyPolicy from '../screens/PrivacyPolicy'
+import HelpCenter from '../screens/HelpCenter'
 
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
+    // console.log(PrivacyPolicy)
   return (
     <Stack.Navigator
         screenOptions={{ headerShown: false }}
@@ -55,6 +58,14 @@ const StackNavigator = () => {
         <Stack.Screen 
             name='PasswordManager'
             component={PasswordManager}
+        />
+        <Stack.Screen 
+            name='PrivacyPolicy'
+            component={PrivacyPolicy}
+        />
+        <Stack.Screen 
+            name='HelpCenter'
+            component={HelpCenter}
         />
     </Stack.Navigator>
   )

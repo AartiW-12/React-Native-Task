@@ -8,19 +8,19 @@ import Fonts from '../style/Fonts';
 
 import BackIcon from '../../assets/images/svg/BackIcon.svg'
 
-const Header = ({ text }) => {
+const Header = ({ text , titleStyle, backIconColor }) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.backButton}
+        style={[styles.backButton]}
         onPress={() => navigation.goBack()}
       >
-        <BackIcon width={20} height={20} />
+        <BackIcon width={20} height={20} fill={backIconColor} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>{text}</Text>
+      <Text style={[styles.title, titleStyle]}>{text}</Text>
 
       <View style={styles.placeholder} />
     </View>

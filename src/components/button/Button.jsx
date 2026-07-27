@@ -5,7 +5,8 @@ function Button({
     varient='primary',
     text,
     onPress,
-    style
+    style,
+    textStyle
 }) {
   return (
     <Pressable 
@@ -18,7 +19,8 @@ function Button({
     >
         <Text style={[
             styles.text,
-            varient === "primary" ? styles.primaryText : styles.secondaryText
+            varient === "primary" ? styles.primaryText : styles.secondaryText,
+            textStyle
             ]}>{text}</Text>
     </Pressable>
   )

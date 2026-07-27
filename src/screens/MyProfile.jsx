@@ -53,7 +53,7 @@ const menuData = [
         id: 4,
         title: 'Privacy Policy',
         icon: LockIcon,
-        screen: 'Privacy',
+        screen: 'PrivacyPolicy',
     },
     {
         id: 5,
@@ -65,7 +65,7 @@ const menuData = [
         id: 6,
         title: 'Help',
         icon: HelpIcon,
-        screen: 'Help',
+        screen: 'HelpCenter',
     },
     {
         id: 7,
@@ -76,6 +76,9 @@ const menuData = [
 ]
 
 const MyProfile = ({ navigation }) => {
+    console.log("Current:", navigation.getState().routeNames);
+
+console.log("Parent:", navigation.getParent()?.getState().routeNames);
     return (
         <View style={styles.container}>
             <Header text="My Profile" />

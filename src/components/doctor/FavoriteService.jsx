@@ -28,8 +28,6 @@ const FavoriteService = () => {
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                         <View>
-
-                            {/* Top Card */}
                             <View style={styles.serviceBar}>
                                 <View style={styles.favoriteIcon}>
                                     <HeartWhite width={20} height={20} />

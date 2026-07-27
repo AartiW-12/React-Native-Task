@@ -1,6 +1,7 @@
 const Colors = {
   // Primary
   primary: '#2260FF',
+  primaryLight : '#A9BCFE',
 
   // Backgrounds
   white: '#FFFFFF',
@@ -10,8 +11,6 @@ const Colors = {
 
   // Text Colors
   black: '#000000',
-  textPrimary: '#070707',
-  textSecondary: '#070707',
 
   transparent: 'transparent',
 };
