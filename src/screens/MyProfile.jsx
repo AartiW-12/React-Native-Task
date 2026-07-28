@@ -81,7 +81,7 @@ const MyProfile = ({ navigation }) => {
 console.log("Parent:", navigation.getParent()?.getState().routeNames);
     return (
         <View style={styles.container}>
-            <Header text="My Profile" />
+            <Header text="My Profile"  backIconColor={Colors.primary}/>
             <Image
                 source={ProfileImg}
                 style={styles.profileImage}

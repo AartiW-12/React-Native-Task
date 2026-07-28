@@ -2,31 +2,33 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Modal, ActivityIndicator } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 
-import Colors from '../style/Colors'
-import Fonts from '../style/Fonts'
-import Button from '../button/Button'
-import Header from '../header/Header'
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
+import Button from '../components/button/Button'
+import Header from '../components/header/Header'
 
 // import doctorsList from './doctorsList'
 
-import TabSwitcher from '../tab-switcher/TabSwitcher'
+import TabSwitcher from '../components/tab-switcher/TabSwitcher'
 
 // SVG Icons
-import EmptyStar from '../../assets/images/svg/EmptyStar.svg'
-import FilledStar from '../../assets/images/svg/FilledStar.svg'
-import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
-import FilledHeart from '../../assets/images/svg/FilledHeart.svg'
-import FemaleIcon from '../../assets/images/svg/FemaleIcon.svg'
-import MaleIcon from '../../assets/images/svg/MaleIcon.svg'
-import StarIconWhite from '../../assets/images/svg/StarIconWhite.svg'
-import CalenderIcon from '../../assets/images/svg/CalenderIcon.svg'
-import InfoIcon from '../../assets/images/svg/InfoIcon.svg'
-import QuestionIcon from '../../assets/images/svg/QuestionIcon.svg'
-import HeartWhite from '../../assets/images/svg/HeartWhite.svg'
-import DownIcon from '../../assets/images/svg/DownIcon.svg'
-import DoctorInfo from './DoctorInfo'
+import EmptyStar from '../assets/images/svg/EmptyStar.svg'
+import FilledStar from '../assets/images/svg/FilledStar.svg'
+import EmptyHeart from '../assets/images/svg/EmptyHeart.svg'
+import FilledHeart from '../assets/images/svg/FilledHeart.svg'
+import FemaleIcon from '../assets/images/svg/FemaleIcon.svg'
+import MaleIcon from '../assets/images/svg/MaleIcon.svg'
+import StarIconWhite from '../assets/images/svg/StarIconWhite.svg'
+import CalenderIcon from '../assets/images/svg/CalenderIcon.svg'
+import InfoIcon from '../assets/images/svg/InfoIcon.svg'
+import QuestionIcon from '../assets/images/svg/QuestionIcon.svg'
+import HeartWhite from '../assets/images/svg/HeartWhite.svg'
+import DownIcon from '../assets/images/svg/DownIcon.svg'
+import DoctorInfo from '../components/doctor/DoctorInfo'
 import { useSelector, useDispatch } from 'react-redux'
-import { getDoctors } from '../../redux/doctors/doctorSlice'
+
+import { getDoctors } from '../redux/doctors/doctorSlice'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 
 const filterIndex = {
@@ -63,9 +65,6 @@ const Doctors = () => {
         error
     } = useSelector(state => state.doctors)
 
-    useEffect(() => {
-        dispatch(getDoctors())
-    }, [dispatch])
 
     const setFilter = (filterValue) => {
         setActiveFilter(filterValue)
@@ -272,6 +271,15 @@ const Doctors = () => {
             )}
         </View>
     )
+
+    const renderDoctorInfo = () => {
+        return (
+        <DoctorInfo
+            doctor={selectedDoctor}
+            onBack={() => setSelectedDoctor(null)}
+        />
+    );
+    }
     const renderItem = ({ item }) => {
         switch (activeFilter) {
             case filterIndex.RATING:
@@ -289,27 +297,26 @@ const Doctors = () => {
         }
     }
 
-    if (selectedDoctor) {
-        return <DoctorInfo
-            doctor={selectedDoctor}
-            onBack={() => setSelectedDoctor(null)}
-        />
-    }
+    // if (selectedDoctor) {
+    //     return <DoctorInfo
+    //         doctor={selectedDoctor}
+    //         onBack={() => setSelectedDoctor(null)}
+    //     />
+    // }
     if (loading) {
-        if (loading) {
-            return (
-                <View style={styles.centerContainer}>
-                    <ActivityIndicator
-                        size="large"
-                        color={Colors.primary}
-                    />
-                    <Text style={styles.loadingText}>
-                        Loading doctors...
-                    </Text>
-                </View>
-            );
-        }
+        return (
+            <View style={styles.centerContainer}>
+                <ActivityIndicator
+                    size="large"
+                    color={Colors.primary}
+                />
+                <Text style={styles.loadingText}>
+                    Loading doctors...
+                </Text>
+            </View>
+        );
     }
+
     if (error) {
         return (
             <View style={styles.centerContainer}>
@@ -318,120 +325,127 @@ const Doctors = () => {
                 </Text>
                 <View style={styles.retryBtnContainer}>
                     <Button
-                    text="Retry"
-                    varient="primary"
-                    onPress={() => dispatch(getDoctors())}
-                    style={{ marginTop: 20 }}
-                />
+                        text="Retry"
+                        varient="primary"
+                        onPress={() => dispatch(getDoctors())}
+                        style={{ marginTop: 20 }}
+                    />
                 </View>
-                
+
             </View>
         );
     }
     return (
+        <SafeAreaView style={styles.parentContainer}>
+            <View style={styles.container}>
+                <Header text="Doctors" />
 
-        <View style={styles.container}>
-            <Header text="Doctors" />
+                <View style={styles.headerRow}>
+                    <Text style={styles.headerContent}>Sort By</Text>
 
-            <View style={styles.headerRow}>
-                <Text style={styles.headerContent}>Sort By</Text>
+                    <View style={styles.sortBtnContainer}>
+                        <Button
+                            varient="primary"
+                            text="A→Z"
+                            onPress={handleSortAZ}
+                            style={styles.sortBtn}
+                        />
+                    </View>
 
-                <View style={styles.sortBtnContainer}>
-                    <Button
-                        varient="primary"
-                        text="A→Z"
-                        onPress={handleSortAZ}
-                        style={styles.sortBtn}
-                    />
+                    <TouchableOpacity
+                        style={[
+                            styles.circleButton,
+                            activeFilter === filterIndex.RATING && styles.activeCircleButton,
+                        ]}
+                        onPress={handleRatingSort}
+                    >
+                        <EmptyStar
+                            style={styles.iconStyle}
+                            color={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
+                            fill={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.circleButton,
+                            activeFilter === filterIndex.FAVORITE && styles.activeCircleButton,
+                        ]}
+                        onPress={handleFavoriteFilter}
+                    >
+                        <EmptyHeart
+                            style={styles.iconStyle}
+                            color={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
+                            fill={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
+
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.circleButton,
+                            activeFilter === filterIndex.FEMALE && styles.activeCircleButton,
+                        ]}
+                        onPress={handleFemaleFilter}>
+                        <FemaleIcon
+                            style={styles.iconStyle}
+                            color={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
+                            fill={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            styles.circleButton,
+                            activeFilter === filterIndex.MALE && styles.activeCircleButton,
+                        ]} onPress={handleMaleFilter}>
+                        <MaleIcon
+                            style={styles.iconStyle}
+                            color={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
+                            fill={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
+                        />
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                    style={[
-                        styles.circleButton,
-                        activeFilter === filterIndex.RATING && styles.activeCircleButton,
-                    ]}
-                    onPress={handleRatingSort}
-                >
-                    <EmptyStar
-                        style={styles.iconStyle}
-                        color={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
-                        fill={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
+                {activeFilter === filterIndex.FAVORITE && (
+                    <TabSwitcher
+                        tabs={favoriteTabs}
+                        activeTab={favoriteTab}
+                        onTabPress={setFavoriteTab}
+                        containerStyle={styles.favoriteTabContainer}
+                        buttonWidth={scale(155)}
                     />
-                </TouchableOpacity>
+                )}
 
-                <TouchableOpacity
-                    style={[
-                        styles.circleButton,
-                        activeFilter === filterIndex.FAVORITE && styles.activeCircleButton,
-                    ]}
-                    onPress={handleFavoriteFilter}
-                >
-                    <EmptyHeart
-                        style={styles.iconStyle}
-                        color={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
-                        fill={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
-
+                <View style={styles.doctorsList}>
+                    {selectedDoctor ? (
+                        renderDoctorInfo()
+                    ) : (
+                        <FlatList
+                        data={filteredDoctors}
+                        keyExtractor={(item) => item.id.toString()}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.listContainer}
+                        renderItem={renderItem}
                     />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[
-                        styles.circleButton,
-                        activeFilter === filterIndex.FEMALE && styles.activeCircleButton,
-                    ]}
-                    onPress={handleFemaleFilter}>
-                    <FemaleIcon
-                        style={styles.iconStyle}
-                        color={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
-                        fill={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
-                    />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[
-                        styles.circleButton,
-                        activeFilter === filterIndex.MALE && styles.activeCircleButton,
-                    ]} onPress={handleMaleFilter}>
-                    <MaleIcon
-                        style={styles.iconStyle}
-                        color={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
-                        fill={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
-                    />
-                </TouchableOpacity>
+                    )}
+                    
+                </View>
             </View>
-
-            {activeFilter === filterIndex.FAVORITE && (
-                <TabSwitcher
-                    tabs={favoriteTabs}
-                    activeTab={favoriteTab}
-                    onTabPress={setFavoriteTab}
-                    containerStyle={styles.favoriteTabContainer}
-                    buttonWidth={scale(155)}
-                />
-            )}
-
-            <View style={styles.doctorsList}>
-                <FlatList
-                    data={filteredDoctors}
-                    keyExtractor={(item) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.listContainer}
-                    renderItem={renderItem}
-                />
-            </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
 export default Doctors
 
 const styles = StyleSheet.create({
+    parentContainer: {
+        flex: 1
+    },
     container: {
         backgroundColor: Colors.backgroundColor,
         flex: 1,
         fontFamily: Fonts.regular,
-        marginTop: verticalScale(35),
-        marginBottom: scale(50),
     },
     headerRow: {
         flexDirection: 'row',
@@ -792,9 +806,9 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.medium,
         fontSize: moderateScale(15),
     },
-    retryBtnContainer :{
-        width:scale(100),
-        height:verticalScale(20)
+    retryBtnContainer: {
+        width: scale(100),
+        height: verticalScale(20)
     },
     errorText: {
         color: 'red',

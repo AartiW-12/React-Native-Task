@@ -5,15 +5,35 @@ import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
+import { useDispatch } from 'react-redux'
+import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
+import { login } from '../services/authService/authService'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Login({ navigation }) {
   //hoooks to store and update the state 
   const [inputValue, setInputValue] = useState("")
   const [password, setPassword] = useState("")
 
+  const dispatch = useDispatch()
+
   // functions 
-  const handleLogin = () => {
-    console.log("Login Sucessfull")
+  const handleLogin = async() => {
+      dispatch(loginStart())
+      try{
+        const user = await login(inputValue, password)
+        const token = `token_${Date.now()}`
+
+        await AsyncStorage.setItem("Token", token)
+
+        dispatch(loginSucess({
+          user, 
+          token
+        }))
+      }catch(err){
+        console.log(err)
+        dispatch(loginFailure(err.message))
+      }
   }
 
   const handleForgetPassword = () => {

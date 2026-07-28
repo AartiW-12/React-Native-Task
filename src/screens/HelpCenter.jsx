@@ -33,7 +33,7 @@ const HelpCenter = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Header text={'Help Center'} titleStyle={styles.whiteTitle} backIconColor ={Colors.white} />
+                <Header text={'Help Center'} titleStyle={styles.whiteTitle} backIconColor={Colors.white} />
                 <Text style={styles.headerText}>How Can We Help You?</Text>
                 <SearchBar
                     placeholder='Search...'

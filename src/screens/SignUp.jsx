@@ -6,6 +6,9 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
+import { useDispatch } from 'react-redux'
+import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
+import { signUp } from '../services/authService/authService'
 
 function SignUp({ navigation }) {
 
@@ -16,9 +19,32 @@ function SignUp({ navigation }) {
     const [mobileNumber, setMobileNumber] = useState("")
     const [dob, setDOB] = useState("")
 
-    // sign up function 
-    const handleSignUp = () => {
+    const dispatch = useDispatch()
 
+    // sign up function 
+    const handleSignUp = async() => {
+        dispatch(loginStart())
+
+        try{
+            const user = await signUp({
+                name: name,
+                email,
+                password,
+                mobileNumber,
+                dob,
+                profileImage : ""
+            })
+
+            const token = `token_${Date.now()}`
+
+            dispatch(loginSucess({
+                user,
+                token
+            }))
+        }catch(err){
+            console.log("Error", err)
+            dispatch(loginFailure(err.message))
+        }
     }
 
     // array of icons

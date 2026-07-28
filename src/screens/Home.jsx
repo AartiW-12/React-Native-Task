@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useMemo, useState } from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import SearchBar from '../components/searchbar/SearchBar'
 import Colors from '../components/style/Colors';
 import Fonts from '../components/style/Fonts'
+import Button from '../components/button/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +13,8 @@ import EmptyStar from '../assets/images/svg/EmptyStar.svg';
 import FilledHeart from '../assets/images/svg/FilledHeart.svg';
 import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import Comments from '../assets/images/svg/Comments.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDoctors } from '../redux/doctors/doctorSlice';
 
 const calendarData = [
     {
@@ -24,7 +27,7 @@ const calendarData = [
         id: 2,
         date: '11',
         day: 'Wed',
-        active: true, // Selected date
+        active: true,
     },
     {
         id: 3,
@@ -58,17 +61,34 @@ const calendarData = [
     },
 ];
 
-import doctorsList from '../components/doctor/doctorsList'
+// import doctorsList from '../components/doctor/doctorsList'
 function Home() {
 
     const [search, setSearch] = useState("")
 
     const navigation = useNavigation()
 
+    const { doctors, loading, error } = useSelector(state => state.doctors)
+    
+    const dispatch = useDispatch()
+
+    console.log(doctors)
+    console.log(loading)
+    const filteredDOctors = useMemo(() => {
+        if (!search.trim()) return doctors
+
+        const searchText = search.toLowerCase()
+
+        return doctors.filter((doc) => doc.name.toLowerCase().includes(searchText) || doc.specialization.toLowerCase().includes(searchText))
+    }, [search, doctors])
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
-                <View style={styles.leftContainer}>
+                <TouchableOpacity
+                    style={styles.leftContainer}
+                    onPress={() => navigation.navigate("MyProfile")}
+                >
                     <Image
                         source={require('../assets/images/avatar.png')}
                         style={styles.headerAvatar}
@@ -78,11 +98,11 @@ function Home() {
                         <Text style={styles.welcome}>Hi, Welcome Back</Text>
                         <Text style={styles.headerName}>John Doe</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
                         style={styles.iconButton}
-                        // onPress={}
+                    // onPress={}
                     >
                         <Image
                             source={require('../assets/images/Notification.png')}
@@ -92,7 +112,7 @@ function Home() {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.iconButton}
-                        onPress={() => navigation.navigate("Settings") }    
+                        onPress={() => navigation.navigate("Settings")}
                     >
                         <Image
                             source={require('../assets/images/settings.png')}
@@ -191,14 +211,41 @@ function Home() {
                 </View>
             </View>
             <View style={styles.doctorsList}>
+                {loading && (
+                    <View style={styles.centerContainer}>
+                        <ActivityIndicator
+                            size="large"
+                            color={Colors.primary}
+                        />
+                        <Text style={styles.loadingText}>
+                            Loading doctors...
+                        </Text>
+                    </View>
+                )}
+                {error && (
+                    <View style={styles.centerContainer}>
+                        <Text style={styles.errorText}>
+                            {error}
+                        </Text>
+                        <View style={styles.retryBtnContainer}>
+                            <Button
+                                text="Retry"
+                                varient="primary"
+                                onPress={() => dispatch(getDoctors())}
+                                style={{ marginTop: 20 }}
+                            />
+                        </View>
+
+                    </View>
+                )}
                 <FlatList
-                    data={doctorsList}
+                    data={filteredDOctors}
                     keyExtractor={(item) => item.id.toString()}
                     contentContainerStyle={styles.listContainer}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                         <View style={styles.card}>
-                            <Image source={item.avatar} style={styles.avatar} />
+                            <Image source={{ uri: item.avatar }} style={styles.avatar} />
                             <View style={styles.detailsContainer}>
                                 <View style={styles.nameContainer}>
                                     <Text numberOfLines={1} style={styles.name}>
@@ -509,6 +556,30 @@ const styles = StyleSheet.create({
         color: Colors.primary,
         fontSize: moderateScale(12),
         fontWeight: '700',
+    },
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.backgroundColor,
+    },
+
+    loadingText: {
+        marginTop: verticalScale(12),
+        color: Colors.primary,
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(15),
+    },
+    retryBtnContainer: {
+        width: scale(100),
+        height: verticalScale(20)
+    },
+    errorText: {
+        color: 'red',
+        fontSize: moderateScale(16),
+        fontFamily: Fonts.medium,
+        textAlign: 'center',
+        paddingHorizontal: scale(20),
     },
 })
 export default Home

@@ -26,10 +26,11 @@ const PasswordManager = ({ navigation }) => {
         <View style={styles.settingsContainer}>
             <Text style={styles.label}>Current Password</Text>
             <Input 
-                placeholder={'*************'}
-                value={currentPass}
-                onChangeText={setCurrentPassword}
-                secureTextEntry={true}
+                placeholder='*************'
+        value={currentPass}
+        onChangeText={setCurrentPassword}
+        style={styles.input}
+        secureTextEntry={true}
             />
             <Text 
                 style={styles.link}
@@ -40,6 +41,7 @@ const PasswordManager = ({ navigation }) => {
                 placeholder={'*************'}
                 value={password}
                 onChangeText={setPassword}
+                style={styles.input}
                 secureTextEntry={true}
             />
             <Text style={styles.label}>Confirm New Password</Text>
@@ -48,6 +50,7 @@ const PasswordManager = ({ navigation }) => {
                 value={cnfmPassword}
                 onChangeText={setCnfmPassword}
                 secureTextEntry={true}
+                style={styles.input}
             />
             <View style={styles.btnContainer}>
                 <Button 

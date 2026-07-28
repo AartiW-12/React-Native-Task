@@ -3,10 +3,9 @@ import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import BottomTabNavigator from '../navigation/BottomTabNavigator'
-import DoctorInfo from '../components/doctor/DoctorInfo'
-import Doctors from '../components/doctor/Doctors'
+// import DoctorInfo from '../components/doctor/DoctorInfo'
+import Doctors from '../screens/Doctors'
 import SetPassword from '../screens/SetPassword'
-import DoctorRating from '../components/doctor/DoctorRating'
 import Profile from '../components/profile/Profile'
 import Settings from '../screens/Settings'
 import NotificationSettings from '../screens/NotificationSettings'
@@ -17,10 +16,9 @@ import HelpCenter from '../screens/HelpCenter'
 const Stack = createNativeStackNavigator()
 
 const StackNavigator = () => {
-    // console.log(PrivacyPolicy)
   return (
     <Stack.Navigator
-        screenOptions={{ headerShown: false }}
+        screenOptions={{ headerShown: false, headerBackVisible:false }}
     >
         <Stack.Screen 
             name='BottomTabNavigator'
@@ -34,15 +32,10 @@ const StackNavigator = () => {
             name='Doctors'
             component={Doctors}
         />
-        <Stack.Screen 
+        {/* <Stack.Screen 
             name ="DoctorInfo"
             component={DoctorInfo}
-        />
-
-        <Stack.Screen 
-            name='DoctorRating'
-            component={DoctorRating}
-        />
+        /> */}
         <Stack.Screen 
             name='Profile'
             component={Profile}

@@ -6,19 +6,28 @@ import { scale } from 'react-native-size-matters';
 import Colors from '../style/Colors';
 import Fonts from '../style/Fonts';
 
-import BackIcon from '../../assets/images/svg/BackIcon.svg'
+import BackIcon from '../../assets/images/svg/BackIcon.svg';
 
-const Header = ({ text , titleStyle, backIconColor }) => {
+const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.backButton]}
-        onPress={() => navigation.goBack()}
-      >
-        <BackIcon width={20} height={20} fill={backIconColor} />
-      </TouchableOpacity>
+      {navigation.canGoBack() ? (
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={onBack ?? (() => navigation.goBack())}
+          activeOpacity={0.8}
+        >
+          <BackIcon
+            width={20}
+            height={20}
+            stroke={backIconColor}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.backButton} />
+      )}
 
       <Text style={[styles.title, titleStyle]}>{text}</Text>
 
@@ -38,7 +47,8 @@ const styles = StyleSheet.create({
   backButton: {
     width: 40,
     height: 40,
-    justifyContent:'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   title: {
@@ -51,12 +61,6 @@ const styles = StyleSheet.create({
 
   placeholder: {
     width: 40,
-  },
-
-  arrow: {
-    fontSize: 24,
-    color: Colors.primary,
-    fontWeight: 'bold',
   },
 });
 

@@ -5,7 +5,7 @@
  * @format
  */
 
-import {  StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
@@ -14,40 +14,23 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator'
 
-import Doctors from './src/components/doctor/Doctors'
-import Home from './src/screens/Home';
-import DoctorInfo from './src/components/doctor/DoctorInfo'
-import DoctorRating from './src/components/doctor/DoctorRating'
-import FavoriteDoctor from './src/components/doctor/FavoriteDoctor'
-import FavoriteService from './src/components/doctor/FavoriteService'
-import MyProfile from './src/screens/MyProfile'
-import Profile from './src/components/profile/Profile';
+import { Provider, useDispatch } from 'react-redux';
+import store from './src/redux/store'
+import { useEffect } from 'react';
+import { getDoctors } from './src/redux/doctors/doctorSlice';
+import AppContent from './src/content/AppContent'
 
 function App() {
   return (
     <SafeAreaProvider>
-      <View style={{flex:1}}>
+      <Provider store={store}>
         <NavigationContainer>
           <AppNavigator />
         </NavigationContainer>
-        {/* <Doctors /> */}
-        {/* <DoctorInfo doctor={{ id: 2, name: "Dr. Michael Davidson, M.D.", specialization: 'Solar Dermatology', avatar: require("./src/assets/images/doctors/Michael.png"), rating: 4, comments: 30, favorite: false, experience:12 , availableTime:'11:00 AM' }} /> */}
-        {/* <Home /> */}
-        {/* <DoctorRating /> */}
-        {/* <FavoriteDoctor /> */}
-        {/* <FavoriteService /> */}
-        {/* <MyProfile /> */}
-
-        {/* <Profile /> */}
-      </View>
+        {/* <AppContent /> */}
+      </Provider>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-  },
-});
 
 export default App;

@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from '../screens/Home';
 import Notifications from '../screens/Notifications';
-import Profile from '../screens/Profile';
 import Schedule from '../screens/Schedule';
 
 import HomeIcon from '../assets/images/svg/HomeIcon.svg';

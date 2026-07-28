@@ -3,16 +3,10 @@ import React from 'react'
 //React-Native Library
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import { SafeAreaView } from 'react-native-safe-area-context'
-
 
 //Styling Components
 import Colors from '../style/Colors'
 import Fonts from '../style/Fonts'
-
-//Reusable Components
-import Header from '../header/Header'
-
 
 //importing SVG's
 import StarIcon from '../../assets/images/svg/StarIcon.svg'
@@ -24,14 +18,20 @@ import ClockIcon from '../../assets/images/svg/ClockIcon.svg'
 import EmptyStar from '../../assets/images/svg/EmptyStar.svg'
 import QuestionIcon from '../../assets/images/svg/QuestionIcon.svg'
 import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
+import BackIcon from '../../assets/images/svg/BackIcon.svg'
 
-
-
-const DoctorInfo = ({ doctor }) => {
+const DoctorInfo = ({ doctor, onBack }) => {
     return (
-        <SafeAreaView style={styles.container}>
-            <Header text="Doctor Info" />
+        <View style={styles.container}>
+            <View style={styles.headerRow}>
+                <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+                    <BackIcon width={16} height={16} />
+                </TouchableOpacity>
 
+                <Text style={styles.headerText}>Doctor Info</Text>
+
+                <View style={styles.headerPlaceholder} />
+            </View>
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
@@ -40,7 +40,7 @@ const DoctorInfo = ({ doctor }) => {
                         <View style={styles.profileContainer}>
                             <View style={styles.firstSection}>
                                 <Image
-                                    source={doctor.avatar}
+                                    source={{ uri: doctor.avatar }}
                                     style={styles.avatar}
                                     resizeMode='contain'
                                 />
@@ -88,7 +88,7 @@ const DoctorInfo = ({ doctor }) => {
                                 <Text>{' '}{doctor.comments}</Text>
                             </View>
                             <View style={styles.chipDate}>
-                                <ClockIcon width={16} height={16}/>
+                                <ClockIcon width={16} height={16} />
                                 <Text> {' '} Mon - Sat  / {' '}{doctor.availableTime}</Text>
                             </View>
                         </View>
@@ -127,20 +127,49 @@ const DoctorInfo = ({ doctor }) => {
                 </View>
             </ScrollView>
 
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.backgroundColor,
         fontFamily: Fonts.regular
+    },
+    headerRow: {
+        height: verticalScale(56),
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: scale(20),
+        backgroundColor: Colors.backgroundColor,
+    },
+
+    backBtn: {
+        width: scale(36),
+        height: scale(36),
+        borderRadius: scale(18),
+        backgroundColor: Colors.socialButtonBackground,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    headerText: {
+        flex: 1,
+        textAlign: 'center',
+        fontSize: moderateScale(24),
+        fontFamily: Fonts.semiBold,
+        color: Colors.primary,
+    },
+
+    headerPlaceholder: {
+        width: scale(36),
     },
     infoContainer: {
         flex: 1,
         paddingHorizontal: scale(22),
-        paddingTop: verticalScale(20),
+        paddingTop: 0,
     },
 
     card: {
@@ -306,7 +335,9 @@ const styles = StyleSheet.create({
         color: Colors.primary,
         fontFamily: Fonts.medium,
         fontWeight: '500',
-        paddingVertical: verticalScale(5)
+        paddingVertical: verticalScale(10),
+        paddingHorizontal: scale(5),
+        fontSize: moderateScale(14)
     },
     text: {
         color: Colors.black,
