@@ -29,6 +29,7 @@ const DoctorInfo = ({ doctor, onBack }) => {
     const [selectedDate, setSelectedDate] = useState(null)
 
     const handleSchedule = () => {
+        
         setShowSchedule(true)
     }
 
