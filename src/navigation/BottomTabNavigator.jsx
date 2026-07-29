@@ -1,8 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Home from '../screens/Home';
-import Notifications from '../screens/Notifications';
+import Chat from '../screens/Chat';
 import Schedule from '../screens/Schedule';
 
 import HomeIcon from '../assets/images/svg/HomeIcon.svg';
@@ -14,7 +13,7 @@ import Colors from '../components/style/Colors';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { StyleSheet } from 'react-native';
 import MyProfile from '../screens/MyProfile';
-
+import CommonStack from '../navigation/CommonStack'
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
@@ -29,21 +28,21 @@ export default function BottomTabNavigator() {
     >
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={CommonStack}
         options={{
           tabBarIcon: ({ focused }) => (
             <HomeIcon
               width={24}
               height={24}
-              opacity={focused ? 1 : 0.7}
+              fill={focused ? Colors.black : Colors.white}
             />
           ),
         }}
       />
 
       <Tab.Screen
-        name="Notifications"
-        component={Notifications}
+        name="Chat"
+        component={Chat}
         options={{
           tabBarIcon: ({ focused }) => (
             <ChatIcon
@@ -82,6 +81,15 @@ export default function BottomTabNavigator() {
           ),
         }}
       />
+      {/* <Tab.Screen 
+        name='Doctors'
+        component={Doctors}
+        options={{
+          tabBarItemStyle: {
+            display:'none'
+          }
+        }}
+      /> */}
     </Tab.Navigator>
   );
 }

@@ -14,11 +14,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/AppNavigator'
 
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './src/redux/store'
-import { useEffect } from 'react';
-import { getDoctors } from './src/redux/doctors/doctorSlice';
-import AppContent from './src/content/AppContent'
 
 function App() {
   return (
@@ -27,7 +24,6 @@ function App() {
         <NavigationContainer>
           <AppNavigator />
         </NavigationContainer>
-        {/* <AppContent /> */}
       </Provider>
     </SafeAreaProvider>
   );

@@ -11,12 +11,12 @@ export const signUp = async(userData) => {
     return newUser.data
 }
 
-export const login = async (email, password) => {
+export const login = async (inputValue, password) => {
     const response = await api.get("/users");
 
     const user = response.data.find(
         (item) =>
-            item.email === email &&
+            (item.email === inputValue || item.mobileNumber === inputValue) &&
             item.password === password
     );
 
@@ -26,3 +26,9 @@ export const login = async (email, password) => {
 
     return user;
 };
+
+export const updateProfile = async(userId, userData) => {
+    const response = await api.put(`/users/${userId}`, userData)
+
+    return response.data
+}

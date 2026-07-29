@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 //React-Native Library
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
@@ -19,114 +19,221 @@ import EmptyStar from '../../assets/images/svg/EmptyStar.svg'
 import QuestionIcon from '../../assets/images/svg/QuestionIcon.svg'
 import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
 import BackIcon from '../../assets/images/svg/BackIcon.svg'
+import CalendarPicker from 'react-native-calendar-picker'
 
 const DoctorInfo = ({ doctor, onBack }) => {
-    return (
-        <View style={styles.container}>
+
+    const today = new Date()
+
+    const [showSchedule, setShowSchedule] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(null)
+
+    const handleSchedule = () => {
+        setShowSchedule(true)
+    }
+
+    const renderDoctorCard = () => {
+        return (
+            <View style={styles.card}>
+                <View style={styles.profileContainer}>
+                    <View style={styles.firstSection}>
+                        <Image
+                            source={{uri:doctor.avatar}}
+                            style={styles.avatar}
+                        />
+                    </View>
+                    <View style={styles.secondSection}>
+                        <View style={styles.experienceCard}>
+                            <View style={styles.starCircleBtn}>
+                                <StarIcon width={18} height={18}/>
+                            </View>
+                            <View style={{marginLeft:8}}>
+                                <Text style={styles.experienceText}>
+                                    {doctor.experience} Years
+                                </Text>
+                                <Text style={styles.smallText}>
+                                    Experience
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.focusCard}>
+                            <Text style={styles.focusTitle}>
+                                Focus
+                            </Text>
+                            <Text style={styles.focusText}>
+                                {doctor.focus ||
+                                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor, sapiente neque qui iure accusantium aut nostrum dignissimos et perferendis?"}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.name}>
+                        {doctor.name}
+                    </Text>
+                    <Text style={styles.specialization}>
+                        {doctor.specialization}
+                    </Text>
+                </View>
+                <View style={styles.statsRow}>
+                    <View style={styles.chip}>
+                        <FilledStar width={16} height={16}/>
+                        <Text>
+                            {doctor.rating}
+                        </Text>
+                    </View>
+                    <View style={styles.chip}>
+                        <Comments width={16} height={16}/>
+                        <Text>
+                            {doctor.comments}
+                        </Text>
+                    </View>
+                    <View style={styles.chipDate}>
+                        <ClockIcon width={16} height={16}/>
+                        <Text>
+                            Mon - Sat / {doctor.availableTime}
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.actionRow}>
+
+                    <TouchableOpacity style={styles.scheduleBtn}>
+                        <CalenderIconWhite/>
+                        <Text 
+                            style={styles.scheduleText}
+                            onPress={() => handleSchedule()}
+                        >
+                            Schedule
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.circleBtn}>
+                        <InfoIcon width={18} height={18}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.circleBtn}>
+                        <QuestionIcon width={18} height={18}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.circleBtn}>
+                        <EmptyStar width={18} height={18}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.circleBtn}>
+                        <EmptyHeart width={18} height={18}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+
+    const renderProfile = () => {
+        return (
+            <View>
+                <Text style={styles.heading}>
+                    Profile
+                </Text>
+                <Text style={styles.text}>
+                    {doctor.profile ||
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+                </Text>
+            </View>
+        )
+    }
+    const renderHeader = () => {
+        return (
             <View style={styles.headerRow}>
-                <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+                <TouchableOpacity
+                    style={styles.backBtn}
+                    onPress={onBack}
+                >
                     <BackIcon width={16} height={16} />
                 </TouchableOpacity>
-
-                <Text style={styles.headerText}>Doctor Info</Text>
-
+                <Text style={styles.headerText}>
+                    Doctor Info
+                </Text>
                 <View style={styles.headerPlaceholder} />
             </View>
+        )
+    }
+
+    const renderFooterCard = () => {
+        return (
+            <View>
+                <View style={styles.careerPath}>
+                    <Text style={styles.heading}>
+                        Career Path
+                    </Text>
+                    <Text style={styles.text}>
+                        {doctor.careerPath ||
+                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
+                    </Text>
+                </View>
+                <View style={styles.highlights}>
+                    <Text style={styles.heading}>
+                        Highlights
+                    </Text>
+                    <Text style={styles.text}>
+                        {doctor.highlights ||
+                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
+                    </Text>
+                </View>
+            </View>
+        )
+    }
+    const renderSchedule = () => {
+        return (
+            <View style={styles.container}>
+                <View style={styles.headerRow}>
+                    <TouchableOpacity
+                        style={styles.backBtn}
+                        onPress={() => setShowSchedule(false)}
+                    >
+                        <BackIcon width={16} height={16} />
+                    </TouchableOpacity>
+                    <Text style={styles.headerText}>
+                        Schedule
+                    </Text>
+                    <View style={styles.headerPlaceholder} />
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.heading}>
+                        Select Date
+                    </Text>
+                    <CalendarPicker
+                        minDate={today}
+                        onDateChange={(date) => {
+                            console.log(date)
+                        }}
+                        selectedDayColor={Colors.primary}
+                        selectedDayTextColor={Colors.white}
+                    />
+                    {
+                        selectedDate &&
+                        <TouchableOpacity
+                            style={styles.scheduleBtn}
+                            onPress={() => console.log("Next")}
+                        >
+                            <Text style={styles.scheduleText}>
+                                Continue
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                </View>
+            </View>
+        )
+    }
+    if (showSchedule) {
+        return renderSchedule()
+    }
+    return (
+        <View style={styles.container}>
+            {renderHeader()}
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.infoContainer}>
-                    <View style={styles.card}>
-                        <View style={styles.profileContainer}>
-                            <View style={styles.firstSection}>
-                                <Image
-                                    source={{ uri: doctor.avatar }}
-                                    style={styles.avatar}
-                                    resizeMode='contain'
-                                />
-                            </View>
-                            <View style={styles.secondSection}>
-                                <View style={styles.experienceCard}>
-                                    <View style={styles.starCircleBtn}>
-                                        <StarIcon width={18} height={18} />
-                                    </View>
-                                    <View style={{ marginLeft: 8 }}>
-                                        <Text style={styles.experienceText}>
-                                            {doctor.experience} Years
-                                        </Text>
-
-                                        <Text style={styles.smallText}>
-                                            Experience
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={styles.focusCard}>
-                                    <Text style={styles.focusTitle}>
-                                        Focus
-                                    </Text>
-                                    <Text style={styles.focusText}>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat deserunt natus, rerum optio soluta earum!
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.nameContainer}>
-                            <Text style={styles.name}>
-                                {doctor.name}
-                            </Text>
-                            <Text style={styles.specialization}>
-                                {doctor.specialization}
-                            </Text>
-                        </View>
-                        <View style={styles.statsRow}>
-                            <View style={styles.chip}>
-                                <FilledStar width={16} height={16} />
-                                <Text style={{ marginLeft: 4 }}>{' '}{doctor.rating}</Text>
-                            </View>
-                            <View style={styles.chip}>
-                                <Comments width={16} height={16} />
-                                <Text>{' '}{doctor.comments}</Text>
-                            </View>
-                            <View style={styles.chipDate}>
-                                <ClockIcon width={16} height={16} />
-                                <Text> {' '} Mon - Sat  / {' '}{doctor.availableTime}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.actionRow}>
-                            <TouchableOpacity style={styles.scheduleBtn}>
-                                <CalenderIconWhite />
-                                <Text style={styles.scheduleText}>
-                                    Schedule
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.circleBtn}>
-                                <InfoIcon width={18} height={18} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.circleBtn}>
-                                <QuestionIcon width={18} height={18} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.circleBtn}>
-                                <EmptyStar width={18} height={18} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.circleBtn}>
-                                <EmptyHeart width={18} height={18} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <Text style={styles.heading}>Profile</Text>
-                    <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Text>
-
-                    <View style={styles.careerPath}>
-                        <Text style={styles.heading}>Career Path</Text>
-                        <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</Text>
-                    </View>
-                    <View style={styles.highlights}>
-                        <Text style={styles.heading}>Highlights</Text>
-                        <Text style={styles.text}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis laborum, commodi eveniet velit est sint, quasi accusamus recusandae praesentium, aliquam a aut tenetur! Eveniet recusandae sint ullam maxime. Repellat sapiente eveniet optio est quidem? Quaerat, ea. Delectus ad modi odit commodi inventore cumque ducimus debitis fugit numquam eaque? Sunt, possimus optio temporibus, doloremque pariatur repellat totam excepturi dicta nulla aut, fuga perspiciatis deleniti magnam eos cumque fugit id sapiente iste natus animi repellendus. Architecto consequuntur alias perspiciatis natus veritatis odit quasi nesciunt placeat voluptatibus obcaecati et nihil possimus, quam repudiandae excepturi? Quidem dignissimos error, eaque eligendi maiores consequuntur nihil harum.</Text>
-                    </View>
+                    {renderDoctorCard()}
+                    {renderProfile()}
+                    {renderFooterCard()}
                 </View>
             </ScrollView>
-
         </View>
     )
 }

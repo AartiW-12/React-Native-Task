@@ -12,6 +12,7 @@ import NotificationSettings from '../screens/NotificationSettings'
 import PasswordManager from '../screens/PasswordManager'
 import PrivacyPolicy from '../screens/PrivacyPolicy'
 import HelpCenter from '../screens/HelpCenter'
+import Notifications from '../screens/Notifications'
 
 const Stack = createNativeStackNavigator()
 
@@ -59,6 +60,10 @@ const StackNavigator = () => {
         <Stack.Screen 
             name='HelpCenter'
             component={HelpCenter}
+        />
+        <Stack.Screen 
+            name='Notifications'
+            component={Notifications}
         />
     </Stack.Navigator>
   )

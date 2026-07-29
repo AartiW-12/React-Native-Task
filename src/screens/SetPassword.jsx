@@ -6,6 +6,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
+import { SafeAreaView } from 'react-native-safe-area-context'
 function SetPassword() {
 
     const [password, setPassword] = useState("")
@@ -19,7 +20,7 @@ function SetPassword() {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 <Header text="Set Password" />
                 <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
@@ -47,7 +48,7 @@ function SetPassword() {
                     />
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 

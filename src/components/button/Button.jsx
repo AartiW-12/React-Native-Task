@@ -1,6 +1,7 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
 import Colors from '../style/Colors'
+import FontSizes from '../style/FontSize'
 function Button({
     varient='primary',
     text,
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     text : {
         fontFamily:'League Spartan',
         fontWeight:'500',
-        fontSize:20,
+        fontSize:FontSizes.xxl,
     },
     primaryText : {
         color : Colors.screenBackground

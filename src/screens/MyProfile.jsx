@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     View,
     Text,
@@ -6,6 +6,7 @@ import {
     Image,
     FlatList,
     TouchableOpacity,
+    Modal,
 } from 'react-native'
 import {
     moderateScale,
@@ -29,6 +30,12 @@ import SettingIcon from '../assets/images/svg/profile/SettingIcon.svg'
 import HelpIcon from '../assets/images/svg/profile/HelpIcon.svg'
 import LogoutIcon from '../assets/images/svg/profile/LogoutIcon.svg'
 import RightArrow from '../assets/images/svg/profile/RightArrow.svg'
+import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { logout } from '../redux/auth/authSlice'
+import Button from '../components/button/Button'
+import FontSizes from '../components/style/FontSize'
 
 const menuData = [
     {
@@ -75,19 +82,41 @@ const menuData = [
     },
 ]
 
-const MyProfile = ({ navigation }) => {
-    console.log("Current:", navigation.getState().routeNames);
+const MyProfile = () => {
 
-console.log("Parent:", navigation.getParent()?.getState().routeNames);
+    const [openModal, setOpenModal] = useState(false)
+
+    const navigation = useNavigation()
+
+    const dispatch = useDispatch()
+
+    const { user } = useSelector(state => state.auth)
+
+    
+    const handleLogout = async () => {
+        try {
+            try {
+                await AsyncStorage.removeItem("Token");
+                await AsyncStorage.removeItem("User");
+
+                dispatch(logout());
+            } catch (error) {
+                console.log("Logout Error:", error);
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
     return (
         <View style={styles.container}>
-            <Header text="My Profile"  backIconColor={Colors.primary}/>
+            <Header text="My Profile" backIconColor={Colors.primary} />
             <Image
                 source={ProfileImg}
                 style={styles.profileImage}
             />
             <Text style={styles.name}>
-                John Doe
+                {user?.name || "USER"}
             </Text>
             <FlatList
                 data={menuData}
@@ -100,7 +129,13 @@ console.log("Parent:", navigation.getParent()?.getState().routeNames);
                         <TouchableOpacity
                             activeOpacity={0.8}
                             style={styles.optionContainer}
-                            onPress={() => navigation.navigate(item.screen)}
+                            onPress={() => {
+                                if (item.screen === "Logout") {
+                                    setOpenModal(true)
+                                } else {
+                                    navigation.navigate(item.screen);
+                                }
+                            }}
                         >
                             <View style={styles.leftContainer}>
                                 <View style={styles.iconContainer}>
@@ -118,7 +153,39 @@ console.log("Parent:", navigation.getParent()?.getState().routeNames);
                     );
                 }}
             />
+            <Modal
+                visible={openModal}
+                transparent
+                animationType='slide'
+            >
+                <View style={styles.modalLayout}>
+                    <View style={styles.logoutModal}>
+                        <Text style={styles.logoutTitle}>Logout</Text>
+                        <Text style={styles.logoutText}>Are you sure you want to log out?</Text>
+                        <View style={styles.buttonContainer}>
+                            <View style={styles.cancelBtnContainer}>
+                                <Button
+                                    text="Cancel"
+                                    varient="secondary"
+                                    style={styles.cancelButton}
+                                    textStyle={styles.cancelText}
+                                    onPress={() => setOpenModal(false)}
+                                />
+                            </View>
 
+                            <View style={styles.logoutBtnContainer}>
+                                <Button
+                                    text="Yes, Logout"
+                                    varient="primary"
+                                    style={styles.logoutButton}
+                                    textStyle={styles.logoutBtnText}
+                                    onPress={handleLogout}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -172,5 +239,71 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
         fontSize: moderateScale(20),
     },
+    modalLayout: {
+        flex: 1,
+        backgroundColor: 'rgba(163, 184, 243, 0.57)',
+        justifyContent: 'flex-end',
+    },
+
+
+    logoutModal: {
+        backgroundColor: Colors.white,
+        borderRadius: moderateScale(35),
+        paddingHorizontal: scale(20),
+        paddingVertical: verticalScale(20),
+        alignItems: 'center',
+
+    },
+
+
+    logoutTitle: {
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(24),
+        color: Colors.primary,
+    },
+
+
+    logoutText: {
+        marginTop: verticalScale(10),
+        fontFamily: Fonts.regular,
+        fontSize: moderateScale(12),
+        color: Colors.black,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: verticalScale(20),
+    },
+    cancelBtnContainer: {
+        width: '45%',
+    },
+
+    logoutBtnContainer: {
+        width: '45%',
+    },
+
+    cancelButton: {
+        height: verticalScale(40),
+        borderRadius: moderateScale(25),
+        backgroundColor: Colors.socialButtonBackground,
+    },
+
+    logoutButton: {
+        height: verticalScale(40),
+        borderRadius: moderateScale(25),
+        backgroundColor: Colors.primary,
+    },
+
+    cancelText: {
+        color: Colors.primary,
+        fontSize: FontSizes.xl,
+        fontFamily:Fonts.medium
+    },
+    logoutBtnText : {
+        color:Colors.white,
+        fontSize:FontSizes.xl,
+        fontFamily:Fonts.medium
+    }
 })
 export default MyProfile

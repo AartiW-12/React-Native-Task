@@ -1,23 +1,52 @@
-import React from 'react'
-import BottomTabNavigator from './BottomTabNavigator'
+import React, { useEffect, useState } from 'react'
 import AuthNavigator from './AuthNavigator'
 import StackNavigator from './StackNavigator'
-import AppContent from '../content/AppContent'
+import { useDispatch, useSelector } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { restoreSession } from '../redux/auth/authSlice'
+import SplashScreen from '../screens/SplashScreen'
+import { getDoctors } from '../redux/doctors/doctorSlice'
 
 function AppNavigator() {
-    console.log("APP Navigator")
-    const userToken = ""
+
+    const [initializing , setInitializing] = useState(true)
+
+    const dispatch = useDispatch()
+
+    const {token } = useSelector(state => state.auth)
+
+    useEffect(() => {
+        const initializeApp = async () => {
+            try{
+                const storedToken = await AsyncStorage.getItem("Token")
+                const storedUser = await AsyncStorage.getItem("User")
+
+                if(storedToken && storedUser){
+                    dispatch(restoreSession({
+                        token: storedToken,
+                        user : JSON.parse(storedUser)
+                    }))
+                }
+                await dispatch(getDoctors())
+            }
+            catch(err){
+                console.log(err)
+            }
+            finally{
+                setInitializing(false)
+            }
+        }
+        initializeApp()
+    },[])
+
+    if(initializing){
+        return <SplashScreen />
+    }
     return (
         <>
             {
-                userToken ?
-                    (
-                        <>
+                token ?
                             <StackNavigator />
-                            <AppContent />
-                        </>
-                    )
-
                     :
                     <AuthNavigator />
             }

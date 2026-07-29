@@ -9,6 +9,7 @@ import Header from '../components/header/Header'
 import { useDispatch } from 'react-redux'
 import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
 import { signUp } from '../services/authService/authService'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 function SignUp({ navigation }) {
 
@@ -22,17 +23,17 @@ function SignUp({ navigation }) {
     const dispatch = useDispatch()
 
     // sign up function 
-    const handleSignUp = async() => {
+    const handleSignUp = async () => {
         dispatch(loginStart())
 
-        try{
+        try {
             const user = await signUp({
                 name: name,
                 email,
                 password,
                 mobileNumber,
                 dob,
-                profileImage : ""
+                profileImage: ""
             })
 
             const token = `token_${Date.now()}`
@@ -41,7 +42,7 @@ function SignUp({ navigation }) {
                 user,
                 token
             }))
-        }catch(err){
+        } catch (err) {
             console.log("Error", err)
             dispatch(loginFailure(err.message))
         }
@@ -54,106 +55,108 @@ function SignUp({ navigation }) {
         { id: 3, image: require('../assets/images/Vector164.png') },
     ];
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-            <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps='handled'
+        <SafeAreaView style={{ flex: 1}}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
-                <View style={styles.container}>
- 
-                    <Header text="New Account" />
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps='handled'
+                >
+                    <View style={styles.container}>
 
-                    <View style={styles.signUpSection}>
-                        <Text style={styles.label}>Full name</Text>
-                        <Input
-                            placeholder="example@example.com"
-                            value={name}
-                            onChangeText={setName}
-                            style={styles.inputBox}
-                        />
-                        <Text style={styles.label}>Password</Text>
-                        <Input
-                            placeholder="*************"
-                            value={password}
-                            onChangeText={setPassword}
-                            style={styles.inputBox}
-                            secureTextEntry={true}
-                        />
-                        <Text style={styles.label}>Email</Text>
-                        <Input
-                            placeholder="example@example.com"
-                            value={email}
-                            onChangeText={setEmail}
-                            style={styles.inputBox}
-                        />
-                        <Text style={styles.label}>Mobile Number</Text>
-                        <Input
-                            placeholder="1234567890"
-                            value={mobileNumber}
-                            onChangeText={setMobileNumber}
-                            keyboardType='numeric'
-                            style={styles.inputBox}
-                        />
-                        <Text style={styles.label}>Date of birth</Text>
-                        <Input
-                            placeholder="DD / MM /YYY"
-                            value={dob}
-                            onChangeText={setDOB}
-                            keyboardType='numeric'
-                            style={styles.inputBox}
-                        />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.terms}>
-                            By continuing, you agree to{' '}
-                            <Text style={styles.link}>
-                                Terms of Use
+                        <Header text="New Account" />
+
+                        <View style={styles.signUpSection}>
+                            <Text style={styles.label}>Full name</Text>
+                            <Input
+                                placeholder="example@example.com"
+                                value={name}
+                                onChangeText={setName}
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Password</Text>
+                            <Input
+                                placeholder="*************"
+                                value={password}
+                                onChangeText={setPassword}
+                                style={styles.inputBox}
+                                secureTextEntry={true}
+                            />
+                            <Text style={styles.label}>Email</Text>
+                            <Input
+                                placeholder="example@example.com"
+                                value={email}
+                                onChangeText={setEmail}
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Mobile Number</Text>
+                            <Input
+                                placeholder="1234567890"
+                                value={mobileNumber}
+                                onChangeText={setMobileNumber}
+                                keyboardType='numeric'
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Date of birth</Text>
+                            <Input
+                                placeholder="DD / MM /YYY"
+                                value={dob}
+                                onChangeText={setDOB}
+                                keyboardType='numeric'
+                                style={styles.inputBox}
+                            />
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.terms}>
+                                By continuing, you agree to{' '}
+                                <Text style={styles.link}>
+                                    Terms of Use
+                                </Text>
+                                {' and '}
+                                <Text style={styles.link}>
+                                    Privacy Policy
+                                </Text>
+                                .
                             </Text>
-                            {' and '}
-                            <Text style={styles.link}>
-                                Privacy Policy
-                            </Text>
-                            .
-                        </Text>
-                    </View>
-                    <View style={styles.btnContainer}>
-                        <Button
-                            varient='primary'
-                            text='Sign Up'
-                            onPress={handleSignUp}
-                        />
-                    </View>
-                    <Text style={styles.dividerText}>or sign up with</Text>
-                    <View style={styles.signUpOptionsContainer}>
-                        {icons.map((item) => (
-                            <Pressable
-                                key={item.id}
-                                style={styles.socialButton}
+                        </View>
+                        <View style={styles.btnContainer}>
+                            <Button
+                                varient='primary'
+                                text='Sign Up'
+                                onPress={handleSignUp}
+                            />
+                        </View>
+                        <Text style={styles.dividerText}>or sign up with</Text>
+                        <View style={styles.signUpOptionsContainer}>
+                            {icons.map((item) => (
+                                <Pressable
+                                    key={item.id}
+                                    style={styles.socialButton}
+                                >
+                                    <Image
+                                        source={item.image}
+                                        style={styles.socialIcon}
+                                        resizeMode="contain"
+                                    />
+                                </Pressable>
+                            ))}
+                        </View>
+                        <Text style={styles.footer}>
+                            already have an account?{' '}
+                            <Text
+                                style={styles.link}
+                                onPress={() => navigation.navigate("Login")}
                             >
-                                <Image
-                                    source={item.image}
-                                    style={styles.socialIcon}
-                                    resizeMode="contain"
-                                />
-                            </Pressable>
-                        ))}
-                    </View>
-                    <Text style={styles.footer}>
-                        already have an account?{' '}
-                        <Text 
-                            style={styles.link}
-                            onPress={() => navigation.navigate("Login")}
-                        >
-                            Log in
+                                Log in
+                            </Text>
                         </Text>
-                    </Text>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     )
 }
 

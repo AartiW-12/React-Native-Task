@@ -7,8 +7,9 @@ import Colors from '../style/Colors';
 import Fonts from '../style/Fonts';
 
 import BackIcon from '../../assets/images/svg/BackIcon.svg';
+import FontSizes from '../style/FontSize';
 
-const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack}) => {
+const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack, rightComponent}) => {
   const navigation = useNavigation();
 
   return (
@@ -31,7 +32,7 @@ const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack}) =>
 
       <Text style={[styles.title, titleStyle]}>{text}</Text>
 
-      <View style={styles.placeholder} />
+      {rightComponent ?? <View style={styles.placeholder} />}
     </View>
   );
 };
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.primary,
     fontFamily: Fonts.bold,
-    fontSize: scale(24),
+    fontSize: FontSizes.title,
   },
 
   placeholder: {

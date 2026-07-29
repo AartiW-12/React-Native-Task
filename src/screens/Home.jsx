@@ -3,6 +3,7 @@ import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndi
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import SearchBar from '../components/searchbar/SearchBar'
 import Colors from '../components/style/Colors';
+import FontSizes from '../components/style/FontSize';
 import Fonts from '../components/style/Fonts'
 import Button from '../components/button/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -69,11 +70,11 @@ function Home() {
     const navigation = useNavigation()
 
     const { doctors, loading, error } = useSelector(state => state.doctors)
+    const { user } = useSelector(state => state.auth)
     
     const dispatch = useDispatch()
 
-    console.log(doctors)
-    console.log(loading)
+
     const filteredDOctors = useMemo(() => {
         if (!search.trim()) return doctors
 
@@ -96,13 +97,13 @@ function Home() {
                     />
                     <View>
                         <Text style={styles.welcome}>Hi, Welcome Back</Text>
-                        <Text style={styles.headerName}>John Doe</Text>
+                        <Text style={styles.headerName}>{user?.name}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
                         style={styles.iconButton}
-                    // onPress={}
+                        onPress={() => navigation.navigate("Notifications")}
                     >
                         <Image
                             source={require('../assets/images/Notification.png')}
@@ -483,7 +484,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
     },
     dateNumber: {
-        fontSize: moderateScale(24),
+         fontSize: FontSizes.title,
         color: Colors.black,
         fontFamily: Fonts.bold,
     },

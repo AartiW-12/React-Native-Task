@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
+import FontSizes from '../components/style/FontSize'
 import Fonts from '../components/style/Fonts'
 import { useDispatch } from 'react-redux'
 import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
 import { login } from '../services/authService/authService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Header from '../components/header/Header'
 
 function Login({ navigation }) {
   //hoooks to store and update the state 
@@ -17,23 +20,25 @@ function Login({ navigation }) {
 
   const dispatch = useDispatch()
 
+
   // functions 
-  const handleLogin = async() => {
-      dispatch(loginStart())
-      try{
-        const user = await login(inputValue, password)
-        const token = `token_${Date.now()}`
+  const handleLogin = async () => {
+    dispatch(loginStart())
+    try {
+      const user = await login(inputValue, password)
+      const token = `token_${Date.now()}`
 
-        await AsyncStorage.setItem("Token", token)
+      await AsyncStorage.setItem("Token", token)
+      await AsyncStorage.setItem("User", JSON.stringify(user))
 
-        dispatch(loginSucess({
-          user, 
-          token
-        }))
-      }catch(err){
-        console.log(err)
-        dispatch(loginFailure(err.message))
-      }
+      dispatch(loginSucess({
+        user,
+        token
+      }))
+    } catch (err) {
+      console.log(err)
+      dispatch(loginFailure(err.message))
+    }
   }
 
   const handleForgetPassword = () => {
@@ -48,7 +53,9 @@ function Login({ navigation }) {
   ];
 
   return (
+    <SafeAreaView style={{flex : 1}}>
     <View style={styles.container}>
+      <Header text={'Log In'}/>
       <Text style={styles.header2}>Welcome</Text>
       <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
       <Text style={styles.label}>Email or Mobile Number</Text>
@@ -72,7 +79,7 @@ function Login({ navigation }) {
         <Button
           varient='primary'
           text="Log In"
-          onPress={handleLogin}
+          onPress={() => handleLogin()}
         />
       </View>
       <View style={styles.signUpOptionsContainer}>
@@ -98,6 +105,7 @@ function Login({ navigation }) {
         </Text>
       </Text>
     </View>
+    </SafeAreaView>
   )
 }
 
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
 
   header2: {
     fontFamily: Fonts.semiBold,
-    fontSize: moderateScale(24),
+     fontSize: FontSizes.title,
     fontWeight: '600',
     color: Colors.primary,
     alignSelf: 'flex-start',
@@ -154,7 +162,9 @@ const styles = StyleSheet.create({
   btnContainer: {
     width: '70%',
     alignSelf: 'center',
-    marginTop: verticalScale(20),
+    paddingVertical: verticalScale(10),
+    paddingHorizontal:scale(5),
+    marginTop: verticalScale(40)
   },
 
   signUpOptionsContainer: {
