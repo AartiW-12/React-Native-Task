@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     },
     text : {
         fontFamily:'League Spartan',
-        fontWeight:'500',
         fontSize:FontSizes.xxl,
     },
     primaryText : {

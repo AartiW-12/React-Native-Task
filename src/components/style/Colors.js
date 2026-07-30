@@ -11,6 +11,7 @@ const Colors = {
 
   // Text Colors
   black: '#000000',
+  disabledText : '#9E9E9E',
 
   transparent: 'transparent',
 };

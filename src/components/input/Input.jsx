@@ -12,6 +12,10 @@ function Input({
   keyboardType = 'default',
   style,
   secureTextEntry = false,
+  multiline = false,
+  numberOfLines = 1,
+  textAlignVertical = 'center',
+  placeholderTextColor = Colors.primary,
 }) {
 
   const [hidePassword, setHidePassword] = useState(secureTextEntry)
@@ -22,10 +26,16 @@ function Input({
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
-        placeholderTextColor="#809CFF"
+        placeholderTextColor={placeholderTextColor}
         keyboardType={keyboardType}
         secureTextEntry={hidePassword}
-        style={styles.input}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        textAlignVertical={textAlignVertical}
+        style={[
+          styles.input,
+          multiline && styles.multilineInput,
+        ]}
       />
 
       {secureTextEntry && (
@@ -36,7 +46,7 @@ function Input({
         >
           {hidePassword ? (
             <OpenEye width={20} height={20} />
-            
+
           ) : (
             <EyeIcon width={20} height={20} />
           )}
@@ -49,18 +59,23 @@ function Input({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     borderRadius: 13,
     backgroundColor: Colors.inputBackground,
     flexDirection: 'row',
-    alignItems: 'center',
   },
 
   input: {
     flex: 1,
-    height: '100%',
     paddingHorizontal: 15,
     color: Colors.black,
+  },
+
+  multilineInput: {
+    minHeight: 120,
+    textAlignVertical: 'top',
+    paddingTop: 14,
+    paddingBottom: 14,
   },
 
   iconContainer: {

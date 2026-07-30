@@ -26,6 +26,7 @@ import HeartWhite from '../assets/images/svg/HeartWhite.svg'
 import DownIcon from '../assets/images/svg/DownIcon.svg'
 import DoctorInfo from '../components/doctor/DoctorInfo'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
 
 import { getDoctors } from '../redux/doctors/doctorSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -58,6 +59,7 @@ const Doctors = () => {
     const [selectedDoctor, setSelectedDoctor] = useState(null)
 
     const dispatch = useDispatch()
+    const navigation = useNavigation()
 
     const {
         doctors,
@@ -88,7 +90,7 @@ const Doctors = () => {
     }
 
     const viewInfo = (doctor) => {
-        setSelectedDoctor(doctor)
+        navigation.navigate("DoctorInfo", {doctor})
     }
 
     const bookAppointment = (doctor) => {
@@ -116,7 +118,6 @@ const Doctors = () => {
 
     const renderDefaultCard = (item) => (
         <View style={styles.defaultCard}>
-            {console.log("Image", item.avatar)}
             <Image
                 source={{ uri: item.avatar }}
                 style={styles.defaultAvatar}
@@ -273,12 +274,13 @@ const Doctors = () => {
     )
 
     const renderDoctorInfo = () => {
-        return (
-        <DoctorInfo
-            doctor={selectedDoctor}
-            onBack={() => setSelectedDoctor(null)}
-        />
-    );
+        // return (
+        // <DoctorInfo
+        //     doctor={selectedDoctor}
+        //     onBack={() => setSelectedDoctor(null)}
+        // />
+    // );
+    navigation.navigate("DoctorInfo")
     }
     const renderItem = ({ item }) => {
         switch (activeFilter) {

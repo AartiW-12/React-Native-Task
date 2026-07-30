@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 
 //React-Native Library
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
@@ -20,17 +20,70 @@ import QuestionIcon from '../../assets/images/svg/QuestionIcon.svg'
 import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
 import BackIcon from '../../assets/images/svg/BackIcon.svg'
 import CalendarPicker from 'react-native-calendar-picker'
+import ScheduleCall from '../../assets/images/svg/ScheduleCall.svg'
+import ScheduleVideoCall from '../../assets/images/svg/ScheduleVideoCall.svg'
+import ChatIcon from '../../assets/images/svg/ChatIcon.svg'
+import FilledHeart from '../../assets/images/svg/FilledHeart.svg'
 
-const DoctorInfo = ({ doctor, onBack }) => {
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import FontSizes from '../style/FontSize'
 
+
+
+const DoctorInfo = () => {
+    const route = useRoute()
+    const navigation = useNavigation()
+
+    const doctor = route.params.doctor
     const today = new Date()
 
     const [showSchedule, setShowSchedule] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null)
+    const [currMonth, setCurrMonth] = useState(new Date())
+    
+    const calenderRef = useRef(null)
 
     const handleSchedule = () => {
-        
         setShowSchedule(true)
+    }
+    const renderScheduleHeader = () => {
+        return (
+            <View style={styles.scheduleHeader}>
+                <TouchableOpacity
+                    style={styles.backBtn}
+                    onPress={() => setShowSchedule(false)}
+                >
+                    <BackIcon width={16} height={16} />
+                </TouchableOpacity>
+                <View style={styles.scheduleTitleContainer}>
+                    <Text style={styles.scheduleHeaderTitle}>
+                        Schedule
+                    </Text>
+                </View>
+                <View style={styles.scheduleActions}>
+                    <TouchableOpacity style={styles.blueCircleBtn}>
+                        <ScheduleCall width={16} height={16} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.blueCircleBtn}>
+                        <ScheduleVideoCall width={16} height={16} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.blueCircleBtn}>
+                        <ChatIcon width={16} height={16} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.starCircleBtn}>
+                        <QuestionIcon width={16} height={16} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.starCircleBtn}>
+                        {doctor.favorite ? <FilledHeart width={16} height={16} /> : <EmptyHeart width={16} height={16} />}
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
     }
 
     const renderDoctorCard = () => {
@@ -39,16 +92,16 @@ const DoctorInfo = ({ doctor, onBack }) => {
                 <View style={styles.profileContainer}>
                     <View style={styles.firstSection}>
                         <Image
-                            source={{uri:doctor.avatar}}
+                            source={{ uri: doctor.avatar }}
                             style={styles.avatar}
                         />
                     </View>
                     <View style={styles.secondSection}>
                         <View style={styles.experienceCard}>
                             <View style={styles.starCircleBtn}>
-                                <StarIcon width={18} height={18}/>
+                                <StarIcon width={18} height={18} />
                             </View>
-                            <View style={{marginLeft:8}}>
+                            <View style={{ marginLeft: 8 }}>
                                 <Text style={styles.experienceText}>
                                     {doctor.experience} Years
                                 </Text>
@@ -63,7 +116,7 @@ const DoctorInfo = ({ doctor, onBack }) => {
                             </Text>
                             <Text style={styles.focusText}>
                                 {doctor.focus ||
-                                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor, sapiente neque qui iure accusantium aut nostrum dignissimos et perferendis?"}
+                                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor, sapiente neque qui iure accusantium aut nostrum dignissimos et perferendis?"}
                             </Text>
                         </View>
                     </View>
@@ -78,19 +131,19 @@ const DoctorInfo = ({ doctor, onBack }) => {
                 </View>
                 <View style={styles.statsRow}>
                     <View style={styles.chip}>
-                        <FilledStar width={16} height={16}/>
+                        <FilledStar width={16} height={16} />
                         <Text>
                             {doctor.rating}
                         </Text>
                     </View>
                     <View style={styles.chip}>
-                        <Comments width={16} height={16}/>
+                        <Comments width={16} height={16} />
                         <Text>
                             {doctor.comments}
                         </Text>
                     </View>
                     <View style={styles.chipDate}>
-                        <ClockIcon width={16} height={16}/>
+                        <ClockIcon width={16} height={16} />
                         <Text>
                             Mon - Sat / {doctor.availableTime}
                         </Text>
@@ -99,8 +152,8 @@ const DoctorInfo = ({ doctor, onBack }) => {
                 <View style={styles.actionRow}>
 
                     <TouchableOpacity style={styles.scheduleBtn}>
-                        <CalenderIconWhite/>
-                        <Text 
+                        <CalenderIconWhite />
+                        <Text
                             style={styles.scheduleText}
                             onPress={() => handleSchedule()}
                         >
@@ -108,16 +161,16 @@ const DoctorInfo = ({ doctor, onBack }) => {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <InfoIcon width={18} height={18}/>
+                        <InfoIcon width={18} height={18} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <QuestionIcon width={18} height={18}/>
+                        <QuestionIcon width={18} height={18} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <EmptyStar width={18} height={18}/>
+                        <EmptyStar width={18} height={18} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <EmptyHeart width={18} height={18}/>
+                        <EmptyHeart width={18} height={18} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -132,17 +185,18 @@ const DoctorInfo = ({ doctor, onBack }) => {
                 </Text>
                 <Text style={styles.text}>
                     {doctor.profile ||
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
                 </Text>
             </View>
         )
     }
+
     const renderHeader = () => {
         return (
             <View style={styles.headerRow}>
                 <TouchableOpacity
                     style={styles.backBtn}
-                    onPress={onBack}
+                    onPress={() => navigation.goBack()}
                 >
                     <BackIcon width={16} height={16} />
                 </TouchableOpacity>
@@ -163,7 +217,7 @@ const DoctorInfo = ({ doctor, onBack }) => {
                     </Text>
                     <Text style={styles.text}>
                         {doctor.careerPath ||
-                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
+                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
                     </Text>
                 </View>
                 <View style={styles.highlights}>
@@ -172,70 +226,101 @@ const DoctorInfo = ({ doctor, onBack }) => {
                     </Text>
                     <Text style={styles.text}>
                         {doctor.highlights ||
-                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
+                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam aperiam deserunt numquam, mollitia, distinctio necessitatibus eum voluptatum ratione iure culpa, obcaecati atque autem neque aliquid pariatur? Rerum aperiam quisquam vitae quasi similique maiores sapiente cumque dolor exercitationem nesciunt aliquam odio, asperiores voluptatum illo deserunt veniam nostrum blanditiis eveniet. Facilis, sint."}
                     </Text>
                 </View>
             </View>
         )
     }
-    const renderSchedule = () => {
+    
+    const renderScheduleCalendar = () => {
         return (
-            <View style={styles.container}>
-                <View style={styles.headerRow}>
+            <View style={styles.calendarSection}>
+                <View style={styles.calendarHeader}>
                     <TouchableOpacity
-                        style={styles.backBtn}
-                        onPress={() => setShowSchedule(false)}
-                    >
-                        <BackIcon width={16} height={16} />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>
-                        Schedule
-                    </Text>
-                    <View style={styles.headerPlaceholder} />
-                </View>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.heading}>
-                        Select Date
-                    </Text>
-                    <CalendarPicker
-                        minDate={today}
-                        onDateChange={(date) => {
-                            console.log(date)
+                        onPress={() => {
+                            calenderRef.current?.handleOnPressPrevious()
                         }}
-                        selectedDayColor={Colors.primary}
-                        selectedDayTextColor={Colors.white}
-                    />
-                    {
-                        selectedDate &&
-                        <TouchableOpacity
-                            style={styles.scheduleBtn}
-                            onPress={() => console.log("Next")}
-                        >
-                            <Text style={styles.scheduleText}>
-                                Continue
-                            </Text>
-                        </TouchableOpacity>
-                    }
+                    >
+                        <Text style={styles.arrow}>
+                            {'<'}
+                        </Text>
+                    </TouchableOpacity>
+                    <Text style={styles.monthText}>
+                        {currMonth.toLocaleString('default', {
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            calenderRef.current?.handleOnPressNext()
+                        }}
+                    >
+                        <Text style={styles.arrow}>
+                            {'>'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
+                <CalendarPicker
+                    ref={calenderRef}
+                    minDate={today}
+                    selectedStartDate={selectedDate}
+                    onDateChange={(date) => {
+        setSelectedDate(date);
+
+        navigation.navigate("ScheduleAppointment", {
+            doctor,
+            selectedDate: date,
+        });
+    }}
+                    onMonthChange={(date) => setCurrMonth(date)}
+                    weekdays={["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]}
+                    previousTitle=""
+                    nextTitle=""
+                    todayBackgroundColor="transparent"
+                    selectedDayColor={Colors.primary}
+                    selectedDayTextColor={Colors.white}
+                    textStyle={{ color: Colors.black, fontFamily: Fonts.medium, }}
+                    weekdaysStyle={{ color: Colors.white, fontFamily: Fonts.medium, fontSize: 11, }}
+                    monthTitleStyle={{
+                        display: 'none',
+                    }}
+                    yearTitleStyle={{
+                        display: 'none',
+                    }}
+                    dayShape="circle"
+                    width={scale(285)}
+                />
+                {selectedDate && (
+                    <TouchableOpacity
+                        style={styles.continueBtn}
+                        onPress={() => {
+                            navigation.navigate("ScheduleAppointment", {doctor})
+                        }}
+                    >
+                        <Text style={styles.continueText}>
+                            Continue
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
         )
     }
-    if (showSchedule) {
-        return renderSchedule()
-    }
+
     return (
-        <View style={styles.container}>
-            {renderHeader()}
+        <SafeAreaView style={styles.container}>
+            {showSchedule ? renderScheduleHeader() : renderHeader()}
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.infoContainer}>
                     {renderDoctorCard()}
                     {renderProfile()}
-                    {renderFooterCard()}
+                    {showSchedule ? renderScheduleCalendar() : renderFooterCard()}
                 </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -243,7 +328,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.backgroundColor,
-        fontFamily: Fonts.regular
+        fontFamily: Fonts.regular,
     },
     headerRow: {
         height: verticalScale(56),
@@ -253,16 +338,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(20),
         backgroundColor: Colors.backgroundColor,
     },
-
     backBtn: {
         width: scale(36),
         height: scale(36),
-        borderRadius: scale(18),
-        backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     headerText: {
         flex: 1,
         textAlign: 'center',
@@ -270,7 +351,6 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.semiBold,
         color: Colors.primary,
     },
-
     headerPlaceholder: {
         width: scale(36),
     },
@@ -293,11 +373,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
     },
-
     firstSection: {
         alignSelf: 'center'
     },
-
     secondSection: {
         width: '40%',
         justifyContent: 'space-between',
@@ -350,7 +428,6 @@ const styles = StyleSheet.create({
         lineHeight: moderateScale(15),
         marginTop: verticalScale(4),
     },
-
     nameContainer: {
         marginTop: verticalScale(5),
         backgroundColor: Colors.white,
@@ -358,10 +435,9 @@ const styles = StyleSheet.create({
         paddingVertical: verticalScale(5),
         alignItems: 'center',
     },
-
     name: {
-        fontFamily: Fonts.bold,
-        fontSize: moderateScale(20),
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(14),
         color: Colors.primary,
     },
     specialization: {
@@ -415,14 +491,12 @@ const styles = StyleSheet.create({
         height: verticalScale(21),
         borderRadius: moderateScale(22),
     },
-
     scheduleText: {
         color: Colors.white,
         marginLeft: scale(6),
         fontFamily: Fonts.medium,
         fontSize: moderateScale(14),
     },
-
     circleBtn: {
         width: scale(28),
         height: scale(28),
@@ -452,6 +526,93 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
         fontWeight: '300',
         paddingVertical: verticalScale(5)
-    }
+    },
+    scheduleHeader: {
+        height: verticalScale(60),
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: scale(15),
+        backgroundColor: Colors.backgroundColor,
+    },
+    scheduleTitleContainer: {
+        backgroundColor: Colors.primary,
+        paddingHorizontal: scale(18),
+        paddingVertical: verticalScale(4),
+        borderRadius: moderateScale(20),
+    },
+
+
+    scheduleHeaderTitle: {
+        color: Colors.white,
+        fontSize: moderateScale(14),
+        fontFamily: Fonts.semiBold,
+    },
+    scheduleActions: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: scale(8),
+    },
+    blueCircleBtn: {
+        width: scale(26),
+        height: scale(26),
+        borderRadius: scale(13),
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    starCircleBtn: {
+        width: scale(30),
+        height: scale(30),
+        borderRadius: scale(15),
+        backgroundColor: Colors.socialButtonBackground,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    calendarSection: {
+        marginTop: verticalScale(18),
+        backgroundColor: Colors.socialButtonBackground,
+        marginHorizontal: scale(-22),
+        paddingVertical: verticalScale(20),
+        alignItems: 'center',
+    },
+    calendarHeader: {
+        width: '82%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: verticalScale(15),
+    },
+    monthText: {
+        color: Colors.primary,
+        fontSize: moderateScale(16),
+        fontFamily: Fonts.bold,
+    },
+    arrow: {
+        fontSize: moderateScale(22),
+        color: Colors.primary,
+        fontWeight: '700',
+    },
+    continueBtn: {
+        marginTop: verticalScale(20),
+        width: scale(295),
+        height: verticalScale(48),
+        borderRadius: moderateScale(24),
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    continueText: {
+        color: Colors.white,
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(16),
+    },
+    rightContainer: {
+        flexDirection: 'row',
+        gap: scale(10),
+        marginLeft: moderateScale(20)
+    },
+    
 })
 export default DoctorInfo

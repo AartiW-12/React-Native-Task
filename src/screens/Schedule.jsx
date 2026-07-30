@@ -1,12 +1,392 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
+import FilledStar from '../assets/images/svg/FilledStar.svg'
+import EmptyHeart from '../assets/images/svg/EmptyHeart.svg'
+import FilledHeart from '../assets/images/svg/FilledHeart.svg'
+import CalenderIcon from '../assets/images/svg/CalenderIcon.svg'
+import ClockIcon from '../assets/images/svg/ClockIcon.svg'
+import TickIcon from '../assets/images/svg/TickIcon.svg'
+import CrossIcon from '../assets/images/svg/CrossIcon.svg'
+
+import Colors from '../components/style/Colors';
+import FontSizes from '../components/style/FontSize';
+import Fonts from '../components/style/Fonts';
+import TabSwitcher from '../components/tab-switcher/TabSwitcher';
+import Header from '../components/header/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Button from '../components/button/Button';
+
+const APPOINTMENTS = [
+  { id: '1', doctorId: '1', status: 'completed', date: '2026-07-12', time: '10:00 AM' },
+  { id: '2', doctorId: '8', status: 'upcoming', date: '2026-08-02', time: '09:30 AM' },
+  { id: '3', doctorId: '3', status: 'cancelled', date: '2026-07-10', time: '11:00 AM' },
+  { id: '4', doctorId: '4', status: 'upcoming', date: '2026-08-06', time: '03:00 PM' },
+  { id: '5', doctorId: '6', status: 'completed', date: '2026-10-06', time: '03:00 PM' },
+];
+
+const TABS = [
+  { label: 'Complete', value: 'completed' },
+  { label: 'Upcoming', value: 'upcoming' },
+  { label: 'Cancelled', value: 'cancelled' },
+];
 
 const Schedule = () => {
+  const { doctors } = useSelector(state => state.doctors);
+  const navigation = useNavigation();
+  const [activeTab, setActiveTab] = useState('completed');
+
+  const filteredAppointments = APPOINTMENTS.filter(
+    item => item.status === activeTab,
+  );
+
+  const renderUpcomingCard = ({ item }) => {
+    const doctor = doctors.find(d => d.id === item.doctorId);
+    console.log(doctor)
+    if (!doctor) return null;
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.topSection}>
+          <Image source={{ uri: doctor.avatar }} style={styles.image} />
+
+          <View style={styles.infoContainer}>
+            <Text numberOfLines={1} style={styles.name}>
+              {doctor.name}
+            </Text>
+            <Text numberOfLines={1} style={styles.specialization}>
+              {doctor.specialization}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.detailsRow}>
+          <View style={styles.infoChip}>
+            <CalenderIcon width={14} height={14} />
+            <Text style={styles.chipText}>{item.date}</Text>
+          </View>
+
+          <View style={styles.infoChip}>
+            <ClockIcon width={14} height={14} />
+            <Text style={styles.chipText}>{item.time}</Text>
+          </View>
+        </View>
+
+        <View style={styles.bottomRow}>
+          <Button 
+            text={'Details'}
+            style={styles.detailsButton}
+            textStyle={styles.detailsText}
+            onPress={() => console.log("Details Page")}
+          />
+
+          <TouchableOpacity style={styles.iconButton}>
+            <TickIcon height={14} width={14}/>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() =>
+              navigation.navigate('CancelAppointment')
+            }>
+            <CrossIcon height={14} width={14}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const renderCompletedCard = ({ item }) => {
+    const doctor = doctors.find(d => d.id === item.doctorId);
+    if (!doctor) return null;
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.topSection}>
+          <Image source={{ uri: doctor.avatar }} style={styles.image} />
+
+          <View style={styles.infoContainer}>
+            <Text numberOfLines={1} style={styles.name}>
+              {doctor.name}
+            </Text>
+            <Text numberOfLines={1} style={styles.specialization}>
+              {doctor.specialization}
+            </Text>
+
+            <View style={styles.ratingRow}>
+              <View style={styles.infoChip}>
+                <FilledStar width={14} height={14} />
+                <Text style={styles.ratingText}>{doctor.rating}</Text>
+              </View>
+
+              <TouchableOpacity style={styles.infoChip}>
+                {doctor.favorite ? (
+                  <FilledHeart width={14} height={14} />
+                ) : (
+                  <EmptyHeart width={14} height={14} />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.buttonRow}>
+          {/* <TouchableOpacity style={styles.secondaryButton}>
+            <Text style={styles.secondaryText}>Re-Book</Text>
+          </TouchableOpacity> */}
+          <Button
+            text={'Re-Book'}
+            style={styles.secondaryButton}
+            textStyle={styles.secondaryText}
+          />
+          <Button
+            text={'Add Review'}
+            style={styles.primaryButton}
+            textStyle={styles.primaryText}
+            onPress={() => navigation.navigate('Review', { doctor })}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const renderCancelledCard = ({ item }) => {
+    const doctor = doctors.find(d => d.id === item.doctorId);
+    if (!doctor) return null;
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.topSection}>
+          <Image source={{ uri: doctor.avatar }} style={styles.image} />
+
+          <View style={styles.infoContainer}>
+            <Text numberOfLines={1} style={styles.name}>
+              {doctor.name}
+            </Text>
+            <Text numberOfLines={1} style={styles.specialization}>
+              {doctor.specialization}
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={styles.primaryButtonFull}
+          onPress={() => navigation.navigate('Review', { doctor })}>
+          <Text style={styles.primaryText}>Add Review</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderItem = (params) => {
+    if (activeTab === 'completed') return renderCompletedCard(params);
+    if (activeTab === 'upcoming') return renderUpcomingCard(params);
+    if (activeTab === 'cancelled') return renderCancelledCard(params);
+    return null;
+  };
+
   return (
-    <View style={{ flex : 1, justifyContent:'center', alignSelf:'center'}}>
-      <Text>Schedule</Text>
-    </View>
-  )
-}
+    <SafeAreaView style={styles.container}>
+      <Header text={'All Appointments'} />
+      <View style={styles.appointmentContainer}>
+        <TabSwitcher
+          tabs={TABS}
+          activeTab={activeTab}
+          onTabPress={setActiveTab}
+          buttonStyle={styles.tabBtn}
+          buttonTextStyle={styles.tabBtnText}
+        />
+
+        <FlatList
+          data={filteredAppointments}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+  appointmentContainer: {
+    flex: 1,
+    paddingHorizontal: scale(20),
+    paddingVertical: verticalScale(10),
+  },
+  tabSwitcherContainer: {
+    marginBottom: verticalScale(16),
+    justifyContent: 'center',
+    fontFamily: Fonts.medium
+  },
+  listContent: {
+    paddingBottom: verticalScale(24),
+    marginTop: verticalScale(20)
+  },
+  card: {
+    backgroundColor: Colors.socialButtonBackground,
+    borderRadius: moderateScale(18),
+    paddingHorizontal: scale(14),
+    paddingVertical: verticalScale(10),
+    marginBottom: verticalScale(16),
+  },
+  tabBtn: {
+    height: verticalScale(30),
+  },
+  tabBtnText: {
+    fontSize: FontSizes.sm,
+    fontFamily: Fonts.regular
+  },
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: scale(60),
+    height: scale(60),
+    borderRadius: scale(30),
+    backgroundColor: '#DDD',
+  },
+  infoContainer: {
+    flex: 1,
+    marginLeft: scale(12),
+  },
+  name: {
+    fontSize: FontSizes.lg,
+    fontFamily: Fonts.semiBold,
+    color: Colors.primary,
+  },
+  specialization: {
+    marginTop: verticalScale(3),
+    fontSize: FontSizes.md,
+    fontFamily: Fonts.regular,
+    color: Colors.black
+  },
+  detailsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(10),
+    gap: scale(8),
+  },
+
+  infoChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: moderateScale(16),
+    paddingHorizontal: scale(10),
+  },
+  chipText: {
+    marginLeft: scale(5),
+    fontSize: FontSizes.xs,
+    fontFamily: Fonts.medium,
+    color: Colors.primary,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(14),
+  },
+  detailsButton: {
+    flex: 1,
+    height: verticalScale(27),
+    borderRadius: moderateScale(18),
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: scale(8),
+  },
+  detailsText: {
+    color: Colors.white,
+    fontSize: FontSizes.small,
+    fontFamily: Fonts.medium,
+  },
+  iconButton: {
+    width: scale(30),
+    height: scale(30),
+    borderRadius: scale(15),
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: scale(8),
+  },
+
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(8),
+  },
+
+  infoChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: moderateScale(12),
+    paddingHorizontal: scale(8),
+    paddingVertical: verticalScale(4),
+    marginRight: scale(8),
+  },
+  ratingText: {
+    marginLeft: scale(4),
+    fontSize: FontSizes.small,
+    color: Colors.primary,
+    fontFamily: Fonts.medium,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: verticalScale(14),
+  },
+
+  secondaryButton: {
+    flex: 1,
+    height: verticalScale(27),
+    borderRadius: moderateScale(18),
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: scale(8),
+  },
+
+  secondaryText: {
+    color: Colors.primary,
+    fontSize: FontSizes.small,
+    fontFamily: Fonts.medium,
+  },
+
+  primaryButton: {
+    flex: 1,
+    height: verticalScale(27),
+    borderRadius: moderateScale(18),
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: scale(8),
+  },
+
+  /* ========================= Cancelled: full-width button ========================= */
+  primaryButtonFull: {
+    height: verticalScale(34),
+    borderRadius: moderateScale(18),
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: verticalScale(14),
+  },
+
+  primaryText: {
+    color: Colors.white,
+    fontSize: FontSizes.small,
+    fontFamily: Fonts.medium,
+  },
+})
 
 export default Schedule
