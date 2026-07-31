@@ -4,6 +4,7 @@ import Colors from '../style/Colors';
 
 import EyeIcon from '../../assets/images/svg/EyeIcon'
 import OpenEye from '../../assets/images/svg/OpenEye.svg'
+import Fonts from '../style/Fonts';
 
 function Input({
   placeholder,
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     color: Colors.black,
+    fontFamily:Fonts.regular
   },
 
   multilineInput: {

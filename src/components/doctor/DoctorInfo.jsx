@@ -19,7 +19,7 @@ import EmptyStar from '../../assets/images/svg/EmptyStar.svg'
 import QuestionIcon from '../../assets/images/svg/QuestionIcon.svg'
 import EmptyHeart from '../../assets/images/svg/EmptyHeart.svg'
 import BackIcon from '../../assets/images/svg/BackIcon.svg'
-import CalendarPicker from 'react-native-calendar-picker'
+import { Calendar } from 'react-native-calendars'
 import ScheduleCall from '../../assets/images/svg/ScheduleCall.svg'
 import ScheduleVideoCall from '../../assets/images/svg/ScheduleVideoCall.svg'
 import ChatIcon from '../../assets/images/svg/ChatIcon.svg'
@@ -41,7 +41,25 @@ const DoctorInfo = () => {
     const [showSchedule, setShowSchedule] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null)
     const [currMonth, setCurrMonth] = useState(new Date())
-    
+
+    // const [selectedDate, setSelectedDate] = useState(null);
+
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+
+    const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+    const goToPreviousMonth = () => {
+        const prev = new Date(currentMonth);
+        prev.setMonth(prev.getMonth() - 1);
+        setCurrentMonth(prev);
+    };
+
+    const goToNextMonth = () => {
+        const next = new Date(currentMonth);
+        next.setMonth(next.getMonth() + 1);
+        setCurrentMonth(next);
+    };
+
     const calenderRef = useRef(null)
 
     const handleSchedule = () => {
@@ -132,19 +150,19 @@ const DoctorInfo = () => {
                 <View style={styles.statsRow}>
                     <View style={styles.chip}>
                         <FilledStar width={16} height={16} />
-                        <Text>
+                        <Text style={styles.chipText}>
                             {doctor.rating}
                         </Text>
                     </View>
                     <View style={styles.chip}>
                         <Comments width={16} height={16} />
-                        <Text>
+                        <Text style={styles.chipText}>
                             {doctor.comments}
                         </Text>
                     </View>
                     <View style={styles.chipDate}>
                         <ClockIcon width={16} height={16} />
-                        <Text>
+                        <Text style={styles.chipText}>
                             Mon - Sat / {doctor.availableTime}
                         </Text>
                     </View>
@@ -161,16 +179,16 @@ const DoctorInfo = () => {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <InfoIcon width={18} height={18} />
+                        <InfoIcon width={14} height={14} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <QuestionIcon width={18} height={18} />
+                        <QuestionIcon width={14} height={14} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <EmptyStar width={18} height={18} />
+                        <EmptyStar width={14} height={14} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <EmptyHeart width={18} height={18} />
+                        <EmptyHeart width={14} height={14} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -232,82 +250,80 @@ const DoctorInfo = () => {
             </View>
         )
     }
-    
+
     const renderScheduleCalendar = () => {
         return (
             <View style={styles.calendarSection}>
                 <View style={styles.calendarHeader}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            calenderRef.current?.handleOnPressPrevious()
-                        }}
-                    >
-                        <Text style={styles.arrow}>
-                            {'<'}
-                        </Text>
+                    <TouchableOpacity onPress={goToPreviousMonth}>
+                        <Text style={styles.arrow}>{'<'}</Text>
                     </TouchableOpacity>
                     <Text style={styles.monthText}>
-                        {currMonth.toLocaleString('default', {
-                            month: 'long',
-                            year: 'numeric'
+                        {currentMonth.toLocaleString("default", {
+                            month: "long",
+                            year: "numeric",
                         })}
                     </Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            calenderRef.current?.handleOnPressNext()
-                        }}
-                    >
-                        <Text style={styles.arrow}>
-                            {'>'}
-                        </Text>
+                    <TouchableOpacity onPress={goToNextMonth}>
+                        <Text style={styles.arrow}>{'>'}</Text>
                     </TouchableOpacity>
                 </View>
-                <CalendarPicker
-                    ref={calenderRef}
-                    minDate={today}
-                    selectedStartDate={selectedDate}
-                    onDateChange={(date) => {
-        setSelectedDate(date);
-
-        navigation.navigate("ScheduleAppointment", {
-            doctor,
-            selectedDate: date,
-        });
-    }}
-                    onMonthChange={(date) => setCurrMonth(date)}
-                    weekdays={["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]}
-                    previousTitle=""
-                    nextTitle=""
-                    todayBackgroundColor="transparent"
-                    selectedDayColor={Colors.primary}
-                    selectedDayTextColor={Colors.white}
-                    textStyle={{ color: Colors.black, fontFamily: Fonts.medium, }}
-                    weekdaysStyle={{ color: Colors.white, fontFamily: Fonts.medium, fontSize: 11, }}
-                    monthTitleStyle={{
-                        display: 'none',
-                    }}
-                    yearTitleStyle={{
-                        display: 'none',
-                    }}
-                    dayShape="circle"
-                    width={scale(285)}
-                />
-                {selectedDate && (
-                    <TouchableOpacity
-                        style={styles.continueBtn}
-                        onPress={() => {
-                            navigation.navigate("ScheduleAppointment", {doctor})
+                <View style={styles.weekContainer}>
+                    {weekDays.map(day => (
+                        <View key={day} style={styles.weekDay}>
+                            <Text style={styles.weekText}>
+                                {day}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={styles.dateContainer}>
+                    <Calendar
+                        key={currentMonth.toISOString().slice(0, 7)}
+                        current={currentMonth.toISOString().split("T")[0]}
+                        minDate={new Date().toISOString().split("T")[0]}
+                        firstDay={1}
+                        hideDayNames
+                        hideExtraDays
+                        hideArrows
+                        renderHeader={() => null}
+                        headerStyle={{
+                            height: 0,
+                            margin: 0,
+                            padding: 0,
                         }}
-                    >
-                        <Text style={styles.continueText}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
-                )}
-            </View>
-        )
-    }
+                        onMonthChange={(month) => {
+                            setCurrentMonth(new Date(month.timestamp));
+                        }}
+                        onDayPress={(day) => {
+                            setSelectedDate(day.dateString);
+                            navigation.navigate("ScheduleAppointment", {
+                                doctor,
+                                selectedDate: day.dateString,
+                            });
+                        }}
 
+                        markedDates={{
+                            [selectedDate]: {
+                                selected: true,
+                                selectedColor: Colors.primary,
+                            },
+                        }}
+
+                        theme={{
+                            calendarBackground: Colors.white,
+                            backgroundColor: Colors.white,
+                            monthTextColor: "transparent",
+                            textSectionTitleColor: "transparent",
+                            textDayFontFamily: Fonts.medium,
+                            dayTextColor: Colors.black,
+                        }}
+                    />
+
+                </View>
+            </View>
+        );
+    };
     return (
         <SafeAreaView style={styles.container}>
             {showSchedule ? renderScheduleHeader() : renderHeader()}
@@ -413,7 +429,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         borderRadius: moderateScale(20),
         padding: moderateScale(10),
-        minHeight: verticalScale(110),
+        minHeight: verticalScale(100),
         justifyContent: 'flex-start',
     },
     focusTitle: {
@@ -460,25 +476,27 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: moderateScale(20),
         paddingHorizontal: scale(10),
-        height: verticalScale(34),
-        minWidth: scale(48),
+        height: verticalScale(20),
+        minWidth: scale(43),
+    },
+    chipText :{
+        marginLeft:scale(5)
     },
     chipDate: {
         width: scale(155),
-        height: verticalScale(18),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.white,
         borderRadius: moderateScale(20),
         paddingHorizontal: scale(10),
-        height: verticalScale(34),
+        height: verticalScale(20),
         minWidth: scale(58),
     },
     actionRow: {
         marginTop: verticalScale(14),
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        gap:scale(8),
         alignItems: 'center',
     },
     scheduleBtn: {
@@ -498,9 +516,9 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(14),
     },
     circleBtn: {
-        width: scale(28),
-        height: scale(28),
-        borderRadius: scale(19),
+        width: scale(24),
+        height: scale(24),
+        borderRadius: scale(12),
         backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
@@ -516,7 +534,6 @@ const styles = StyleSheet.create({
     heading: {
         color: Colors.primary,
         fontFamily: Fonts.medium,
-        fontWeight: '500',
         paddingVertical: verticalScale(10),
         paddingHorizontal: scale(5),
         fontSize: moderateScale(14)
@@ -613,6 +630,61 @@ const styles = StyleSheet.create({
         gap: scale(10),
         marginLeft: moderateScale(20)
     },
-    
+    weekContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        marginBottom: verticalScale(15),
+    },
+
+    weekDay: {
+        width: scale(34),
+        height: scale(22),
+        borderRadius: moderateScale(12),
+        backgroundColor: Colors.primary,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    weekText: {
+        color: Colors.white,
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(11),
+    },
+
+    dateContainer: {
+        backgroundColor: Colors.white,
+        borderRadius: moderateScale(25),
+        padding: moderateScale(12),
+        overflow: "hidden",
+        width: "100%",
+    },
+
+    calendarSection: {
+        marginTop: verticalScale(18),
+        backgroundColor: Colors.socialButtonBackground,
+        marginHorizontal: scale(-22),
+        padding: moderateScale(20),
+    },
+
+    calendarHeader: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: verticalScale(15),
+    },
+
+    monthText: {
+        color: Colors.primary,
+        fontFamily: Fonts.bold,
+        fontSize: moderateScale(18),
+        marginHorizontal: scale(15),
+    },
+
+    arrow: {
+        color: Colors.primary,
+        fontSize: moderateScale(24),
+        fontWeight: "700",
+    },
 })
 export default DoctorInfo

@@ -54,7 +54,7 @@ const menuData = [
         id: 3,
         title: 'Payment Method',
         icon: PaymentIcon,
-        screen: 'Payment',
+        screen: 'PaymentMethod',
     },
     {
         id: 4,

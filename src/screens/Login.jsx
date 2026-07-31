@@ -12,6 +12,8 @@ import { login } from '../services/authService/authService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../components/header/Header'
+import Strings from '../components/constants/Strings'
+import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 
 function Login({ navigation }) {
   //hoooks to store and update the state 
@@ -38,6 +40,7 @@ function Login({ navigation }) {
     } catch (err) {
       console.log(err)
       dispatch(loginFailure(err.message))
+      showSnackbar({ msg : err.message})
     }
   }
 
@@ -55,30 +58,30 @@ function Login({ navigation }) {
   return (
     <SafeAreaView style={{flex : 1}}>
     <View style={styles.container}>
-      <Header text={'Log In'}/>
+      <Header text={Strings.login}/>
       <Text style={styles.header2}>Welcome</Text>
       <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
       <Text style={styles.label}>Email or Mobile Number</Text>
       <Input
-        placeholder="example@example.com"
+        placeholder={Strings.emailPlaceholder}
         value={inputValue}
         onChangeText={setInputValue}
         style={styles.input}
 
       />
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>{Strings.password}</Text>
       <Input
-        placeholder='*************'
+        placeholder={Strings.passwordPlaceholder}
         value={password}
         onChangeText={setPassword}
         style={styles.input}
         secureTextEntry={true}
       />
-      <Text style={styles.link} onPress={handleForgetPassword}>Forget Password</Text>
+      <Text style={styles.link} onPress={handleForgetPassword}>{Strings.forgotPassword}</Text>
       <View style={styles.btnContainer}>
         <Button
           varient='primary'
-          text="Log In"
+          text={Strings.login}
           onPress={() => handleLogin()}
         />
       </View>
@@ -101,7 +104,7 @@ function Login({ navigation }) {
           style={styles.link}
           onPress={() => navigation.navigate("SignUp")}
         >
-          Sign Up
+          {Strings.signUp}
         </Text>
       </Text>
     </View>

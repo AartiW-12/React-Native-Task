@@ -116,3 +116,27 @@ firebase-debug.log
 
 # Misc
 *.orig
+
+# React Native
+android/app/debug/
+android/app/release/
+
+# Hermes
+*.hbc
+
+# Flipper
+.flipper/
+
+# Watchman
+.watchmanconfig
+
+# React Native generated bundle
+android/app/src/main/assets/index.android.bundle
+android/app/src/main/res/drawable-*
+android/app/src/main/res/raw/
+
+# Flipper logs
+flipper.log
+
+# Watchman
+.watchmanconfig

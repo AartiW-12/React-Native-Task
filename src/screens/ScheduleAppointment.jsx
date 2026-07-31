@@ -56,12 +56,16 @@ const ScheduleAppointment = () => {
     const route = useRoute();
 
     const { user } = useSelector(state => state.auth)
-    console.log(user)
 
-    const doctor = route.params.doctor;
+    const { doctor, selectedDate: selectedDateParam } = route.params;
 
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(
+        selectedDateParam || new Date().toISOString().split("T")[0]
+    );
+
+    const [currentDate, setCurrentDate] = useState(
+        selectedDateParam ? new Date(selectedDateParam) : new Date()
+    );
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [appointmentFor, setAppointmentFor] = useState('self');
     const [patientName, setPatientName] = useState(user.name);
@@ -73,10 +77,12 @@ const ScheduleAppointment = () => {
     const baseDate = currentDate
 
     const changeDate = (days) => {
-        const newDate = new Date(currentDate);
-        newDate.setDate(currentDate.getDate() + days);
-        setCurrentDate(newDate);
-    };
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + days);
+
+    setCurrentDate(newDate);
+    setSelectedDate(newDate.toISOString().split("T")[0]);
+};
 
     const dates = [];
 
@@ -91,7 +97,7 @@ const ScheduleAppointment = () => {
                 .toLocaleDateString('default', { weekday: 'short' })
                 .toUpperCase(),
             active:
-                date.toDateString() === selectedDate.toDateString(),
+                date.toISOString().split("T")[0] === selectedDate,
         });
     }
 
@@ -122,7 +128,7 @@ const ScheduleAppointment = () => {
 
         navigation.navigate("YourAppointment", {
             doctor,
-            selectedDate: selectedDate.toDateString(),
+            selectedDate,
             selectedSlot: selectedTime,
             appointmentFor,
             patientDetails: {
@@ -197,7 +203,10 @@ const ScheduleAppointment = () => {
                         {dates.map((item, index) => (
                             <TouchableOpacity
                                 key={index}
-                                onPress={() => setSelectedDate(item.fullDate)}
+                                onPress={() => {
+    setSelectedDate(item.fullDate.toISOString().split("T")[0]);
+    setCurrentDate(item.fullDate);
+}}
                                 style={[
                                     styles.dateCard,
                                     item.active && styles.activeDateCard,

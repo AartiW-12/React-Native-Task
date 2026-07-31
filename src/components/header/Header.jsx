@@ -9,7 +9,7 @@ import Fonts from '../style/Fonts';
 import BackIcon from '../../assets/images/svg/BackIcon.svg';
 import FontSizes from '../style/FontSize';
 
-const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack, rightComponent}) => {
+const Header = ({ text, titleStyle, backIconColor = Colors.primary, onBack, rightComponent }) => {
   const navigation = useNavigation();
 
   return (
@@ -23,7 +23,8 @@ const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack, rig
           <BackIcon
             width={20}
             height={20}
-            stroke={backIconColor}
+            color={backIconColor}
+          // stroke={Colors.white}
           />
         </TouchableOpacity>
       ) : (
@@ -39,7 +40,7 @@ const Header = ({ text, titleStyle, backIconColor = Colors.primary , onBack, rig
 
 const styles = StyleSheet.create({
   container: {
-    height: 50,
+    height: 80,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

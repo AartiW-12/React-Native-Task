@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import Header from '../components/header/Header'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -14,9 +14,12 @@ import EmptyHeart from '../assets/images/svg/EmptyHeart.svg'
 import FilledHeart from '../assets/images/svg/FilledHeart.svg'
 import FontSizes from '../components/style/FontSize'
 import EmptyStar from '../assets/images/svg/EmptyStar.svg'
+import { showSnackbar } from '../components/snackbar/ShowSnackbar'
+import ReviewSummary from './ReviewSummary'
 
 const YourAppoitment = () => {
     const route = useRoute()
+    const navigation = useNavigation()
     const doctor = route.params.doctor
     const selectedDate = route.params.selectedDate
     const selectedSlot = route.params.selectedSlot
@@ -84,11 +87,26 @@ const YourAppoitment = () => {
                 </View>
 
                 <View style={styles.statusContainer}>
-                    <TouchableOpacity style={styles.statusButton}>
+                    <TouchableOpacity 
+                        style={styles.statusButton}
+                        onPress={() => {
+                            showSnackbar({ msg:'Appointment Booked Sucessfully'})
+                            navigation.navigate("ReviewSummary", {
+                                doctor,
+                                selectedDate,
+                                selectedSlot,
+                                patientDetails,
+                                appointmentFor
+                            })
+                        }}
+                    >
                         <Text style={styles.statusIcon}>✓</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.statusButton}>
+                    <TouchableOpacity 
+                        style={styles.statusButton}
+                        onPress={() => showSnackbar({ msg:"Appointment Cancelled"})}
+                    >
                         <Text style={styles.statusIcon}>✕</Text>
                     </TouchableOpacity>
                 </View>

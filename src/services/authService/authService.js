@@ -32,3 +32,10 @@ export const updateProfile = async(userId, userData) => {
 
     return response.data
 }
+
+export const resetPassword = async (userId, password) => {
+    const response = await api.put(`/users/${userId}`, {
+        password,
+    });
+    return response.data;
+};

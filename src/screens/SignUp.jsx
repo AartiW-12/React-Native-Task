@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import Input from '../components/input/Input'
-import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import Colors from '../components/style/Colors'
-import Fonts from '../components/style/Fonts'
-import Header from '../components/header/Header'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { useDispatch } from 'react-redux'
 import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
 import { signUp } from '../services/authService/authService'
-import { SafeAreaView } from 'react-native-safe-area-context'
+
+import Input from '../components/input/Input'
+import Button from '../components/button/Button'
+
+import Colors from '../components/style/Colors'
+import Fonts from '../components/style/Fonts'
+import Header from '../components/header/Header'
+import Strings from '../components/constants/Strings'
+
 
 function SignUp({ navigation }) {
 
@@ -67,32 +72,32 @@ function SignUp({ navigation }) {
                 >
                     <View style={styles.container}>
 
-                        <Header text="New Account" />
+                        <Header text={Strings.newAccount} />
 
                         <View style={styles.signUpSection}>
                             <Text style={styles.label}>Full name</Text>
                             <Input
-                                placeholder="example@example.com"
+                                placeholder={Strings.emailPlaceholder}
                                 value={name}
                                 onChangeText={setName}
                                 style={styles.inputBox}
                             />
-                            <Text style={styles.label}>Password</Text>
+                            <Text style={styles.label}>{Strings.password}</Text>
                             <Input
-                                placeholder="*************"
+                                placeholder={Strings.passwordPlaceholder}
                                 value={password}
                                 onChangeText={setPassword}
                                 style={styles.inputBox}
                                 secureTextEntry={true}
                             />
-                            <Text style={styles.label}>Email</Text>
+                            <Text style={styles.label}>{Strings.email}</Text>
                             <Input
-                                placeholder="example@example.com"
+                                placeholder={Strings.emailPlaceholder}
                                 value={email}
                                 onChangeText={setEmail}
                                 style={styles.inputBox}
                             />
-                            <Text style={styles.label}>Mobile Number</Text>
+                            <Text style={styles.label}>{Strings.mobileNumber}</Text>
                             <Input
                                 placeholder="1234567890"
                                 value={mobileNumber}
@@ -102,7 +107,7 @@ function SignUp({ navigation }) {
                             />
                             <Text style={styles.label}>Date of birth</Text>
                             <Input
-                                placeholder="DD / MM /YYY"
+                                placeholder={Strings.dobPlaceholder}
                                 value={dob}
                                 onChangeText={setDOB}
                                 keyboardType='numeric'
@@ -125,7 +130,7 @@ function SignUp({ navigation }) {
                         <View style={styles.btnContainer}>
                             <Button
                                 varient='primary'
-                                text='Sign Up'
+                                text={Strings.signUp}
                                 onPress={handleSignUp}
                             />
                         </View>
@@ -150,7 +155,7 @@ function SignUp({ navigation }) {
                                 style={styles.link}
                                 onPress={() => navigation.navigate("Login")}
                             >
-                                Log in
+                                {Strings.login}
                             </Text>
                         </Text>
                     </View>

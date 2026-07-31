@@ -15,8 +15,7 @@ import { updateProfile } from '../../services/authService/authService'
 import { updateUser } from '../../redux/auth/authSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-import { Snackbar } from 'react-native-snackbar'
+import { showSnackbar } from '../snackbar/ShowSnackbar'
 const Profile = () => {
 
     const { user } = useSelector(state => state.auth)
@@ -37,15 +36,6 @@ const Profile = () => {
             setDOB(user.dob || '');
         }
     }, [user])
-
-    const showSnackbar = () => {
-        Snackbar.show({
-            text: "Profile Updated Sucssfully",
-            duration: Snackbar.LENGTH_SHORT,
-            backgroundColor: Colors.primary,
-            textColor: Colors.white,
-        })
-    }
 
     const handleUpdateProfile = async () => {
         try {
@@ -69,7 +59,7 @@ const Profile = () => {
                 JSON.stringify(updatedData)
             );
 
-            showSnackbar()
+            showSnackbar({ msg:"Profile Updated Sucessfully"})
         }
         catch (err) {
             console.log(err)

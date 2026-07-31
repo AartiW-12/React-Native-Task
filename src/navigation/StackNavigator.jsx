@@ -17,6 +17,10 @@ import ScheduleAppointment from '../screens/ScheduleAppointment'
 import YourAppointment from '../screens/YourAppoitment'
 import CancelAppointment from '../screens/CancelAppointment'
 import Review from '../screens/Review'
+import PaymentMethod from '../screens/PaymentMethod'
+import AddCard from '../screens/AddCard'
+import ReviewSummary from '../screens/ReviewSummary'
+import PaymentSuccessfull from '../screens/PaymentSuccessfull'
 
 const Stack = createNativeStackNavigator()
 
@@ -84,6 +88,22 @@ const StackNavigator = () => {
         <Stack.Screen 
             name='Review'
             component={Review}
+        />
+        <Stack.Screen 
+            name='PaymentMethod'
+            component={PaymentMethod}
+        />
+        <Stack.Screen 
+            name='AddCard'
+            component={AddCard}
+        />
+        <Stack.Screen 
+            name='ReviewSummary'
+            component={ReviewSummary}
+        />
+        <Stack.Screen 
+            name='PaymentSuccessfull'
+            component={PaymentSuccessfull}
         />
     </Stack.Navigator>
   )

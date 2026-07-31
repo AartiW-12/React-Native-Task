@@ -9,6 +9,9 @@ const Colors = {
   inputBackground: '#ECF1FF',
   socialButtonBackground: '#CAD6FF',
 
+  //payment text
+  paymentText: "#809CFF",
+
   // Text Colors
   black: '#000000',
   disabledText : '#9E9E9E',

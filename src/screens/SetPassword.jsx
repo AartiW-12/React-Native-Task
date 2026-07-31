@@ -1,40 +1,42 @@
 import React, { useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+
+import { StyleSheet, Text, View } from 'react-native'
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import Strings from '../components/constants/Strings'
+
 function SetPassword() {
 
     const [password, setPassword] = useState("")
     const [cnfmPass, setCnfmPass] = useState("")
 
-    const handleResetPassword = () => {
-        console.log("Reset Password")
-    }
-    const handleBack = () => {
-        console.log("Back")
+    const handleResetPassword = async() => {
+        console.log("forgot password")
     }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <Header text="Set Password" />
+                <Header text={Strings.setPassword} />
                 <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
-                <Text style={styles.label}>Password</Text>
+                <Text style={styles.label}>{Strings.password}</Text>
                 <Input
-                    placeholder="*************"
+                    placeholder={Strings.passwordPlaceholder}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={true}
                     style={styles.input}
                 />
-                <Text style={styles.label}>Confirm Password</Text>
+                <Text style={styles.label}>{Strings.confirmPassword}</Text>
                 <Input
-                    placeholder="*************"
+                    placeholder={Strings.passwordPlaceholder}
                     value={cnfmPass}
                     onChangeText={setCnfmPass}
                     style={styles.input}
@@ -43,7 +45,7 @@ function SetPassword() {
                 <View style={styles.btnContainer}>
                     <Button
                         varient='primary'
-                        text="Create New password"
+                        text={Strings.createNewPassword}
                         onPress={handleResetPassword}
                     />
                 </View>
@@ -56,12 +58,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.screenBackground,
-        paddingTop: verticalScale(50),
-        // width: scale(299),
-        // marginLeft: scale(20)
+        paddingHorizontal: scale(20)
     },
     text: {
-        width: '100%',
         height: verticalScale(50),
         textAlign: 'center',
         color: '#070707',
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(20),
         fontFamily: Fonts.medium,
         fontWeight: '500',
-        color: '#000',
+        color: Colors.black,
         marginBottom: verticalScale(5),
         marginTop: verticalScale(20),
     },
