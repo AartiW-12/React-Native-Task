@@ -21,6 +21,7 @@ import PaymentMethod from '../screens/PaymentMethod'
 import AddCard from '../screens/AddCard'
 import ReviewSummary from '../screens/ReviewSummary'
 import PaymentSuccessfull from '../screens/PaymentSuccessfull'
+import Chat from '../screens/Chat'
 
 const Stack = createNativeStackNavigator()
 
@@ -41,10 +42,10 @@ const StackNavigator = () => {
             name='Doctors'
             component={Doctors}
         />
-        {/* <Stack.Screen 
+        <Stack.Screen 
             name ="DoctorInfo"
             component={DoctorInfo}
-        /> */}
+        />
         <Stack.Screen 
             name='Profile'
             component={Profile}
@@ -104,6 +105,10 @@ const StackNavigator = () => {
         <Stack.Screen 
             name='PaymentSuccessfull'
             component={PaymentSuccessfull}
+        />
+        <Stack.Screen 
+            name='Chat'
+            component={Chat}
         />
     </Stack.Navigator>
   )

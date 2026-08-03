@@ -41,8 +41,9 @@ const styles = StyleSheet.create({
 
     buttonContainer: {
         flex: 1,
-        minWidth: 0, // lets text shrink/ellipsize instead of forcing overflow
+        width:'100%'
     },
+    
 });
 
 export default TabSwitcher;

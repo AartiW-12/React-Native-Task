@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
@@ -19,14 +19,8 @@ import TabSwitcher from '../components/tab-switcher/TabSwitcher';
 import Header from '../components/header/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/button/Button';
+import { cancelAppointment, completeAppointment } from '../redux/appointment/appointmentSlice';
 
-const APPOINTMENTS = [
-  { id: '1', doctorId: '1', status: 'completed', date: '2026-07-12', time: '10:00 AM' },
-  { id: '2', doctorId: '8', status: 'upcoming', date: '2026-08-02', time: '09:30 AM' },
-  { id: '3', doctorId: '3', status: 'cancelled', date: '2026-07-10', time: '11:00 AM' },
-  { id: '4', doctorId: '4', status: 'upcoming', date: '2026-08-06', time: '03:00 PM' },
-  { id: '5', doctorId: '6', status: 'completed', date: '2026-10-06', time: '03:00 PM' },
-];
 
 const TABS = [
   { label: 'Complete', value: 'completed' },
@@ -36,10 +30,15 @@ const TABS = [
 
 const Schedule = () => {
   const { doctors } = useSelector(state => state.doctors);
+  const appointments = useSelector(state => state.appointments.appointments)
+
+  const dispatch = useDispatch()
+
   const navigation = useNavigation();
+
   const [activeTab, setActiveTab] = useState('completed');
 
-  const filteredAppointments = APPOINTMENTS.filter(
+  const filteredAppointments = appointments.filter(
     item => item.status === activeTab,
   );
 
@@ -75,140 +74,139 @@ const Schedule = () => {
         </View>
 
         <View style={styles.bottomRow}>
-          <Button 
+          <Button
             text={'Details'}
             style={styles.detailsButton}
             textStyle={styles.detailsText}
-            onPress={() => console.log("Details Page")}
           />
 
-          <TouchableOpacity style={styles.iconButton}>
-            <TickIcon height={14} width={14}/>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => dispatch(completeAppointment(item.id))}
+          >
+            <TickIcon height={14} width={14} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() =>
-              navigation.navigate('CancelAppointment')
-            }>
-            <CrossIcon height={14} width={14}/>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
-  const renderCompletedCard = ({ item }) => {
-    const doctor = doctors.find(d => d.id === item.doctorId);
-    if (!doctor) return null;
-
-    return (
-      <View style={styles.card}>
-        <View style={styles.topSection}>
-          <Image source={{ uri: doctor.avatar }} style={styles.image} />
-
-          <View style={styles.infoContainer}>
-            <Text numberOfLines={1} style={styles.name}>
-              {doctor.name}
-            </Text>
-            <Text numberOfLines={1} style={styles.specialization}>
-              {doctor.specialization}
-            </Text>
-
-            <View style={styles.ratingRow}>
-              <View style={styles.infoChip}>
-                <FilledStar width={14} height={14} />
-                <Text style={styles.ratingText}>{doctor.rating}</Text>
-              </View>
-
-              <TouchableOpacity style={styles.infoChip}>
-                {doctor.favorite ? (
-                  <FilledHeart width={14} height={14} />
-                ) : (
-                  <EmptyHeart width={14} height={14} />
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.buttonRow}>
-          {/* <TouchableOpacity style={styles.secondaryButton}>
-            <Text style={styles.secondaryText}>Re-Book</Text>
-          </TouchableOpacity> */}
-          <Button
-            text={'Re-Book'}
-            style={styles.secondaryButton}
-            textStyle={styles.secondaryText}
-          />
-          <Button
-            text={'Add Review'}
-            style={styles.primaryButton}
-            textStyle={styles.primaryText}
-            onPress={() => navigation.navigate('Review', { doctor })}
-          />
-        </View>
-      </View>
-    );
-  };
-
-  const renderCancelledCard = ({ item }) => {
-    const doctor = doctors.find(d => d.id === item.doctorId);
-    if (!doctor) return null;
-
-    return (
-      <View style={styles.card}>
-        <View style={styles.topSection}>
-          <Image source={{ uri: doctor.avatar }} style={styles.image} />
-
-          <View style={styles.infoContainer}>
-            <Text numberOfLines={1} style={styles.name}>
-              {doctor.name}
-            </Text>
-            <Text numberOfLines={1} style={styles.specialization}>
-              {doctor.specialization}
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={styles.primaryButtonFull}
-          onPress={() => navigation.navigate('Review', { doctor })}>
-          <Text style={styles.primaryText}>Add Review</Text>
+            onPress={() => dispatch(cancelAppointment(item.id))}
+          >
+          <CrossIcon height={14} width={14} />
         </TouchableOpacity>
       </View>
+      </View >
     );
   };
 
-  const renderItem = (params) => {
-    if (activeTab === 'completed') return renderCompletedCard(params);
-    if (activeTab === 'upcoming') return renderUpcomingCard(params);
-    if (activeTab === 'cancelled') return renderCancelledCard(params);
-    return null;
-  };
+const renderCompletedCard = ({ item }) => {
+  const doctor = doctors.find(d => d.id === item.doctorId);
+  if (!doctor) return null;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header text={'All Appointments'} />
-      <View style={styles.appointmentContainer}>
-        <TabSwitcher
-          tabs={TABS}
-          activeTab={activeTab}
-          onTabPress={setActiveTab}
-          buttonStyle={styles.tabBtn}
-          buttonTextStyle={styles.tabBtnText}
-        />
+    <View style={styles.card}>
+      <View style={styles.topSection}>
+        <Image source={{ uri: doctor.avatar }} style={styles.image} />
 
-        <FlatList
-          data={filteredAppointments}
-          keyExtractor={item => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
+        <View style={styles.infoContainer}>
+          <Text numberOfLines={1} style={styles.name}>
+            {doctor.name}
+          </Text>
+          <Text numberOfLines={1} style={styles.specialization}>
+            {doctor.specialization}
+          </Text>
+
+          <View style={styles.ratingRow}>
+            <View style={styles.infoChip}>
+              <FilledStar width={14} height={14} />
+              <Text style={styles.ratingText}>{doctor.rating}</Text>
+            </View>
+
+            <TouchableOpacity style={styles.infoChip}>
+              {doctor.favorite ? (
+                <FilledHeart width={14} height={14} />
+              ) : (
+                <EmptyHeart width={14} height={14} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <Button
+          text={'Re-Book'}
+          style={styles.secondaryButton}
+          textStyle={styles.secondaryText}
+          onPress={() => navigation.navigate("DoctorInfo", { doctor, openSchedule: true })}
+        />
+        <Button
+          text={'Add Review'}
+          style={styles.primaryButton}
+          textStyle={styles.primaryText}
+          onPress={() => navigation.navigate('Review', { doctor })}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
+};
+
+const renderCancelledCard = ({ item }) => {
+  const doctor = doctors.find(d => d.id === item.doctorId);
+  if (!doctor) return null;
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.topSection}>
+        <Image source={{ uri: doctor.avatar }} style={styles.image} />
+
+        <View style={styles.infoContainer}>
+          <Text numberOfLines={1} style={styles.name}>
+            {doctor.name}
+          </Text>
+          <Text numberOfLines={1} style={styles.specialization}>
+            {doctor.specialization}
+          </Text>
+        </View>
+      </View>
+
+      <TouchableOpacity
+        style={styles.primaryButtonFull}
+        onPress={() => navigation.navigate('Review', { doctor })}>
+        <Text style={styles.primaryText}>Add Review</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const renderItem = (params) => {
+  if (activeTab === 'completed') return renderCompletedCard(params);
+  if (activeTab === 'upcoming') return renderUpcomingCard(params);
+  if (activeTab === 'cancelled') return renderCancelledCard(params);
+  return null;
+};
+
+return (
+  <SafeAreaView style={styles.container}>
+    <Header text={'All Appointments'} />
+    <View style={styles.appointmentContainer}>
+      <TabSwitcher
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabPress={setActiveTab}
+        buttonStyle={styles.tabBtn}
+        buttonTextStyle={styles.tabBtnText}
+      />
+
+      <FlatList
+        data={filteredAppointments}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  </SafeAreaView>
+);
 };
 
 const styles = StyleSheet.create({

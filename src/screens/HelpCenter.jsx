@@ -7,7 +7,6 @@ import SearchBar from '../components/searchbar/SearchBar'
 import Colors from '../components/style/Colors'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Fonts from '../components/style/Fonts'
-import Button from '../components/button/Button'
 
 import TabSwitcher from '../components/tab-switcher/TabSwitcher'
 
@@ -21,15 +20,15 @@ const HelpCenter = () => {
     const [help, setHelp] = useState("FAQ")
 
     const helpTabs = [
-  {
-    label: 'FAQ',
-    value: 'FAQ',
-  },
-  {
-    label: 'Contact Us',
-    value: 'ContactUs',
-  },
-];
+        {
+            label: 'FAQ',
+            value: 'FAQ',
+        },
+        {
+            label: 'Contact Us',
+            value: 'ContactUs',
+        },
+    ];
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -65,11 +64,13 @@ const HelpCenter = () => {
                 {help==="FAQ" ? <FAQ /> : <ContactUs />}
                         
             </View> */}
-            <TabSwitcher 
+            <TabSwitcher
                 tabs={helpTabs}
                 activeTab={help}
                 onTabPress={setHelp}
                 containerStyle={styles.sectionContainer}
+                buttonStyle={styles.helpTabButton}
+                buttonTextStyle={styles.helpTabText}
             />
             <View style={styles.contentContainer}>
                 {help === 'FAQ' ? <FAQ /> : <ContactUs />}
@@ -87,37 +88,48 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         paddingVertical: moderateScale(20),
         paddingHorizontal: moderateScale(20),
-        gap:scale(30)
+        gap: scale(30)
     },
 
     whiteTitle: {
         color: Colors.white,
     },
     whiteBtn: {
-        color:Colors.white
+        color: Colors.white
     },
-    searchBar : {
-        backgroundColor:Colors.screenBackground,
-        height:verticalScale(38),
-        minWidth:scale(300)
+    searchBar: {
+        backgroundColor: Colors.screenBackground,
+        height: verticalScale(38),
+        minWidth: scale(300)
     },
     headerText: {
         color: Colors.socialButtonBackground,
-        alignSelf:'center',
-        fontFamily:Fonts.regular,
-        fontSize:moderateScale(16)
+        alignSelf: 'center',
+        fontFamily: Fonts.regular,
+        fontSize: moderateScale(16)
     },
-    sectionContainer : {
-        flexDirection:'row',
-        marginTop: verticalScale(20),
+    sectionContainer: {
+        flexDirection: 'row',
+        marginTop: verticalScale(10),
         paddingHorizontal: scale(20),
         gap: verticalScale(16),
-    },  
-    btnContainer : {
+    },
+    btnContainer: {
         width: scale(140)
     },
-    contentContainer : {
+    contentContainer: {
         flex: 1
-    }
+    },
+    helpTabButton: {
+        width: scale(140),
+        height: verticalScale(38),
+        borderRadius: moderateScale(20),
+        marginBottom:verticalScale(20)
+    },
+
+    helpTabText: {
+        fontFamily: Fonts.medium,
+        fontSize: moderateScale(14),
+    },
 })
 export default HelpCenter

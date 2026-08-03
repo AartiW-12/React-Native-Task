@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -7,9 +7,8 @@ import Colors from '../components/style/Colors'
 import FontSizes from '../components/style/FontSize'
 import Fonts from '../components/style/Fonts'
 import { useDispatch } from 'react-redux'
-import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
-import { login } from '../services/authService/authService'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginUser } from '../redux/auth/authSlice'
+
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
@@ -25,24 +24,23 @@ function Login({ navigation }) {
 
   // functions 
   const handleLogin = async () => {
-    dispatch(loginStart())
-    try {
-      const user = await login(inputValue, password)
-      const token = `token_${Date.now()}`
+    const result = await dispatch(
+      loginUser({
+        inputValue,
+        password,
+      })
+    );
 
-      await AsyncStorage.setItem("Token", token)
-      await AsyncStorage.setItem("User", JSON.stringify(user))
-
-      dispatch(loginSucess({
-        user,
-        token
-      }))
-    } catch (err) {
-      console.log(err)
-      dispatch(loginFailure(err.message))
-      showSnackbar({ msg : err.message})
+    if (loginUser.fulfilled.match(result)) {
+      showSnackbar({
+        msg: "Login Successful",
+      });
+    } else {
+      showSnackbar({
+        msg: result.payload,
+      });
     }
-  }
+  };
 
   const handleForgetPassword = () => {
     navigation.navigate("SetPassword")
@@ -56,58 +54,64 @@ function Login({ navigation }) {
   ];
 
   return (
-    <SafeAreaView style={{flex : 1}}>
-    <View style={styles.container}>
-      <Header text={Strings.login}/>
-      <Text style={styles.header2}>Welcome</Text>
-      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
-      <Text style={styles.label}>Email or Mobile Number</Text>
-      <Input
-        placeholder={Strings.emailPlaceholder}
-        value={inputValue}
-        onChangeText={setInputValue}
-        style={styles.input}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.container}>
+          <Header text={Strings.login} />
+          <Text style={styles.header2}>Welcome</Text>
+          <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>
+          <Text style={styles.label}>Email or Mobile Number</Text>
+          <Input
+            placeholder={Strings.emailPlaceholder}
+            value={inputValue}
+            onChangeText={setInputValue}
+            style={styles.input}
 
-      />
-      <Text style={styles.label}>{Strings.password}</Text>
-      <Input
-        placeholder={Strings.passwordPlaceholder}
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry={true}
-      />
-      <Text style={styles.link} onPress={handleForgetPassword}>{Strings.forgotPassword}</Text>
-      <View style={styles.btnContainer}>
-        <Button
-          varient='primary'
-          text={Strings.login}
-          onPress={() => handleLogin()}
-        />
-      </View>
-      <View style={styles.signUpOptionsContainer}>
-        {icons.map((item) => (
-          <Pressable
-            key={item.id}
-            style={styles.socialButton}
-          >
-            <Image
-              source={item.image}
-              style={styles.socialIcon}
-              resizeMode="contain"
+          />
+          <Text style={styles.label}>{Strings.password}</Text>
+          <Input
+            placeholder={Strings.passwordPlaceholder}
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            secureTextEntry={true}
+          />
+          <Text style={styles.link} onPress={handleForgetPassword}>{Strings.forgotPassword}</Text>
+          <View style={styles.btnContainer}>
+            <Button
+              varient='primary'
+              text={Strings.login}
+              onPress={() => handleLogin()}
             />
-          </Pressable>
-        ))}
-      </View>
-      <Text style={styles.footer}>Don’t have an account? {' '}
-        <Text
-          style={styles.link}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          {Strings.signUp}
-        </Text>
-      </Text>
-    </View>
+          </View>
+          <View style={styles.signUpOptionsContainer}>
+            {icons.map((item) => (
+              <Pressable
+                key={item.id}
+                style={styles.socialButton}
+              >
+                <Image
+                  source={item.image}
+                  style={styles.socialIcon}
+                  resizeMode="contain"
+                />
+              </Pressable>
+            ))}
+          </View>
+          <Text style={styles.footer}>Don’t have an account? {' '}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("SignUp")}
+            >
+              {Strings.signUp}
+            </Text>
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
+
     </SafeAreaView>
   )
 }
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
 
   header2: {
     fontFamily: Fonts.semiBold,
-     fontSize: FontSizes.title,
+    fontSize: FontSizes.title,
     fontWeight: '600',
     color: Colors.primary,
     alignSelf: 'flex-start',
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'center',
     paddingVertical: verticalScale(10),
-    paddingHorizontal:scale(5),
+    paddingHorizontal: scale(5),
     marginTop: verticalScale(40)
   },
 

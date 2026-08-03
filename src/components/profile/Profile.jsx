@@ -11,10 +11,8 @@ import Fonts from '../style/Fonts'
 import Header from '../header/Header'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateProfile } from '../../services/authService/authService'
-import { updateUser } from '../../redux/auth/authSlice'
+import { updateProfileUser } from '../../redux/auth/authSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { showSnackbar } from '../snackbar/ShowSnackbar'
 const Profile = () => {
 
@@ -38,33 +36,36 @@ const Profile = () => {
     }, [user])
 
     const handleUpdateProfile = async () => {
-        try {
-            if (!user) {
-                Alert.alert("User Not Found")
-                return
-            }
-            const updatedData = {
-                ...user,
-                name,
-                email,
-                mobileNumber: Phone,
-                dob
-            }
-
-            const response = await updateProfile(user.id, updatedData)
-
-            dispatch(updateUser(response))
-            await AsyncStorage.setItem(
-                "User",
-                JSON.stringify(updatedData)
-            );
-
-            showSnackbar({ msg:"Profile Updated Sucessfully"})
+        if (!user) {
+            showSnackbar("User Not Found");
+            return;
         }
-        catch (err) {
-            console.log(err)
+
+        const updatedData = {
+            ...user,
+            name,
+            email,
+            mobileNumber: Phone,
+            dob,
+        };
+
+        const result = await dispatch(
+            updateProfileUser({
+                userId: user.id,
+                userData: updatedData,
+            })
+        );
+
+        if (updateProfileUser.fulfilled.match(result)) {
+            showSnackbar({
+                msg: "Profile Updated Successfully",
+            });
+        } else {
+            showSnackbar({
+                msg: result.payload,
+            });
         }
-    }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Chat from '../screens/Chat';
 import Schedule from '../screens/Schedule';
+import ChatList from '../screens/ChatList'
 
 import HomeIcon from '../assets/images/svg/HomeIcon.svg';
 import ChatIcon from '../assets/images/svg/ChatIcon.svg';
@@ -41,8 +42,8 @@ export default function BottomTabNavigator() {
       />
 
       <Tab.Screen
-        name="Chat"
-        component={Chat}
+        name="ChatList"
+        component={ChatList}
         options={{
           tabBarIcon: ({ focused }) => (
             <ChatIcon

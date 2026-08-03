@@ -4,8 +4,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useDispatch } from 'react-redux'
-import { loginFailure, loginStart, loginSucess } from '../redux/auth/authSlice'
-import { signUp } from '../services/authService/authService'
+import {signUpUser } from '../redux/auth/authSlice'
 
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
@@ -14,6 +13,7 @@ import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
+import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 
 
 function SignUp({ navigation }) {
@@ -29,29 +29,27 @@ function SignUp({ navigation }) {
 
     // sign up function 
     const handleSignUp = async () => {
-        dispatch(loginStart())
+    const result = await dispatch(
+        signUpUser({
+            name,
+            email,
+            password,
+            mobileNumber,
+            dob,
+            profileImage: "",
+        })
+    );
 
-        try {
-            const user = await signUp({
-                name: name,
-                email,
-                password,
-                mobileNumber,
-                dob,
-                profileImage: ""
-            })
-
-            const token = `token_${Date.now()}`
-
-            dispatch(loginSucess({
-                user,
-                token
-            }))
-        } catch (err) {
-            console.log("Error", err)
-            dispatch(loginFailure(err.message))
-        }
+    if (signUpUser.fulfilled.match(result)) {
+        showSnackbar({
+            msg: "Account Created Successfully",
+        });
+    } else {
+        showSnackbar({
+            msg: result.payload,
+        });
     }
+};
 
     // array of icons
     const icons = [
@@ -110,7 +108,6 @@ function SignUp({ navigation }) {
                                 placeholder={Strings.dobPlaceholder}
                                 value={dob}
                                 onChangeText={setDOB}
-                                keyboardType='numeric'
                                 style={styles.inputBox}
                             />
                         </View>

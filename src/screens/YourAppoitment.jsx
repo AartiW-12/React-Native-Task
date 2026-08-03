@@ -90,7 +90,7 @@ const YourAppoitment = () => {
                     <TouchableOpacity 
                         style={styles.statusButton}
                         onPress={() => {
-                            showSnackbar({ msg:'Appointment Booked Sucessfully'})
+                            showSnackbar({ msg:'Appointment created'})
                             navigation.navigate("ReviewSummary", {
                                 doctor,
                                 selectedDate,

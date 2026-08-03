@@ -22,7 +22,14 @@ export const getDoctors = createAsyncThunk(
 const doctorSlice = createSlice({
     name:"doctors",
     initialState,
-    reducers : {},
+    reducers : {
+        toggleFavorite : (state, action) => {
+            const doctor = state.doctors.find(item => item.id === action.payload)
+            if( doctor){
+                doctor.favorite = !doctor.favorite
+            }
+        }
+    },
     extraReducers : (builder) => {
         builder
         .addCase(getDoctors.pending , (state) => {
@@ -39,5 +46,7 @@ const doctorSlice = createSlice({
         })  
     }
 })
+
+export const { toggleFavorite } = doctorSlice.actions
 
 export default doctorSlice.reducer

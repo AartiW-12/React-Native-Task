@@ -33,6 +33,7 @@ import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import BackIcon from '../assets/images/svg/BackIcon.svg';
 import { useSelector } from 'react-redux';
 import Button from '../components/button/Button';
+import { showSnackbar } from '../components/snackbar/ShowSnackbar';
 
 const availableTime = [
     { id: 1, availableTime: "09:00 AM", isAvailable: true },
@@ -122,9 +123,15 @@ const ScheduleAppointment = () => {
     };
 
     const handleBookAppointment = () => {
+        
         const selectedTime = availableTime.find(
             item => item.id === selectedSlot
         )?.availableTime;
+
+        if(!selectedDate || !selectedTime || !appointmentFor || !patientName.trim() || !patientAge.trim() || !patientGender){
+            showSnackbar({ msg : "Please fill details"})
+            return
+        }
 
         navigation.navigate("YourAppointment", {
             doctor,

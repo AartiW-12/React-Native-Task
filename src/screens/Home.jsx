@@ -66,22 +66,35 @@ const calendarData = [
 function Home() {
 
     const [search, setSearch] = useState("")
+    const [showFav, setShowFav] = useState(false)
 
     const navigation = useNavigation()
 
     const { doctors, loading, error } = useSelector(state => state.doctors)
     const { user } = useSelector(state => state.auth)
-    
+
     const dispatch = useDispatch()
 
 
     const filteredDOctors = useMemo(() => {
-        if (!search.trim()) return doctors
+        let filtered = doctors;
 
-        const searchText = search.toLowerCase()
+        if (showFav) {
+            filtered = filtered.filter(doc => doc.favorite);
+        }
 
-        return doctors.filter((doc) => doc.name.toLowerCase().includes(searchText) || doc.specialization.toLowerCase().includes(searchText))
-    }, [search, doctors])
+        if (search.trim()) {
+            const searchText = search.toLowerCase();
+
+            filtered = filtered.filter(
+                doc =>
+                    doc.name.toLowerCase().includes(searchText) ||
+                    doc.specialization.toLowerCase().includes(searchText)
+            );
+        }
+
+        return filtered;
+    }, [doctors, search, showFav]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -135,14 +148,17 @@ function Home() {
                     />
                     <Text style={styles.link}>Doctors</Text>
                 </TouchableOpacity>
-                <View style={styles.sectionLeftContainer}>
+                <TouchableOpacity
+                    style={styles.sectionLeftContainer}
+                    onPress={() => setShowFav(prev => !prev)}
+                >
                     <Image
                         source={require('../assets/images/favourite.png')}
                         style={styles.sectionIcons}
                         resizeMode='contain'
                     />
                     <Text style={styles.link}>Favorite</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.sectionRightContainer}>
                     <SearchBar
                         placeholder=''
@@ -305,6 +321,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginHorizontal: 20,
+        marginTop: verticalScale(10)
     },
     leftContainer: {
         flexDirection: 'row',
@@ -484,7 +501,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
     },
     dateNumber: {
-         fontSize: FontSizes.title,
+        fontSize: FontSizes.title,
         color: Colors.black,
         fontFamily: Fonts.bold,
     },

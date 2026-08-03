@@ -10,8 +10,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Fonts from '../components/style/Fonts'
 import Button from '../components/button/Button'
 import Strings from '../components/constants/Strings'
-import { resetPassword } from '../services/authService/authService'
-import { resetPasswordFailure, resetPasswordStart, resetPasswordSuccess } from '../redux/auth/authSlice'
+import {resetPasswordUser } from '../redux/auth/authSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 
@@ -25,23 +24,38 @@ const PasswordManager = ({ navigation }) => {
 
     const dispatch = useDispatch()
 
-    const handleChangePassword = async() => {
-        if (!password || !cnfmPassword || !currentPass) {
-            showSnackbar({ msg: "Please Fill Details" })
-            return
-        }
-        dispatch(resetPasswordStart());
-
-        try {
-            const updatedUser = await resetPassword(user.id, cnfmPassword);
-            dispatch(resetPasswordSuccess(updatedUser));
-            showSnackbar({ msg: "Password Updated Sucessfully" })
-        } catch (error) {
-            dispatch(resetPasswordFailure(error.message));
-            console.log("Error Message", error.message)
-            showSnackbar({ msg: "Failed to update password" })
-        }
+    const handleChangePassword = async () => {
+    if (!currentPass || !password || !cnfmPassword) {
+        showSnackbar({ msg: "Please Fill Details" });
+        return;
     }
+
+    if (password !== cnfmPassword) {
+        showSnackbar({ msg: "Passwords do not match" });
+        return;
+    }
+
+    const result = await dispatch(
+        resetPasswordUser({
+            userId: user.id,
+            password: cnfmPassword,
+        })
+    );
+
+    if (resetPasswordUser.fulfilled.match(result)) {
+        showSnackbar({
+            msg: "Password Updated Successfully",
+        });
+    
+        setPassword("")
+        setCurrentPassword("")
+        setCnfmPassword("")
+    } else {
+        showSnackbar({
+            msg: result.payload,
+        });
+    }
+};
 
     return (
         <SafeAreaView style={styles.container}>
@@ -91,7 +105,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.backgroundColor,
-        marginTop: verticalScale(20),
         paddingHorizontal: scale(22),
     },
     settingsContainer: {

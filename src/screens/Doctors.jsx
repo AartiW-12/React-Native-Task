@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Modal, ActivityIndicator } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 
@@ -24,12 +24,12 @@ import InfoIcon from '../assets/images/svg/InfoIcon.svg'
 import QuestionIcon from '../assets/images/svg/QuestionIcon.svg'
 import HeartWhite from '../assets/images/svg/HeartWhite.svg'
 import DownIcon from '../assets/images/svg/DownIcon.svg'
-import DoctorInfo from '../components/doctor/DoctorInfo'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
-import { getDoctors } from '../redux/doctors/doctorSlice'
+import { getDoctors, toggleFavorite} from '../redux/doctors/doctorSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import FontSizes from '../components/style/FontSize'
 
 
 const filterIndex = {
@@ -56,7 +56,6 @@ const Doctors = () => {
     const [activeFilter, setActiveFilter] = useState(filterIndex.ALL)
     const [favoriteTab, setFavoriteTab] = useState(favTab.DOCTORS)
     const [openServiceId, setOpenServiceId] = useState(null)
-    const [selectedDoctor, setSelectedDoctor] = useState(null)
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -90,11 +89,15 @@ const Doctors = () => {
     }
 
     const viewInfo = (doctor) => {
-        navigation.navigate("DoctorInfo", {doctor})
+        navigation.navigate("DoctorInfo", { doctor })
     }
 
     const bookAppointment = (doctor) => {
-        console.log('Book Appointment', doctor.name)
+        navigation.navigate("DoctorInfo", { doctor, openSchedule : true})
+    }
+
+    const handleFavoriteDoctor = (id) => {
+        dispatch(toggleFavorite(id))
     }
 
     const filteredDoctors = useMemo(() => {
@@ -132,6 +135,7 @@ const Doctors = () => {
                             text="Info"
                             style={styles.defaultInfoBtn}
                             onPress={() => viewInfo(item)}
+                            textStyle={styles.buttonText}
                         />
                     </View>
                     <View style={styles.defaultIconContainer}>
@@ -144,8 +148,11 @@ const Doctors = () => {
                         <TouchableOpacity style={styles.defaultCardCircleButton}>
                             <QuestionIcon style={styles.defaultIconStyle} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.defaultCardCircleButton}>
-                            <EmptyHeart style={styles.defaultIconStyle} />
+                        <TouchableOpacity 
+                            style={styles.defaultCardCircleButton}
+                            onPress={() => handleFavoriteDoctor(item.id)}    
+                        >
+                            {item.favorite ? <FilledHeart style={styles.defaultIconStyle} /> : <EmptyHeart style={styles.defaultIconStyle} />}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -185,6 +192,7 @@ const Doctors = () => {
                             text="Info"
                             style={styles.ratingInfoBtn}
                             onPress={() => viewInfo(item)}
+                            textStyle={styles.buttonText}
                         />
                     </View>
                     <View style={styles.ratingIconContainer}>
@@ -234,6 +242,7 @@ const Doctors = () => {
                         text="Make Appointment"
                         style={styles.favoriteBtnMakeAppointment}
                         onPress={() => bookAppointment(item)}
+                        textStyle={styles.buttonText}
                     />
                 </View>
             </View>
@@ -273,15 +282,6 @@ const Doctors = () => {
         </View>
     )
 
-    const renderDoctorInfo = () => {
-        // return (
-        // <DoctorInfo
-        //     doctor={selectedDoctor}
-        //     onBack={() => setSelectedDoctor(null)}
-        // />
-    // );
-    navigation.navigate("DoctorInfo")
-    }
     const renderItem = ({ item }) => {
         switch (activeFilter) {
             case filterIndex.RATING:
@@ -298,13 +298,6 @@ const Doctors = () => {
                 return renderDefaultCard(item)
         }
     }
-
-    // if (selectedDoctor) {
-    //     return <DoctorInfo
-    //         doctor={selectedDoctor}
-    //         onBack={() => setSelectedDoctor(null)}
-    //     />
-    // }
     if (loading) {
         return (
             <View style={styles.centerContainer}>
@@ -331,6 +324,7 @@ const Doctors = () => {
                         varient="primary"
                         onPress={() => dispatch(getDoctors())}
                         style={{ marginTop: 20 }}
+                        textStyle={styles.buttonText}
                     />
                 </View>
 
@@ -340,7 +334,19 @@ const Doctors = () => {
     return (
         <SafeAreaView style={styles.parentContainer}>
             <View style={styles.container}>
-                <Header text="Doctors" />
+                <Header
+                    text={
+                        activeFilter === filterIndex.RATING
+                            ? "Rating"
+                            : activeFilter === filterIndex.FAVORITE
+                                ? "Favorite"
+                                : activeFilter === filterIndex.MALE
+                                    ? "Male"
+                                    : activeFilter === filterIndex.FEMALE
+                                        ? "Female"
+                                        : "Doctor"
+                    }
+                />
 
                 <View style={styles.headerRow}>
                     <Text style={styles.headerContent}>Sort By</Text>
@@ -351,6 +357,7 @@ const Doctors = () => {
                             text="A→Z"
                             onPress={handleSortAZ}
                             style={styles.sortBtn}
+                            textStyle={styles.buttonText}
                         />
                     </View>
 
@@ -362,7 +369,8 @@ const Doctors = () => {
                         onPress={handleRatingSort}
                     >
                         <EmptyStar
-                            style={styles.iconStyle}
+                            width={activeFilter === filterIndex.RATING ? 35 : 14}
+                            height={activeFilter === filterIndex.RATING ? 20 : 14}
                             color={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
                             fill={activeFilter === filterIndex.RATING ? Colors.white : Colors.primary}
                         />
@@ -376,7 +384,8 @@ const Doctors = () => {
                         onPress={handleFavoriteFilter}
                     >
                         <EmptyHeart
-                            style={styles.iconStyle}
+                            width={activeFilter === filterIndex.FAVORITE ? 20 : 12}
+                            height={activeFilter === filterIndex.FAVORITE ? 18 : 12}
                             color={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
                             fill={activeFilter === filterIndex.FAVORITE ? Colors.white : Colors.primary}
 
@@ -390,7 +399,8 @@ const Doctors = () => {
                         ]}
                         onPress={handleFemaleFilter}>
                         <FemaleIcon
-                            style={styles.iconStyle}
+                            width={activeFilter === filterIndex.FEMALE ? 35 : 14}
+                            height={activeFilter === filterIndex.FEMALE ? 20 : 14}
                             color={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
                             fill={activeFilter === filterIndex.FEMALE ? Colors.white : Colors.primary}
                         />
@@ -402,7 +412,8 @@ const Doctors = () => {
                             activeFilter === filterIndex.MALE && styles.activeCircleButton,
                         ]} onPress={handleMaleFilter}>
                         <MaleIcon
-                            style={styles.iconStyle}
+                            width={activeFilter === filterIndex.MALE ? 35 : 14}
+                            height={activeFilter === filterIndex.MALE ? 20 : 14}
                             color={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
                             fill={activeFilter === filterIndex.MALE ? Colors.white : Colors.primary}
                         />
@@ -415,23 +426,19 @@ const Doctors = () => {
                         activeTab={favoriteTab}
                         onTabPress={setFavoriteTab}
                         containerStyle={styles.favoriteTabContainer}
-                        buttonWidth={scale(155)}
+                        buttonStyle={styles.favoriteTabButton}
+                        buttonTextStyle={styles.favoriteTabText}
                     />
                 )}
 
                 <View style={styles.doctorsList}>
-                    {selectedDoctor ? (
-                        renderDoctorInfo()
-                    ) : (
-                        <FlatList
+                    <FlatList
                         data={filteredDoctors}
                         keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderItem}
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.listContainer}
-                        renderItem={renderItem}
                     />
-                    )}
-                    
                 </View>
             </View>
         </SafeAreaView>
@@ -495,11 +502,10 @@ const styles = StyleSheet.create({
     },
 
     favoriteTabContainer: {
-        width: scale(143),
         marginHorizontal: scale(20),
-        marginTop: verticalScale(20),
-        marginBottom: verticalScale(10),
-        justifyContent: 'space-between',
+        marginTop: verticalScale(15),
+        marginBottom: verticalScale(12),
+        width: 'auto',
     },
 
     defaultCard: {
@@ -794,7 +800,6 @@ const styles = StyleSheet.create({
     activeCircleButton: {
         backgroundColor: Colors.primary
     },
-    // Styling for error message and loading state
     centerContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -819,4 +824,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingHorizontal: scale(20),
     },
+    buttonText: {
+        fontSize: FontSizes.sm,
+        fontFamily: Fonts.regular
+    },
+    favoriteTabButton: {
+        height: verticalScale(36),
+        borderRadius: moderateScale(20),
+    },
+
+    favoriteTabText: {
+        fontSize: moderateScale(13),
+        fontFamily: Fonts.medium,
+    }
 })

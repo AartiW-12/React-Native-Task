@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {  scale,  verticalScale,  moderateScale,} from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale, } from 'react-native-size-matters';
 
 import Header from '../components/header/Header';
 import Button from '../components/button/Button';
@@ -10,10 +10,41 @@ import Input from '../components/input/Input';
 import Colors from '../components/style/Colors';
 import Fonts from '../components/style/Fonts';
 import FontSizes from '../components/style/FontSize';
+import { showSnackbar } from '../components/snackbar/ShowSnackbar';
+
+import { CommonActions, useNavigation } from '@react-navigation/native';
 
 const CancelAppointment = () => {
-  const [selectedReason, setSelectedReason] = useState('weather');
+  const [selectedReason, setSelectedReason] = useState('rescheduling');
   const [reason, setReason] = useState('');
+
+  const navigation = useNavigation()
+
+  const handleCancelAppointment = () => {
+    showSnackbar({ msg:"Appointment Cancelled"})
+    setTimeout(() => {
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes:[
+                            {
+                                name:'BottomTabNavigator',
+                                state:{
+                                    routes:[
+                                        {
+                                            name:"Home",
+                                            state:{
+                                                routes:[{ name:"Home"}]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    })
+                )
+            }, 1000);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,6 +124,7 @@ const CancelAppointment = () => {
         <Button
           text="Cancel Appointment"
           style={styles.button}
+          onPress={handleCancelAppointment}
         />
 
       </View>
@@ -162,7 +194,7 @@ const styles = StyleSheet.create({
 
   reasonInput: {
     height: verticalScale(120),
-    width:'95%',
+    width: '95%',
     backgroundColor: Colors.inputBackground,
     borderRadius: moderateScale(18),
     textAlignVertical: 'top',
@@ -170,7 +202,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    minWidth:scale(180),
+    minWidth: scale(180),
     marginTop: verticalScale(35),
     height: verticalScale(38),
     borderRadius: moderateScale(24),

@@ -28,6 +28,7 @@ import FilledHeart from '../../assets/images/svg/FilledHeart.svg'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FontSizes from '../style/FontSize'
+import Header from '../header/Header'
 
 
 
@@ -36,13 +37,12 @@ const DoctorInfo = () => {
     const navigation = useNavigation()
 
     const doctor = route.params.doctor
-    const today = new Date()
+    const openSchedule = route?.params?.openSchedule ?? false
 
-    const [showSchedule, setShowSchedule] = useState(false)
+
+    const [showSchedule, setShowSchedule] = useState(openSchedule)
     const [selectedDate, setSelectedDate] = useState(null)
-    const [currMonth, setCurrMonth] = useState(new Date())
 
-    // const [selectedDate, setSelectedDate] = useState(null);
 
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -72,7 +72,7 @@ const DoctorInfo = () => {
                     style={styles.backBtn}
                     onPress={() => setShowSchedule(false)}
                 >
-                    <BackIcon width={16} height={16} />
+                    <BackIcon width={16} height={16} color={Colors.primary}/>
                 </TouchableOpacity>
                 <View style={styles.scheduleTitleContainer}>
                     <Text style={styles.scheduleHeaderTitle}>
@@ -134,7 +134,7 @@ const DoctorInfo = () => {
                             </Text>
                             <Text style={styles.focusText}>
                                 {doctor.focus ||
-                                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor, sapiente neque qui iure accusantium aut nostrum dignissimos et perferendis?"}
+                                    "Lorem ipsum dolor sit amet consectetur adipisicing elit."}
                             </Text>
                         </View>
                     </View>
@@ -188,7 +188,7 @@ const DoctorInfo = () => {
                         <EmptyStar width={14} height={14} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        <EmptyHeart width={14} height={14} />
+                        {doctor.favorite ?<FilledHeart width={14} height={14}/> :<EmptyHeart width={14} height={14} />}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -208,27 +208,9 @@ const DoctorInfo = () => {
             </View>
         )
     }
-
-    const renderHeader = () => {
-        return (
-            <View style={styles.headerRow}>
-                <TouchableOpacity
-                    style={styles.backBtn}
-                    onPress={() => navigation.goBack()}
-                >
-                    <BackIcon width={16} height={16} />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>
-                    Doctor Info
-                </Text>
-                <View style={styles.headerPlaceholder} />
-            </View>
-        )
-    }
-
     const renderFooterCard = () => {
         return (
-            <View>
+            <View style={styles.footerCardContainer}>
                 <View style={styles.careerPath}>
                     <Text style={styles.heading}>
                         Career Path
@@ -326,7 +308,9 @@ const DoctorInfo = () => {
     };
     return (
         <SafeAreaView style={styles.container}>
-            {showSchedule ? renderScheduleHeader() : renderHeader()}
+            {showSchedule ? renderScheduleHeader() : (
+                <Header text={'Doctor Info'}/>
+            )}
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
@@ -346,29 +330,12 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.backgroundColor,
         fontFamily: Fonts.regular,
     },
-    headerRow: {
-        height: verticalScale(56),
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: scale(20),
-        backgroundColor: Colors.backgroundColor,
-    },
+
     backBtn: {
         width: scale(36),
         height: scale(36),
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    headerText: {
-        flex: 1,
-        textAlign: 'center',
-        fontSize: moderateScale(24),
-        fontFamily: Fonts.semiBold,
-        color: Colors.primary,
-    },
-    headerPlaceholder: {
-        width: scale(36),
     },
     infoContainer: {
         flex: 1,
@@ -410,11 +377,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(10),
         marginBottom: verticalScale(8),
     },
-    iconStyle: {
-        width: scale(22),
-        height: scale(22),
-        marginRight: scale(8),
-    },
     experienceText: {
         color: Colors.white,
         fontFamily: Fonts.bold,
@@ -429,26 +391,23 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primary,
         borderRadius: moderateScale(20),
         padding: moderateScale(10),
-        minHeight: verticalScale(100),
         justifyContent: 'flex-start',
     },
     focusTitle: {
         color: Colors.white,
         fontFamily: Fonts.bold,
-        fontSize: moderateScale(13),
+        fontSize: FontSizes.md,
     },
     focusText: {
         color: Colors.white,
         fontFamily: Fonts.regular,
-        fontSize: moderateScale(11),
-        lineHeight: moderateScale(15),
-        marginTop: verticalScale(4),
+        fontSize: FontSizes.sm,
     },
     nameContainer: {
-        marginTop: verticalScale(5),
+        marginTop: verticalScale(10),
         backgroundColor: Colors.white,
         borderRadius: moderateScale(20),
-        paddingVertical: verticalScale(5),
+        paddingVertical: verticalScale(2),
         alignItems: 'center',
     },
     name: {
@@ -557,8 +516,6 @@ const styles = StyleSheet.create({
         paddingVertical: verticalScale(4),
         borderRadius: moderateScale(20),
     },
-
-
     scheduleHeaderTitle: {
         color: Colors.white,
         fontSize: moderateScale(14),
@@ -586,49 +543,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    calendarSection: {
-        marginTop: verticalScale(18),
-        backgroundColor: Colors.socialButtonBackground,
-        marginHorizontal: scale(-22),
-        paddingVertical: verticalScale(20),
-        alignItems: 'center',
-    },
-    calendarHeader: {
-        width: '82%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: verticalScale(15),
-    },
-    monthText: {
-        color: Colors.primary,
-        fontSize: moderateScale(16),
-        fontFamily: Fonts.bold,
-    },
-    arrow: {
-        fontSize: moderateScale(22),
-        color: Colors.primary,
-        fontWeight: '700',
-    },
-    continueBtn: {
-        marginTop: verticalScale(20),
-        width: scale(295),
-        height: verticalScale(48),
-        borderRadius: moderateScale(24),
-        backgroundColor: Colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    continueText: {
-        color: Colors.white,
-        fontFamily: Fonts.medium,
-        fontSize: moderateScale(16),
-    },
-    rightContainer: {
-        flexDirection: 'row',
-        gap: scale(10),
-        marginLeft: moderateScale(20)
     },
     weekContainer: {
         flexDirection: "row",
@@ -663,8 +577,9 @@ const styles = StyleSheet.create({
     calendarSection: {
         marginTop: verticalScale(18),
         backgroundColor: Colors.socialButtonBackground,
-        marginHorizontal: scale(-22),
+        marginHorizontal: scale(-20),
         padding: moderateScale(20),
+        marginBottom:verticalScale(40)
     },
 
     calendarHeader: {
@@ -686,5 +601,8 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(24),
         fontWeight: "700",
     },
+    footerCardContainer : {
+        marginBottom:verticalScale(40)
+    }
 })
 export default DoctorInfo
