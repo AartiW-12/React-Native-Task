@@ -14,8 +14,10 @@ import EmptyStar from '../assets/images/svg/EmptyStar.svg';
 import FilledHeart from '../assets/images/svg/FilledHeart.svg';
 import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import Comments from '../assets/images/svg/Comments.svg';
+import Stethoscope from '../assets/images/svg/Stethoscope.svg'
+
 import { useDispatch, useSelector } from 'react-redux';
-import { getDoctors } from '../redux/doctors/doctorSlice';
+import { getDoctors, toggleFavorite } from '../redux/doctors/doctorSlice';
 import CommonStyles from '../components/constants/CommonStyles';
 
 const calendarData = [
@@ -142,22 +144,14 @@ function Home() {
                     style={styles.sectionLeftContainer}
                     onPress={() => navigation.navigate('Doctors')}
                 >
-                    <Image
-                        source={require('../assets/images/stethoscope.png')}
-                        style={styles.sectionIcons}
-                        resizeMode="contain"
-                    />
+                    <Stethoscope width={40} height={20} />
                     <Text style={styles.link}>Doctors</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.sectionLeftContainer}
                     onPress={() => setShowFav(prev => !prev)}
                 >
-                    <Image
-                        source={require('../assets/images/favourite.png')}
-                        style={styles.sectionIcons}
-                        resizeMode='contain'
-                    />
+                    {showFav ? <FilledHeart width={30} height={20} /> : <EmptyHeart width={30} height={20} />}
                     <Text style={styles.link}>Favorite</Text>
                 </TouchableOpacity>
                 <View style={styles.sectionRightContainer}>
@@ -208,7 +202,7 @@ function Home() {
                         11 Wednesday - Today
                     </Text>
                     <View style={styles.appointmentInfo}>
-                        <View style={ CommonStyles.flex1}>
+                        <View style={CommonStyles.flex1}>
                             <Text style={styles.doctorName}>
                                 Dr. Olivia Turner, M.D.
                             </Text>
@@ -294,7 +288,10 @@ function Home() {
                                             <Text style={styles.question}>?</Text>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity style={styles.circleButton}>
+                                        <TouchableOpacity 
+                                            style={styles.circleButton}
+                                            onPress={() => dispatch(toggleFavorite({id : item.id, favorite:item.favorite}))}    
+                                        >
                                             {item.favorite ? (
                                                 <FilledHeart style={styles.iconStyle} />
                                             ) : (
@@ -316,7 +313,7 @@ function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:Colors.screenBackground
+        backgroundColor: Colors.screenBackground
     },
     headerContainer: {
         flexDirection: 'row',
@@ -396,7 +393,7 @@ const styles = StyleSheet.create({
     listContainer: {
         paddingHorizontal: scale(20),
         paddingTop: verticalScale(15),
-        paddingBottom: verticalScale(30),
+        paddingBottom: verticalScale(50),
     },
 
     card: {

@@ -328,8 +328,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.backgroundColor,
         fontFamily: Fonts.regular,
+        marginBottom:verticalScale(30)
     },
-
     backBtn: {
         width: scale(36),
         height: scale(36),

@@ -97,7 +97,7 @@ const Doctors = () => {
     }
 
     const handleFavoriteDoctor = (id) => {
-        dispatch(toggleFavorite(id))
+        dispatch(toggleFavorite(id, ))
     }
 
     const filteredDoctors = useMemo(() => {
@@ -150,7 +150,7 @@ const Doctors = () => {
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style={styles.defaultCardCircleButton}
-                            onPress={() => handleFavoriteDoctor(item.id)}    
+                            onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}    
                         >
                             {item.favorite ? <FilledHeart style={styles.defaultIconStyle} /> : <EmptyHeart style={styles.defaultIconStyle} />}
                         </TouchableOpacity>
@@ -205,9 +205,12 @@ const Doctors = () => {
                         <View style={styles.ratingCardCircleButton}>
                             <QuestionIcon />
                         </View>
-                        <View style={styles.ratingCardCircleButton}>
+                        <TouchableOpacity 
+                            style={styles.ratingCardCircleButton}
+                            onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}
+                        >
                             {item.favorite ? <FilledHeart /> : <EmptyHeart />}
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -232,9 +235,12 @@ const Doctors = () => {
                         <Text numberOfLines={1} style={styles.favoriteName}>{item.name}</Text>
                         <Text style={styles.favoriteSpecialization}>{item.specialization}</Text>
                     </View>
-                    <View style={styles.favoriteFavoriteSection}>
-                        <FilledHeart height={16} width={18} />
-                    </View>
+                    <TouchableOpacity 
+                        style={styles.favoriteFavoriteSection}
+                        onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}
+                    >
+                        {item.favorite ? <FilledHeart height={16} width={18} /> : <EmptyHeart height={16} width={18}/>}
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.favoriteBottomRow}>
                     <Button

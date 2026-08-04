@@ -96,12 +96,14 @@ export default function BottomTabNavigator() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    width:scale(298),
-    bottom: verticalScale(18),
-    height: verticalScale(48),
-    marginLeft:scale(25),
-    backgroundColor: Colors.primary,
-    borderRadius: moderateScale(24),
+    
+    position: 'absolute',
+  
+  bottom: 18,
+  height: 55,
+  borderRadius: 28,
+  backgroundColor: Colors.primary,
+  marginHorizontal:moderateScale(40)
   },
 
   tabItem: {
