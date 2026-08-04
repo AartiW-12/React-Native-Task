@@ -21,6 +21,8 @@ import Colors from '../components/style/Colors';
 import Fonts from '../components/style/Fonts';
 import FontSizes from '../components/style/FontSize';
 
+import CommonStyles from '../components/constants/CommonStyles'
+
 
 import Input from '../components/input/Input';
 
@@ -253,8 +255,8 @@ const ScheduleAppointment = () => {
                 </View>
             </View>
             <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={{ paddingBottom: verticalScale(30) }}
+                style={CommonStyles.flex1}
+                contentContainerStyle={CommonStyles.paddBottom}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.timeSection}>
@@ -415,6 +417,7 @@ const ScheduleAppointment = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:Colors.screenBackground
     },
     calendarRow: {
         flexDirection: 'row',

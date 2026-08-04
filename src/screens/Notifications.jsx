@@ -151,13 +151,6 @@ const Notifications = () => {
   );
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Header text="Notification"/>
-      <View style={styles.header}>
-        <View style={styles.newsContainer}>
-          <Text style={styles.newsText}>News</Text>
-          <View style={styles.dot} />
-        </View>
-      </View> */}
       <Header
         text="Notification"
         titleStyle={{ color: Colors.primary }}
@@ -189,7 +182,7 @@ export default Notifications;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.backgroundColor,
+    backgroundColor: Colors.screenBackground,
   },
   header: {
     flexDirection: 'row',

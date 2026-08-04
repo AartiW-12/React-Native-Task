@@ -40,7 +40,6 @@ function Register({ navigation }) {
                     onPress={handleSignUp}
                 />
             </View>
-            {/* <Text style={{flex:1 }}>HELLO</Text> */}
         </View>
     )
 }

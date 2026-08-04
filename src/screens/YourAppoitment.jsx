@@ -152,7 +152,8 @@ const YourAppoitment = () => {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor:Colors.screenBackground
     },
     card: {
         width: scale(300),

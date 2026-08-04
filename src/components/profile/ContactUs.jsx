@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import { scale } from 'react-native-size-matters'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 
 

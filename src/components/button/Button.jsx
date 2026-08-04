@@ -1,8 +1,10 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
+
 import Colors from '../style/Colors'
 import FontSizes from '../style/FontSize'
 import Fonts from '../style/Fonts'
+
 function Button({
     varient='primary',
     text,

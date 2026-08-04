@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Chat from '../screens/Chat';
 import Schedule from '../screens/Schedule';
 import ChatList from '../screens/ChatList'
 
@@ -28,14 +27,14 @@ export default function BottomTabNavigator() {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="CommonStack"
         component={CommonStack}
         options={{
           tabBarIcon: ({ focused }) => (
             <HomeIcon
               width={24}
               height={24}
-              fill={focused ? Colors.black : Colors.white}
+              opacity={focused ? 1 : 0.5}
             />
           ),
         }}
@@ -49,7 +48,7 @@ export default function BottomTabNavigator() {
             <ChatIcon
               width={24}
               height={24}
-              opacity={focused ? 1 : 0.7}
+              opacity={focused ? 1 : 0.5}
             />
           ),
         }}
@@ -63,7 +62,7 @@ export default function BottomTabNavigator() {
             <ProfileIcon
               width={24}
               height={24}
-              opacity={focused ? 1 : 0.7}
+              opacity={focused ? 1 : 0.5}
             />
           ),
         }}
@@ -77,7 +76,7 @@ export default function BottomTabNavigator() {
             <CalendarIconWhite
               width={24}
               height={24}
-              opacity={focused ? 1 : 0.7}
+              opacity={focused ? 1 : 0.5}
             />
           ),
         }}

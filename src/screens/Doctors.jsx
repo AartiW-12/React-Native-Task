@@ -798,7 +798,9 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(20),
     },
     activeCircleButton: {
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.primary,
+        justifyContent:'center',
+        alignItems:'center'
     },
     centerContainer: {
         flex: 1,

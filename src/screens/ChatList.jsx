@@ -33,7 +33,7 @@ const ChatList = () => {
         return acc;
     }, []);
 
-    console.log(myDoctors, "My Doctors")
+    // console.log(myDoctors, "My Doctors")
     return (
         <SafeAreaView style={styles.container}>
             <Header text={'Chat'} />
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
 
     listContainer: {
         paddingVertical: verticalScale(15),
+        marginBottom:verticalScale(80)
     },
 
     card: {

@@ -1,22 +1,23 @@
 const Colors = {
-  // Primary
+
   primary: '#2260FF',
   primaryLight : '#A9BCFE',
 
-  // Backgrounds
+
   white: '#FFFFFF',
   screenBackground: '#FFFFFF',
   inputBackground: '#ECF1FF',
   socialButtonBackground: '#CAD6FF',
 
-  //payment text
+
   paymentText: "#809CFF",
 
-  // Text Colors
   black: '#000000',
   disabledText : '#9E9E9E',
 
   transparent: 'transparent',
+
+  modalLayout : 'rgba(163, 184, 243, 0.57)'
 };
 
 export default Colors;

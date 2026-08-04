@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { scale } from 'react-native-size-matters';
 
 import Colors from '../style/Colors';
 import Fonts from '../style/Fonts';

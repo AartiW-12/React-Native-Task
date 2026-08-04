@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ToastAndroid, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Input from '../input/Input'
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateProfileUser } from '../../redux/auth/authSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { showSnackbar } from '../snackbar/ShowSnackbar'
+import CommonStyles from '../constants/CommonStyles'
 const Profile = () => {
 
     const { user } = useSelector(state => state.auth)
@@ -68,63 +69,75 @@ const Profile = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.container}>
+        <SafeAreaView style={CommonStyles.flex1}>
+            <KeyboardAvoidingView
+                style={CommonStyles.flex1}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={20}
+            >
+                <ScrollView
+                    contentContainerStyle={CommonStyles.flexGrow1}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.container}>
 
-                <View style={styles.settingContainer}>
-                    <View style={{ flex: 1 }}>
-                        <Header text="Profile" />
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Settings')}
-                        style={styles.blueCircleBtn}
-                    >
-                        <SettingIcon width={12} height={12} />
-                    </TouchableOpacity>
-                </View>
-                <Image
-                    source={ProfileImg}
-                    style={styles.profileImage}
-                />
-                <Text style={styles.name}>
-                    {name}
-                </Text>
-                <View style={styles.profileContainer}>
-                    <Text style={styles.label}>Full Name</Text>
-                    <Input
-                        value={name}
-                        onChangeText={setName}
-                        style={styles.inputBox}
-                    />
-                    <Text style={styles.label}>Phone Number</Text>
-                    <Input
-                        value={Phone}
-                        onChangeText={setPhone}
-                        style={styles.inputBox}
-                    />
-                    <Text style={styles.label}>Email</Text>
-                    <Input
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.inputBox}
-                    />
-                    <Text style={styles.label}>Date of Birth</Text>
-                    <Input
-                        value={dob}
-                        onChangeText={setDOB}
-                        style={styles.inputBox}
-                        placeholder={'DD/MM/YYYY'}
-                    />
-
-                    <View style={styles.btnContainer}>
-                        <Button
-                            varient='primary'
-                            text={'Update Profile'}
-                            onPress={handleUpdateProfile}
+                        <View style={styles.settingContainer}>
+                            <View style={CommonStyles.flex1}>
+                                <Header text="Profile" />
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Settings')}
+                                style={styles.blueCircleBtn}
+                            >
+                                <SettingIcon width={12} height={12} />
+                            </TouchableOpacity>
+                        </View>
+                        <Image
+                            source={ProfileImg}
+                            style={styles.profileImage}
                         />
+                        <Text style={styles.name}>
+                            {name}
+                        </Text>
+                        <View style={styles.profileContainer}>
+                            <Text style={styles.label}>Full Name</Text>
+                            <Input
+                                value={name}
+                                onChangeText={setName}
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Phone Number</Text>
+                            <Input
+                                value={Phone}
+                                onChangeText={setPhone}
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Email</Text>
+                            <Input
+                                value={email}
+                                onChangeText={setEmail}
+                                style={styles.inputBox}
+                            />
+                            <Text style={styles.label}>Date of Birth</Text>
+                            <Input
+                                value={dob}
+                                onChangeText={setDOB}
+                                style={styles.inputBox}
+                                placeholder={'DD/MM/YYYY'}
+                            />
+
+                            <View style={styles.btnContainer}>
+                                <Button
+                                    varient='primary'
+                                    text={'Update Profile'}
+                                    onPress={handleUpdateProfile}
+                                />
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
@@ -132,7 +145,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
+        backgroundColor: Colors.screenBackground,
         paddingHorizontal: scale(22),
     },
     settingContainer: {

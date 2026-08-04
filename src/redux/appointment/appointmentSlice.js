@@ -7,6 +7,8 @@ const initialState = {
     { id: '3', doctorId: '3', status: 'cancelled', date: '2026-07-10', time: '11:00 AM' },
     { id: '4', doctorId: '4', status: 'upcoming', date: '2026-08-06', time: '03:00 PM' },
     { id: '5', doctorId: '6', status: 'completed', date: '2026-10-06', time: '03:00 PM' },
+    { id: '6', doctorId: '5', status: 'upcoming', date: '2026-10-09', time: '06:00 PM' },
+    { id: '7', doctorId: '10', status: 'completed', date: '2026-10-10', time: '02:00 PM' },
   ],
 };
 

@@ -17,7 +17,7 @@ import MikeIcon from '../assets/images/svg/MikeIcon.svg'
 import SendIcon from '../assets/images/svg/SendIcon.svg'
 import Fonts from "../components/style/Fonts";
 import FontSizes from "../components/style/FontSize";
-import { scale, verticalScale } from "react-native-size-matters";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const initialMessages = [
@@ -205,61 +205,51 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.screenBackground,
   },
-
   messageContainer: {
-    marginBottom: 16,
+    marginBottom: verticalScale(16),
   },
-
   doctorContainer: {
     alignItems: "flex-start",
   },
-
   userContainer: {
     alignItems: "flex-end",
   },
-
   bubble: {
     maxWidth: "75%",
-    padding: 12,
-    borderRadius: 16,
+    padding: scale(12),
+    borderRadius: moderateScale(16),
   },
-
   doctorBubble: {
     backgroundColor: Colors.inputBackground,
     borderTopLeftRadius: 0,
   },
-
   userBubble: {
-    backgroundColor: Colors.socialButtonBackgroundi,
+    backgroundColor: Colors.socialButtonBackground,
     borderTopRightRadius: 0,
   },
-
   message: {
-    fontSize: 15,
+    fontSize: FontSizes.md,
     color: Colors.black,
+    fontFamily:Fonts.medium
   },
-
   time: {
-    marginTop: 4,
-    fontSize: 11,
+    marginTop: moderateScale(4),
+    fontSize: FontSizes.sm,
+    fontFamily:Fonts.regular,
     color: Colors.paymentText,
   },
-
-
   textInput: {
     flex: 1,
-    height: 42,
+    height: verticalScale(42),
     color: Colors.black,
   },
-
   micButton: {
-    paddingLeft: 8,
+    paddingLeft: scale(8),
   },
-
   blueCircleButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: scale(40),
+    height: verticalScale(40),
+    borderRadius: moderateScale(20),
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
@@ -275,14 +265,14 @@ const styles = StyleSheet.create({
 
   backArrow: {
     color: Colors.white,
-    fontSize: 36,
+    fontSize: FontSizes.arrowSize,
   },
 
   headerTitle: {
     flex: 1,
-    marginLeft: 20,
+    marginLeft: scale(20),
     color: Colors.white,
-    fontSize: 18,
+    fontSize: FontSizes.xl,
     fontFamily:Fonts.semiBold,
     fontSize:FontSizes.xxl
   },
@@ -292,13 +282,13 @@ const styles = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: scale(34),
+    height: verticalScale(34),
+    borderRadius: moderateScale(17),
     backgroundColor: Colors.white,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10,
+    marginLeft: scale(10),
   },
 
   bottomContainer: {
@@ -306,15 +296,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.socialButtonBackground,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: scale(15),
+    paddingVertical: verticalScale(10),
     marginBottom:scale(20)
   },
 
   socialCircleButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: scale(40),
+    height: verticalScale(40),
+    borderRadius: moderateScale(20),
     backgroundColor: Colors.inputBackground,
     justifyContent: "center",
     alignItems: "center",
@@ -322,13 +312,13 @@ const styles = StyleSheet.create({
 
   inputWrapper: {
     flex: 1,
-    height: 42,
-    marginHorizontal: 10,
-    borderRadius: 22,
+    height: verticalScale(42),
+    marginHorizontal: scale(10),
+    borderRadius: moderateScale(22),
     backgroundColor: Colors.white,
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 15,
+    paddingLeft: scale(15),
   },
 
   input: {
@@ -337,13 +327,13 @@ const styles = StyleSheet.create({
   },
 
   micButton: {
-    paddingHorizontal: 12,
+    paddingHorizontal: scale(12),
   },
 
   sendButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: scale(42),
+    height: verticalScale(42),
+    borderRadius: moderateScale(21),
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",

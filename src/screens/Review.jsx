@@ -1,8 +1,8 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet } from 'react-native'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import Header from '../components/header/Header'
 
@@ -17,77 +17,98 @@ import FontSizes from '../components/style/FontSize'
 
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
+import CommonStyles from '../components/constants/CommonStyles'
+import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 
 const Review = () => {
     const route = useRoute();
     const { doctor } = route.params;
+
+    const navigation = useNavigation()
 
     const [review, setReview] = useState('');
 
     return (
         <SafeAreaView style={styles.container}>
             <Header text="Review" />
-            <Text style={styles.doctorSpecificText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti molestiae error blanditiis odio placeat sed praesentium incidunt repudiandae, quod, quam nostrum repellat commodi itaque cumque ducimus magnam? Debitis dignissimos blanditiis earum, assumenda inventore reprehenderit cumque corporis nobis eaque incidunt illum.</Text>
-            <View style={styles.content}>
+            <KeyboardAvoidingView
+                style={CommonStyles.flex1}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={20}
+            >
+                <ScrollView
+                    contentContainerStyle={CommonStyles.flexGrow1}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <Text style={styles.doctorSpecificText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti molestiae error blanditiis odio placeat sed praesentium incidunt repudiandae, quod, quam nostrum repellat commodi itaque cumque ducimus magnam? Debitis dignissimos blanditiis earum, assumenda inventore reprehenderit cumque corporis nobis eaque incidunt illum.</Text>
+                    <View style={styles.content}>
 
-                <Image
-                    source={{ uri: doctor.avatar }}
-                    style={styles.image}
-                />
+                        <Image
+                            source={{ uri: doctor.avatar }}
+                            style={styles.image}
+                        />
 
-                <Text style={styles.name}>
-                    {doctor.name}
-                </Text>
+                        <Text style={styles.name}>
+                            {doctor.name}
+                        </Text>
 
-                <Text style={styles.specialization}>
-                    {doctor.specialization}
-                </Text>
+                        <Text style={styles.specialization}>
+                            {doctor.specialization}
+                        </Text>
 
-                <View style={styles.infoRow}>
+                        <View style={styles.infoRow}>
 
-                    <View style={styles.chip}>
-                        {doctor.favorite ? (
-                            <FilledHeart width={16} height={16} />
-                        ) : (
-                            <EmptyHeart width={16} height={16} />
-                        )}
+                            <View style={styles.chip}>
+                                {doctor.favorite ? (
+                                    <FilledHeart width={16} height={16} />
+                                ) : (
+                                    <EmptyHeart width={16} height={16} />
+                                )}
+                            </View>
+
+                            <View style={styles.chip}>
+                                {[1, 2, 3, 4, 5].map(item =>
+                                    item <= doctor.rating ? (
+                                        <FilledStar
+                                            key={item}
+                                            width={14}
+                                            height={14}
+                                        />
+                                    ) : (
+                                        <EmptyStar
+                                            key={item}
+                                            width={14}
+                                            height={14}
+                                        />
+                                    ),
+                                )}
+                            </View>
+
+                        </View>
+
+                        <Input
+                            value={review}
+                            onChangeText={setReview}
+                            placeholder="Enter Your Comments here..."
+                            multiline
+                            numberOfLines={6}
+                            textAlignVertical="top"
+                            style={styles.reviewInput}
+                        />
+                        <Button
+                            text="Add Review"
+                            style={styles.button}
+                            onPress={() => {
+                                showSnackbar({ msg : "Review Added Sucessfully"})
+                                setTimeout(() => {
+                                    navigation.goBack()
+                                }, 1000);
+                            }}
+                        />
                     </View>
-
-                    <View style={styles.chip}>
-                        {[1, 2, 3, 4, 5].map(item =>
-                            item <= doctor.rating ? (
-                                <FilledStar
-                                    key={item}
-                                    width={14}
-                                    height={14}
-                                />
-                            ) : (
-                                <EmptyStar
-                                    key={item}
-                                    width={14}
-                                    height={14}
-                                />
-                            ),
-                        )}
-                    </View>
-
-                </View>
-
-                <Input
-                    value={review}
-                    onChangeText={setReview}
-                    placeholder="Enter Your Comments here..."
-                    multiline
-                    numberOfLines={6}
-                    textAlignVertical="top"
-                    style={styles.reviewInput}
-                />
-                <Button
-                    text="Add Review"
-                    style={styles.button}
-                    onPress={() => { }}
-                />
-            </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };
@@ -95,13 +116,13 @@ const Review = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.screenBackground,
     },
-    doctorSpecificText : {
-        fontSize:FontSizes.sm,
-        fontFamily:Fonts.regular,
+    doctorSpecificText: {
+        fontSize: FontSizes.sm,
+        fontFamily: Fonts.regular,
         color: Colors.black,
-        marginHorizontal:scale(20)
+        marginHorizontal: scale(20)
     },
     content: {
         flex: 1,

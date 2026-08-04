@@ -149,6 +149,8 @@ const MyProfile = () => {
                             onPress={() => {
                                 if (item.screen === 'Logout') {
                                     setOpenModal(true);
+                                }else if(item.screen === 'Favorite'){
+                                    // showSnackbar("Favorite Screen")
                                 } else {
                                     navigation.navigate(item.screen);
                                 }
@@ -216,7 +218,7 @@ const MyProfile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
+        backgroundColor: Colors.screenBackground,
         paddingHorizontal: scale(22),
     },
     profileImage: {
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
     },
     modalLayout: {
         flex: 1,
-        backgroundColor: 'rgba(163, 184, 243, 0.57)',
+        backgroundColor: Colors.modalLayout,
         justifyContent: 'flex-end',
     },
 

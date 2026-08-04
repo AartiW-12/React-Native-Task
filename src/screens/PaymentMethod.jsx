@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const PaymentMethod = () => {
 
-    const [selectedPayment, setSelectedPayment] = useState('card')
+    const [selectedPayment, setSelectedPayment] = useState('')
 
     const navigation = useNavigation()
     return (

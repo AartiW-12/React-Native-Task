@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Image, Keyboard, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
+import CommonStyles from '../components/constants/CommonStyles'
 
 function Login({ navigation }) {
   //hoooks to store and update the state 
@@ -54,9 +55,9 @@ function Login({ navigation }) {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={ CommonStyles.flex1}>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={CommonStyles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.container}>

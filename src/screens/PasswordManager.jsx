@@ -104,7 +104,7 @@ const PasswordManager = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
+        backgroundColor: Colors.screenBackground,
         paddingHorizontal: scale(22),
     },
     settingsContainer: {

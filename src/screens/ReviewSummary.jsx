@@ -25,7 +25,6 @@ const ReviewSummary = () => {
     const route = useRoute()
     const { doctor, selectedDate, selectedSlot, appointmentFor } = route.params
 
-    console.log(navigation.canGoBack())
     const handlePayment = () => {
         navigation.navigate("PaymentSuccessfull", {doctor, selectedDate, selectedSlot})
     }

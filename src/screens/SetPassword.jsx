@@ -11,6 +11,7 @@ import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
+import CommonStyles from '../components/constants/CommonStyles'
 
 function SetPassword() {
 
@@ -22,7 +23,7 @@ function SetPassword() {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={CommonStyles.flex1}>
             <View style={styles.container}>
                 <Header text={Strings.setPassword} />
                 <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </Text>

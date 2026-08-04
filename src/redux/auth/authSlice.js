@@ -24,7 +24,7 @@ export const loginUser = createAsyncThunk(
       );
 
       if (!user) {
-        throw new Error("Invalid email or password");
+        return rejectWithValue("Invalid email or password");
       }
 
       const token = `token_${Date.now()}`;
@@ -42,7 +42,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// SIGNUP
 export const signUpUser = createAsyncThunk(
   "auth/signUpUser",
   async (userData, { rejectWithValue }) => {
@@ -56,7 +55,7 @@ export const signUpUser = createAsyncThunk(
       );
 
       if (existingUser) {
-        throw new Error("User Already Exists");
+        return rejectWithValue("User Already Exists");
       }
 
       const newUser = await api.post("/users", userData);
@@ -123,6 +122,22 @@ export const resetPasswordUser = createAsyncThunk(
       }
 
       return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (userId, { rejectWithValue }) => {
+    try {
+      await api.delete(`/users/${userId}`);
+
+      await AsyncStorage.removeItem("User");
+      await AsyncStorage.removeItem("Token");
+
+      return userId;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -209,7 +224,23 @@ const authSlice = createSlice({
       .addCase(resetPasswordUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+      .addCase(deleteAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteAccount.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.token = null;
+        state.isLoggedIn = false;
+      })
+      .addCase(deleteAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
   },
 });
 

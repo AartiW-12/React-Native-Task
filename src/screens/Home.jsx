@@ -16,6 +16,7 @@ import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import Comments from '../assets/images/svg/Comments.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDoctors } from '../redux/doctors/doctorSlice';
+import CommonStyles from '../components/constants/CommonStyles';
 
 const calendarData = [
     {
@@ -207,7 +208,7 @@ function Home() {
                         11 Wednesday - Today
                     </Text>
                     <View style={styles.appointmentInfo}>
-                        <View style={{ flex: 1 }}>
+                        <View style={ CommonStyles.flex1}>
                             <Text style={styles.doctorName}>
                                 Dr. Olivia Turner, M.D.
                             </Text>
@@ -315,6 +316,7 @@ function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:Colors.screenBackground
     },
     headerContainer: {
         flexDirection: 'row',

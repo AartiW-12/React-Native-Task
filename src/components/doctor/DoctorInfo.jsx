@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, {  useState } from 'react'
 
 //React-Native Library
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
@@ -60,7 +60,6 @@ const DoctorInfo = () => {
         setCurrentMonth(next);
     };
 
-    const calenderRef = useRef(null)
 
     const handleSchedule = () => {
         setShowSchedule(true)
@@ -426,7 +425,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: scale(2)
+        gap: scale(2),
     },
     chip: {
         height: verticalScale(10),
@@ -439,7 +438,8 @@ const styles = StyleSheet.create({
         minWidth: scale(43),
     },
     chipText :{
-        marginLeft:scale(5)
+        marginLeft:scale(5),
+        fontFamily:Fonts.regular
     },
     chipDate: {
         width: scale(155),
@@ -451,6 +451,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(10),
         height: verticalScale(20),
         minWidth: scale(58),
+        fontFamily:Fonts.regular
     },
     actionRow: {
         marginTop: verticalScale(14),
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.primary,
-        height: verticalScale(38),
+        height: verticalScale(40),
         width: scale(85),
         height: verticalScale(21),
         borderRadius: moderateScale(22),

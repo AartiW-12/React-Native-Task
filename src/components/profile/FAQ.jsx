@@ -9,6 +9,7 @@ import DownIcon from '../../assets/images/svg/DownIcon.svg'
 import Button from '../button/Button'
 import Colors from '../style/Colors'    
 import Fonts from '../style/Fonts'
+import CommonStyles from '../constants/CommonStyles'
 
 const popularTopics = [
   { id: 1, title: 'Popular Topic 1', description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo animi atque unde amet suscipit, facilis quisquam iusto natus earum, incidunt saepe accusamus iste, delectus aliquam.'},
@@ -116,14 +117,8 @@ const FAQ = () => {
     );
 };
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-
-    faqContainer: {
-        flex: 1,
-    },
-
+    container: CommonStyles.flex1,
+    faqContainer: CommonStyles.flex1,
     stateContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -150,18 +145,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(16),
         paddingVertical: verticalScale(14),
     },
-
-    service: {
-        flex: 1,
-    },
-
+    service: CommonStyles.flex1,
     title: {
         color: Colors.black,
         fontFamily: Fonts.regular,
         fontSize: moderateScale(14),
     
     },
-
     downBtn: {
         width: scale(28),
         height: scale(28),

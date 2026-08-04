@@ -137,7 +137,7 @@ export default CancelAppointment;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.screenBackground,
   },
 
   content: {

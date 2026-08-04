@@ -29,6 +29,9 @@ const TABS = [
 ];
 
 const Schedule = () => {
+
+  const [activeTab, setActiveTab] = useState('completed');
+  
   const { doctors } = useSelector(state => state.doctors);
   const appointments = useSelector(state => state.appointments.appointments)
 
@@ -36,7 +39,7 @@ const Schedule = () => {
 
   const navigation = useNavigation();
 
-  const [activeTab, setActiveTab] = useState('completed');
+  
 
   const filteredAppointments = appointments.filter(
     item => item.status === activeTab,
@@ -44,7 +47,6 @@ const Schedule = () => {
 
   const renderUpcomingCard = ({ item }) => {
     const doctor = doctors.find(d => d.id === item.doctorId);
-    console.log(doctor)
     if (!doctor) return null;
 
     return (
@@ -91,128 +93,128 @@ const Schedule = () => {
             style={styles.iconButton}
             onPress={() => dispatch(cancelAppointment(item.id))}
           >
-          <CrossIcon height={14} width={14} />
-        </TouchableOpacity>
-      </View>
+            <CrossIcon height={14} width={14} />
+          </TouchableOpacity>
+        </View>
       </View >
     );
   };
 
-const renderCompletedCard = ({ item }) => {
-  const doctor = doctors.find(d => d.id === item.doctorId);
-  if (!doctor) return null;
+  const renderCompletedCard = ({ item }) => {
+    const doctor = doctors.find(d => d.id === item.doctorId);
+    if (!doctor) return null;
 
-  return (
-    <View style={styles.card}>
-      <View style={styles.topSection}>
-        <Image source={{ uri: doctor.avatar }} style={styles.image} />
+    return (
+      <View style={styles.card}>
+        <View style={styles.topSection}>
+          <Image source={{ uri: doctor.avatar }} style={styles.image} />
 
-        <View style={styles.infoContainer}>
-          <Text numberOfLines={1} style={styles.name}>
-            {doctor.name}
-          </Text>
-          <Text numberOfLines={1} style={styles.specialization}>
-            {doctor.specialization}
-          </Text>
+          <View style={styles.infoContainer}>
+            <Text numberOfLines={1} style={styles.name}>
+              {doctor.name}
+            </Text>
+            <Text numberOfLines={1} style={styles.specialization}>
+              {doctor.specialization}
+            </Text>
 
-          <View style={styles.ratingRow}>
-            <View style={styles.infoChip}>
-              <FilledStar width={14} height={14} />
-              <Text style={styles.ratingText}>{doctor.rating}</Text>
+            <View style={styles.ratingRow}>
+              <View style={styles.infoChip}>
+                <FilledStar width={14} height={14} />
+                <Text style={styles.ratingText}>{doctor.rating}</Text>
+              </View>
+
+              <TouchableOpacity style={styles.infoChip}>
+                {doctor.favorite ? (
+                  <FilledHeart width={14} height={14} />
+                ) : (
+                  <EmptyHeart width={14} height={14} />
+                )}
+              </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={styles.infoChip}>
-              {doctor.favorite ? (
-                <FilledHeart width={14} height={14} />
-              ) : (
-                <EmptyHeart width={14} height={14} />
-              )}
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      <View style={styles.buttonRow}>
-        <Button
-          text={'Re-Book'}
-          style={styles.secondaryButton}
-          textStyle={styles.secondaryText}
-          onPress={() => navigation.navigate("DoctorInfo", { doctor, openSchedule: true })}
-        />
-        <Button
-          text={'Add Review'}
-          style={styles.primaryButton}
-          textStyle={styles.primaryText}
-          onPress={() => navigation.navigate('Review', { doctor })}
-        />
-      </View>
-    </View>
-  );
-};
-
-const renderCancelledCard = ({ item }) => {
-  const doctor = doctors.find(d => d.id === item.doctorId);
-  if (!doctor) return null;
-
-  return (
-    <View style={styles.card}>
-      <View style={styles.topSection}>
-        <Image source={{ uri: doctor.avatar }} style={styles.image} />
-
-        <View style={styles.infoContainer}>
-          <Text numberOfLines={1} style={styles.name}>
-            {doctor.name}
-          </Text>
-          <Text numberOfLines={1} style={styles.specialization}>
-            {doctor.specialization}
-          </Text>
+        <View style={styles.buttonRow}>
+          <Button
+            text={'Re-Book'}
+            style={styles.secondaryButton}
+            textStyle={styles.secondaryText}
+            onPress={() => navigation.navigate("DoctorInfo", { doctor, openSchedule: true })}
+          />
+          <Button
+            text={'Add Review'}
+            style={styles.primaryButton}
+            textStyle={styles.primaryText}
+            onPress={() => navigation.navigate('Review', { doctor })}
+          />
         </View>
       </View>
+    );
+  };
 
-      <TouchableOpacity
-        style={styles.primaryButtonFull}
-        onPress={() => navigation.navigate('Review', { doctor })}>
-        <Text style={styles.primaryText}>Add Review</Text>
-      </TouchableOpacity>
-    </View>
+  const renderCancelledCard = ({ item }) => {
+    const doctor = doctors.find(d => d.id === item.doctorId);
+    if (!doctor) return null;
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.topSection}>
+          <Image source={{ uri: doctor.avatar }} style={styles.image} />
+
+          <View style={styles.infoContainer}>
+            <Text numberOfLines={1} style={styles.name}>
+              {doctor.name}
+            </Text>
+            <Text numberOfLines={1} style={styles.specialization}>
+              {doctor.specialization}
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={styles.primaryButtonFull}
+          onPress={() => navigation.navigate('Review', { doctor })}>
+          <Text style={styles.primaryText}>Add Review</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderItem = (params) => {
+    if (activeTab === 'completed') return renderCompletedCard(params);
+    if (activeTab === 'upcoming') return renderUpcomingCard(params);
+    if (activeTab === 'cancelled') return renderCancelledCard(params);
+    return null;
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Header text={'All Appointments'} />
+      <View style={styles.appointmentContainer}>
+        <TabSwitcher
+          tabs={TABS}
+          activeTab={activeTab}
+          onTabPress={setActiveTab}
+          buttonStyle={styles.tabBtn}
+          buttonTextStyle={styles.tabBtnText}
+        />
+
+        <FlatList
+          data={filteredAppointments}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    </SafeAreaView>
   );
-};
-
-const renderItem = (params) => {
-  if (activeTab === 'completed') return renderCompletedCard(params);
-  if (activeTab === 'upcoming') return renderUpcomingCard(params);
-  if (activeTab === 'cancelled') return renderCancelledCard(params);
-  return null;
-};
-
-return (
-  <SafeAreaView style={styles.container}>
-    <Header text={'All Appointments'} />
-    <View style={styles.appointmentContainer}>
-      <TabSwitcher
-        tabs={TABS}
-        activeTab={activeTab}
-        onTabPress={setActiveTab}
-        buttonStyle={styles.tabBtn}
-        buttonTextStyle={styles.tabBtnText}
-      />
-
-      <FlatList
-        data={filteredAppointments}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
-  </SafeAreaView>
-);
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.screenBackground,
   },
   appointmentContainer: {
     flex: 1,
@@ -369,8 +371,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: scale(8),
   },
-
-  /* ========================= Cancelled: full-width button ========================= */
   primaryButtonFull: {
     height: verticalScale(34),
     borderRadius: moderateScale(18),

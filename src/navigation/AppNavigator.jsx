@@ -9,44 +9,44 @@ import { getDoctors } from '../redux/doctors/doctorSlice'
 
 function AppNavigator() {
 
-    const [initializing , setInitializing] = useState(true)
+    const [initializing, setInitializing] = useState(true)
 
     const dispatch = useDispatch()
 
-    const {token } = useSelector(state => state.auth)
+    const { isLoggedIn } = useSelector(state => state.auth)
 
     useEffect(() => {
         const initializeApp = async () => {
-            try{
+            try {
                 const storedToken = await AsyncStorage.getItem("Token")
                 const storedUser = await AsyncStorage.getItem("User")
 
-                if(storedToken && storedUser){
+                if (storedToken && storedUser) {
                     dispatch(restoreSession({
                         token: storedToken,
-                        user : JSON.parse(storedUser)
+                        user: JSON.parse(storedUser)
                     }))
                 }
                 await dispatch(getDoctors())
             }
-            catch(err){
+            catch (err) {
                 console.log(err)
             }
-            finally{
+            finally {
                 setInitializing(false)
             }
         }
         initializeApp()
-    },[])
+    }, [])
 
-    if(initializing){
+    if (initializing) {
         return <SplashScreen />
     }
     return (
         <>
             {
-                token ?
-                            <StackNavigator />
+                isLoggedIn ?
+                    <StackNavigator />
                     :
                     <AuthNavigator />
             }

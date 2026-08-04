@@ -176,8 +176,7 @@ export default NotificationSettings;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
-        marginTop: verticalScale(10),
+        backgroundColor: Colors.screenBackground,
         paddingHorizontal: scale(22),
     },
 

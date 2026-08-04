@@ -14,6 +14,7 @@ import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
+import CommonStyles from '../components/constants/CommonStyles'
 
 
 function SignUp({ navigation }) {
@@ -58,9 +59,9 @@ function SignUp({ navigation }) {
         { id: 3, image: require('../assets/images/Vector164.png') },
     ];
     return (
-        <SafeAreaView style={{ flex: 1}}>
+        <SafeAreaView style={CommonStyles.flex1}>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={CommonStyles.flex1}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 <ScrollView

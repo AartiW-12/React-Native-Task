@@ -10,6 +10,8 @@ const FontSizes = {
 
   title: moderateScale(24),
   heading: moderateScale(28),
+
+  arrowSize : moderateScale(36)
 };
 
 export default FontSizes;
