@@ -33,7 +33,6 @@ const ChatList = () => {
         return acc;
     }, []);
 
-    // console.log(myDoctors, "My Doctors")
     return (
         <SafeAreaView style={styles.container}>
             <Header text={'Chat'} />

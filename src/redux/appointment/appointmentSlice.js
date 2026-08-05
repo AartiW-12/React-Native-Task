@@ -1,51 +1,123 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { jsonServerApi } from "../../services/api";
 
 const initialState = {
-  appointments: [
-    { id: '1', doctorId: '1', status: 'completed', date: '2026-07-12', time: '10:00 AM' },
-    { id: '2', doctorId: '8', status: 'upcoming', date: '2026-08-02', time: '09:30 AM' },
-    { id: '3', doctorId: '3', status: 'cancelled', date: '2026-07-10', time: '11:00 AM' },
-    { id: '4', doctorId: '4', status: 'upcoming', date: '2026-08-06', time: '03:00 PM' },
-    { id: '5', doctorId: '6', status: 'completed', date: '2026-10-06', time: '03:00 PM' },
-    { id: '6', doctorId: '5', status: 'upcoming', date: '2026-10-09', time: '06:00 PM' },
-    { id: '7', doctorId: '10', status: 'completed', date: '2026-10-10', time: '02:00 PM' },
-  ],
-};
+  appointments: [],
+  loading: false,
+  error: null,
+}
 
+export const fetchAppointments = createAsyncThunk(
+  "appointments/fetchAppointments",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await jsonServerApi.get("/appointments")
+
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const addAppointment = createAsyncThunk(
+  "appointments/addAppointment",
+  async (data) => {
+    const response = await jsonServerApi.post(
+      "/appointments",
+      data
+    );
+
+    return response.data;
+  }
+)
+
+export const completeAppointment = createAsyncThunk(
+  "appointments/completeAppointment",
+  async (id, { getState }) => {
+
+    const appointment = getState()
+      .appointments
+      .appointments
+      .find(item => item.id === id);
+
+    const response = await jsonServerApi.patch(
+      `/appointments/${id}`,
+      {
+        status: "completed"
+      }
+    );
+
+    return response.data;
+  }
+)
+export const cancelAppointment = createAsyncThunk(
+  "appointments/cancelAppointment",
+  async (id) => {
+
+    const response = await jsonServerApi.patch(
+      `/appointments/${id}`,
+      {
+        status: "cancelled"
+      }
+    );
+
+    return response.data;
+  }
+)
 const appointmentSlice = createSlice({
   name: "appointments",
   initialState,
-  reducers: {
-    addAppointment: (state, action) => {
-      state.appointments.unshift(action.payload);
-    },
+  reducers: {},
+  extraReducers: (builder) => {
 
-    completeAppointment: (state, action) => {
-      const appointment = state.appointments.find(
-        item => item.id === action.payload
-      );
+    builder
 
-      if (appointment) {
-        appointment.status = "completed";
-      }
-    },
+      .addCase(fetchAppointments.pending, (state) => {
+        state.loading = true;
+        state.error= null
+      })
 
-    cancelAppointment: (state, action) => {
-      const appointment = state.appointments.find(
-        item => item.id === action.payload
-      );
+      .addCase(fetchAppointments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.appointments = action.payload;
+        state.error= null
+      })
 
-      if (appointment) {
-        appointment.status = "cancelled";
-      }
-    },
-  },
+      .addCase(fetchAppointments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload
+      })
+
+      .addCase(addAppointment.fulfilled, (state, action) => {
+        state.appointments.unshift(action.payload);
+      })
+
+      .addCase(completeAppointment.fulfilled, (state, action) => {
+
+        const index = state.appointments.findIndex(
+          item => item.id === action.payload.id
+        );
+
+        if (index !== -1) {
+          state.appointments[index] = action.payload;
+        }
+
+      })
+
+      .addCase(cancelAppointment.fulfilled, (state, action) => {
+
+        const index = state.appointments.findIndex(
+          item => item.id === action.payload.id
+        );
+
+        if (index !== -1) {
+          state.appointments[index] = action.payload;
+        }
+
+      })
+
+  }
 });
-
-export const {
-  addAppointment,
-  completeAppointment,
-  cancelAppointment,
-} = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

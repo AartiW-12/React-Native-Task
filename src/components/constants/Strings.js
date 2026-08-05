@@ -13,7 +13,14 @@ const Strings = {
     passwordPlaceholder:'*************',
     emailPlaceholder : "example@example.com",
     dobPlaceholder:"DD / MM /YYY",
-    setPassword:"Set Password"
+    setPassword:"Set Password",
+    viewAll:"View All",
+
+    // Error or loading related texts
+    noFavoriteDoctors : "No Favorite Doctors",
+    noDoctorsFound:"No Doctors Found",
+    loadingDoctors:"Loading Doctors..."
+
 }
 
 export default Strings

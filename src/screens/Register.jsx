@@ -2,12 +2,13 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/native'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
 
-function Register({ navigation }) {
+function Register() {
 
-  console.log("Register called")
+  const navigation = useNavigation()
     const handleLogin = () => {
         navigation.navigate('Login')
     }

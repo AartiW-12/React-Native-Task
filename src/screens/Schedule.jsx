@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -19,7 +19,9 @@ import TabSwitcher from '../components/tab-switcher/TabSwitcher';
 import Header from '../components/header/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/button/Button';
-import { cancelAppointment, completeAppointment } from '../redux/appointment/appointmentSlice';
+import { cancelAppointment, completeAppointment, fetchAppointments } from '../redux/appointment/appointmentSlice';
+import { toggleFavorite } from '../redux/doctors/doctorSlice';
+import CommonStyles from '../components/constants/CommonStyles';
 
 
 const TABS = [
@@ -30,20 +32,27 @@ const TABS = [
 
 const Schedule = () => {
 
-  const [activeTab, setActiveTab] = useState('completed');
-  
+  const [activeTab, setActiveTab] = useState('upcoming');
+
   const { doctors } = useSelector(state => state.doctors);
-  const appointments = useSelector(state => state.appointments.appointments)
+  const { appointments, loading, error } = useSelector(
+    state => state.appointments
+  );
 
   const dispatch = useDispatch()
 
   const navigation = useNavigation();
 
-  
+  useEffect(() => {
+    dispatch(fetchAppointments())
+  }, [])
+
+  console.log("APPOi", appointments)
 
   const filteredAppointments = appointments.filter(
     item => item.status === activeTab,
   );
+
 
   const renderUpcomingCard = ({ item }) => {
     const doctor = doctors.find(d => d.id === item.doctorId);
@@ -123,7 +132,10 @@ const Schedule = () => {
                 <Text style={styles.ratingText}>{doctor.rating}</Text>
               </View>
 
-              <TouchableOpacity style={styles.infoChip}>
+              <TouchableOpacity
+                style={styles.infoChip}
+                onPress={() => dispatch(toggleFavorite({ id: doctor.id, favorite: doctor.favorite }))}
+              >
                 {doctor.favorite ? (
                   <FilledHeart width={14} height={14} />
                 ) : (
@@ -199,6 +211,33 @@ const Schedule = () => {
           buttonTextStyle={styles.tabBtnText}
         />
 
+        {loading && (
+          <View style={styles.centerContainer}>
+            <ActivityIndicator
+              size="large"
+              color={Colors.primary}
+            />
+            <Text style={styles.loadingText}>
+              Loading appointments...
+            </Text>
+          </View>
+        )}
+        {error && (
+          <View style={styles.centerContainer}>
+            <Text style={styles.errorText}>
+              { error}
+            </Text>
+            <View style={styles.retryBtnContainer}>
+              <Button
+                text="Retry"
+                varient="primary"
+                onPress={() => dispatch(fetchAppointments())}
+                style={{ marginTop: 20 }}
+              />
+            </View>
+          </View>
+        )}
+        {filteredAppointments.length <=0 && <Text style={CommonStyles.emptyList}>No Records Found</Text>}
         <FlatList
           data={filteredAppointments}
           keyExtractor={item => item.id}
@@ -385,6 +424,11 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.small,
     fontFamily: Fonts.medium,
   },
+  centerContainer: CommonStyles.centerContainer,
+  loadingText: CommonStyles.loadingText,
+  retryBtnContainer: CommonStyles.retryBtnContainer,
+  errorText: CommonStyles.errorText
+
 })
 
 export default Schedule

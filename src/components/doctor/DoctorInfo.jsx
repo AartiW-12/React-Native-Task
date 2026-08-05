@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 //React-Native Library
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
@@ -29,15 +29,80 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FontSizes from '../style/FontSize'
 import Header from '../header/Header'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAppointments } from '../../redux/appointment/appointmentSlice'
+import { fetchSlots } from '../../redux/slots/slotSlice'
 
 
 
 const DoctorInfo = () => {
     const route = useRoute()
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchSlots())
+        dispatch(fetchAppointments())
+    }, [])
 
     const doctor = route.params.doctor
     const openSchedule = route?.params?.openSchedule ?? false
+
+    const { slots } = useSelector(state => state.slots)
+    const { appointments } = useSelector(state => state.appointments)
+
+    const bookedDates = {};
+
+    appointments.forEach(item => {
+
+        if (
+            item.doctorId !== doctor.id ||
+            item.status !== "upcoming"
+        ) {
+            return;
+        }
+
+        if (!bookedDates[item.date]) {
+            bookedDates[item.date] = [];
+        }
+
+        bookedDates[item.date].push(item.time);
+
+    });
+
+    const markedDates = {};
+
+    appointments.forEach(item => {
+        if (
+            item.doctorId !== doctor.id ||
+            item.status !== "upcoming"
+        ) {
+            return;
+        }
+
+        if (!markedDates[item.date]) {
+            markedDates[item.date] = [];
+        }
+
+        markedDates[item.date].push(item.time);
+    });
+
+    Object.keys(markedDates).forEach(date => {
+        const bookedCount = markedDates[date].length;
+
+        if (bookedCount >= slots.length) {
+            markedDates[date] = {
+                disabled: true,
+                disableTouchEvent: true,
+                textColor: Colors.disabledText,
+            };
+        } else {
+            markedDates[date] = {
+                marked: true,
+                dotColor: Colors.primary,
+            };
+        }
+    });
 
 
     const [showSchedule, setShowSchedule] = useState(openSchedule)
@@ -61,6 +126,8 @@ const DoctorInfo = () => {
     };
 
 
+
+
     const handleSchedule = () => {
         setShowSchedule(true)
     }
@@ -71,7 +138,7 @@ const DoctorInfo = () => {
                     style={styles.backBtn}
                     onPress={() => setShowSchedule(false)}
                 >
-                    <BackIcon width={16} height={16} color={Colors.primary}/>
+                    <BackIcon width={16} height={16} color={Colors.primary} />
                 </TouchableOpacity>
                 <View style={styles.scheduleTitleContainer}>
                     <Text style={styles.scheduleHeaderTitle}>
@@ -102,7 +169,7 @@ const DoctorInfo = () => {
             </View>
         )
     }
-
+    console.log(doctor)
     const renderDoctorCard = () => {
         return (
             <View style={styles.card}>
@@ -187,7 +254,7 @@ const DoctorInfo = () => {
                         <EmptyStar width={14} height={14} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.circleBtn}>
-                        {doctor.favorite ?<FilledHeart width={14} height={14}/> :<EmptyHeart width={14} height={14} />}
+                        {doctor.favorite ? <FilledHeart width={14} height={14} /> : <EmptyHeart width={14} height={14} />}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -285,10 +352,15 @@ const DoctorInfo = () => {
                         }}
 
                         markedDates={{
-                            [selectedDate]: {
-                                selected: true,
-                                selectedColor: Colors.primary,
-                            },
+                            ...markedDates,
+
+                            ...(selectedDate && {
+                                [selectedDate]: {
+                                    ...markedDates[selectedDate],
+                                    selected: true,
+                                    selectedColor: Colors.primary,
+                                },
+                            }),
                         }}
 
                         theme={{
@@ -308,7 +380,7 @@ const DoctorInfo = () => {
     return (
         <SafeAreaView style={styles.container}>
             {showSchedule ? renderScheduleHeader() : (
-                <Header text={'Doctor Info'}/>
+                <Header text={'Doctor Info'} />
             )}
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -328,7 +400,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.backgroundColor,
         fontFamily: Fonts.regular,
-        marginBottom:verticalScale(30)
+        marginBottom: verticalScale(30)
     },
     backBtn: {
         width: scale(36),
@@ -437,9 +509,9 @@ const styles = StyleSheet.create({
         height: verticalScale(20),
         minWidth: scale(43),
     },
-    chipText :{
-        marginLeft:scale(5),
-        fontFamily:Fonts.regular
+    chipText: {
+        marginLeft: scale(5),
+        fontFamily: Fonts.regular
     },
     chipDate: {
         width: scale(155),
@@ -451,12 +523,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(10),
         height: verticalScale(20),
         minWidth: scale(58),
-        fontFamily:Fonts.regular
+        fontFamily: Fonts.regular
     },
     actionRow: {
         marginTop: verticalScale(14),
         flexDirection: 'row',
-        gap:scale(8),
+        gap: scale(8),
         alignItems: 'center',
     },
     scheduleBtn: {
@@ -580,7 +652,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.socialButtonBackground,
         marginHorizontal: scale(-20),
         padding: moderateScale(20),
-        marginBottom:verticalScale(40)
+        marginBottom: verticalScale(40)
     },
 
     calendarHeader: {
@@ -602,8 +674,8 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(24),
         fontWeight: "700",
     },
-    footerCardContainer : {
-        marginBottom:verticalScale(40)
+    footerCardContainer: {
+        marginBottom: verticalScale(40)
     }
 })
 export default DoctorInfo

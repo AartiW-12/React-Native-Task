@@ -1,0 +1,49 @@
+{
+  "timeSlots": [
+    {
+      "id": "1",
+      "time": "09:00 AM",
+      "isAvailable": true
+    },
+    {
+      "id": "2",
+      "time": "09:30 AM",
+      "isAvailable": true
+    }
+  ],
+  "appointments": [
+    {
+      "id": "dOBdb28dC8Y",
+      "userId": "11",
+      "doctorId": "1",
+      "status": "completed",
+      "date": "2026-08-05",
+      "time": "10:30 AM"
+    },
+    {
+      "id": "GZbNTR57MQE",
+      "userId": "11",
+      "doctorId": "1",
+      "status": "completed",
+      "date": "2026-08-05",
+      "time": "09:00 AM"
+    },
+    {
+      "id": "cowggPZe8J8",
+      "userId": "11",
+      "doctorId": "1",
+      "status": "upcoming",
+      "date": "2026-08-05",
+      "time": "09:30 AM"
+    },
+    {
+      "id": "wvrupdCayS0",
+      "userId": "11",
+      "doctorId": "1",
+      "status": "upcoming",
+      "date": "2026-08-06",
+      "time": "09:00 AM"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -19,65 +19,59 @@ import Stethoscope from '../assets/images/svg/Stethoscope.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import { getDoctors, toggleFavorite } from '../redux/doctors/doctorSlice';
 import CommonStyles from '../components/constants/CommonStyles';
-
-const calendarData = [
-    {
-        id: 1,
-        date: '10',
-        day: 'Tue',
-        active: false,
-    },
-    {
-        id: 2,
-        date: '11',
-        day: 'Wed',
-        active: true,
-    },
-    {
-        id: 3,
-        date: '12',
-        day: 'Thu',
-        active: false,
-    },
-    {
-        id: 4,
-        date: '13',
-        day: 'Fri',
-        active: false,
-    },
-    {
-        id: 5,
-        date: '14',
-        day: 'Sat',
-        active: false,
-    },
-    {
-        id: 6,
-        date: '15',
-        day: 'Sun',
-        active: false,
-    },
-    {
-        id: 7,
-        date: '16',
-        day: 'Mon',
-        active: false,
-    },
-];
+import Strings from '../components/constants/Strings';
 
 // import doctorsList from '../components/doctor/doctorsList'
 function Home() {
 
     const [search, setSearch] = useState("")
     const [showFav, setShowFav] = useState(false)
+    const [selectedAppointment, setSelectedAppointment] = useState(0);
 
     const navigation = useNavigation()
 
     const { doctors, loading, error } = useSelector(state => state.doctors)
     const { user } = useSelector(state => state.auth)
+    const { appointments } = useSelector(state => state.appointments)
 
     const dispatch = useDispatch()
 
+    const appointmentsWithDoctor = useMemo(() => {
+        return appointments
+            .filter(appointment => String(appointment.userId) === String(user.id) && appointment.status === "upcoming")
+            .map(appointment => ({
+                ...appointment,
+                doctor: doctors.find(
+                    doc => String(doc.id) === String(appointment.doctorId)
+                ),
+            }))
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+    }, [appointments, doctors, user.id]);
+
+    const currentAppointment =
+        appointmentsWithDoctor[selectedAppointment] || null;
+
+    const currentWeek = useMemo(() => {
+        if (!currentAppointment) return [];
+
+        const appointmentDate = new Date(currentAppointment.date);
+
+        // Start from Sunday
+        const start = new Date(appointmentDate);
+        start.setDate(appointmentDate.getDate() - appointmentDate.getDay());
+
+        return Array.from({ length: 7 }, (_, index) => {
+            const date = new Date(start);
+            date.setDate(start.getDate() + index);
+
+            return {
+                key: date.toISOString().split("T")[0],
+                fullDate: date,
+                active:
+                    date.toDateString() === appointmentDate.toDateString(),
+            };
+        });
+    }, [currentAppointment]);
 
     const filteredDOctors = useMemo(() => {
         let filtered = doctors;
@@ -164,97 +158,126 @@ function Home() {
                     />
                 </View>
             </View>
-            <View style={styles.calendarContainer}>
-                <FlatList
-                    horizontal
-                    data={calendarData}
-                    keyExtractor={(item) => item.id.toString()}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.calendarList}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={[
-                                styles.dateCard,
-                                item.active && styles.activeDateCard,
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.dateNumber,
-                                    item.active && styles.activeText,
-                                ]}
-                            >
-                                {item.date}
-                            </Text>
-                            <Text
-                                style={[
-                                    styles.dateDay,
-                                    item.active && styles.activeText,
-                                ]}
-                            >
-                                {item.day}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                />
-                <View style={styles.appointmentCard}>
-                    <Text style={styles.appointmentDate}>
-                        11 Wednesday - Today
-                    </Text>
-                    <View style={styles.appointmentInfo}>
-                        <View style={CommonStyles.flex1}>
-                            <Text style={styles.doctorName}>
-                                Dr. Olivia Turner, M.D.
-                            </Text>
-                            <Text style={styles.doctorDesc}>
-                                Treatment and prevention of{"\n"}
-                                skin photodermatitis.
-                            </Text>
-                        </View>
-                        <View style={styles.statusContainer}>
-                            <View style={styles.statusCircle}>
-                                <Text style={styles.statusText}>✓</Text>
-                            </View>
-                            <View style={styles.statusCircle}>
-                                <Text style={styles.statusText}>✕</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.doctorsList}>
-                {loading && (
-                    <View style={styles.centerContainer}>
-                        <ActivityIndicator
-                            size="large"
-                            color={Colors.primary}
-                        />
-                        <Text style={styles.loadingText}>
-                            Loading doctors...
-                        </Text>
-                    </View>
-                )}
-                {error && (
-                    <View style={styles.centerContainer}>
-                        <Text style={styles.errorText}>
-                            {error}
-                        </Text>
-                        <View style={styles.retryBtnContainer}>
-                            <Button
-                                text="Retry"
-                                varient="primary"
-                                onPress={() => dispatch(getDoctors())}
-                                style={{ marginTop: 20 }}
-                            />
-                        </View>
 
-                    </View>
-                )}
+            <View style={styles.doctorsList}>
                 <FlatList
-                    data={filteredDOctors}
+                    data={loading || error ? [] : filteredDOctors}
                     keyExtractor={(item) => item.id.toString()}
                     contentContainerStyle={styles.listContainer}
                     showsVerticalScrollIndicator={false}
+                    ListEmptyComponent={
+                        loading ? (
+                            <View style={styles.centerContainer}>
+                                <ActivityIndicator
+                                    size="large"
+                                    color={Colors.primary}
+                                />
+                                <Text style={styles.loadingText}>{Strings.loadingDoctors}</Text>
+                            </View>
+                        ) : error ? (
+                            <View style={styles.centerContainer}>
+                                <Text style={styles.errorText}>
+                                    {error}
+                                </Text>
+                                <View style={styles.retryBtnContainer}>
+                                    <Button
+                                        text="Retry"
+                                        varient="primary"
+                                        onPress={() => dispatch(getDoctors())}
+                                        style={{ marginTop: 20 }}
+                                    />
+                                </View>
+                            </View>
+                        ) : showFav ? (
+                            <Text style={CommonStyles.emptyList}>{Strings.noFavoriteDoctors}</Text>
+                        ) : (
+                            <Text style={CommonStyles.emptyList}>{Strings.noDoctorsFound}</Text>
+                        )
+                    }
+                    ListHeaderComponent={
+                        !loading &&
+                            !error &&
+                            appointmentsWithDoctor.length > 0 ? (
+                            <View style={styles.calendarContainer}>
+
+                                <FlatList
+                                    horizontal
+                                    data={currentWeek}
+                                    keyExtractor={(_, index) => index.toString()}
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={styles.calendarList}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity
+                                            style={[
+                                                styles.dateCard,
+                                                item.active && styles.activeDateCard,
+                                            ]}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.dateNumber,
+                                                    item.active && styles.activeText,
+                                                ]}
+                                            >
+                                                {item.fullDate.getDate()}
+                                            </Text>
+
+                                            <Text
+                                                style={[
+                                                    styles.dateDay,
+                                                    item.active && styles.activeText,
+                                                ]}
+                                            >
+                                                {item.fullDate.toLocaleDateString("en-US", {
+                                                    weekday: "short",
+                                                })}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+
+                                {appointmentsWithDoctor.length > 1 && (
+                                    <TouchableOpacity
+                                        style={styles.viewAllContainer}
+                                        onPress={() => {
+                                            navigation.navigate('Schedule')
+                                        }}
+                                    >
+                                        <Text
+                                            style={styles.viewAll}
+                                        >{Strings.viewAll}</Text>
+                                    </TouchableOpacity>
+                                )}
+
+                                <View style={styles.appointmentCard}>
+                                    <Text style={styles.appointmentDate}>
+                                        {new Date(currentAppointment.date).toLocaleDateString("en-US", {
+                                            weekday: "long",
+                                            day: "numeric",
+                                            month: "long",
+                                        })}
+                                    </Text>
+
+                                    <View style={styles.appointmentInfo}>
+                                        <View style={CommonStyles.flex1}>
+                                            <Text style={styles.doctorName}>
+                                                {currentAppointment.doctor?.name}
+                                            </Text>
+
+                                            <Text style={styles.doctorDesc}>
+                                                {currentAppointment.doctor?.specialization}
+                                            </Text>
+
+                                            <Text style={styles.doctorDesc}>
+                                                {currentAppointment.time}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+
+                            </View>
+                        ) : null
+                    }
                     renderItem={({ item }) => (
                         <View style={styles.card}>
                             <Image source={{ uri: item.avatar }} style={styles.avatar} />
@@ -288,9 +311,9 @@ function Home() {
                                             <Text style={styles.question}>?</Text>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity 
+                                        <TouchableOpacity
                                             style={styles.circleButton}
-                                            onPress={() => dispatch(toggleFavorite({id : item.id, favorite:item.favorite}))}    
+                                            onPress={() => dispatch(toggleFavorite({ id: item.id, favorite: item.favorite }))}
                                         >
                                             {item.favorite ? (
                                                 <FilledHeart style={styles.iconStyle} />
@@ -391,12 +414,12 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(20),
     },
     listContainer: {
-        paddingHorizontal: scale(20),
         paddingTop: verticalScale(15),
         paddingBottom: verticalScale(50),
     },
 
     card: {
+        marginHorizontal: scale(20),
         flexDirection: 'row',
         backgroundColor: Colors.socialButtonBackground,
         borderRadius: moderateScale(18),
@@ -479,17 +502,18 @@ const styles = StyleSheet.create({
         width: scale(12)
     },
     calendarContainer: {
-        minWidth: scale(360),
+        width: '100%',
+        alignSelf: 'stretch',
         backgroundColor: Colors.socialButtonBackground,
-        marginTop: verticalScale(18),
-        paddingVertical: verticalScale(18),
+        paddingVertical: verticalScale(10),
+        marginBottom: verticalScale(10)
     },
     calendarList: {
         paddingHorizontal: scale(18),
     },
     dateCard: {
         width: scale(42),
-        height: verticalScale(64),
+        height: verticalScale(60),
         borderRadius: moderateScale(22),
         backgroundColor: Colors.white,
         justifyContent: 'center',
@@ -519,7 +543,7 @@ const styles = StyleSheet.create({
     appointmentCard: {
         minWidth: scale(299),
         marginHorizontal: scale(18),
-        marginTop: verticalScale(18),
+        marginTop: verticalScale(5),
         backgroundColor: Colors.white,
         borderRadius: moderateScale(22),
         padding: moderateScale(16),
@@ -553,50 +577,19 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
         lineHeight: moderateScale(18),
     },
-
-    statusContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    centerContainer: CommonStyles.centerContainer,
+    loadingText: CommonStyles.loadingText,
+    retryBtnContainer: CommonStyles.retryBtnContainer,
+    errorText: CommonStyles.errorText,
+    viewAllContainer : {
+        alignSelf: "flex-end",
+        paddingHorizontal: scale(30),
+        paddingTop:verticalScale(10)
     },
-
-    statusCircle: {
-        width: scale(24),
-        height: scale(24),
-        borderRadius: scale(12),
-        backgroundColor: Colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: scale(8),
-    },
-
-    statusText: {
+    viewAll : {
         color: Colors.primary,
-        fontSize: moderateScale(12),
-        fontWeight: '700',
-    },
-    centerContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.backgroundColor,
-    },
-
-    loadingText: {
-        marginTop: verticalScale(12),
-        color: Colors.primary,
-        fontFamily: Fonts.medium,
-        fontSize: moderateScale(15),
-    },
-    retryBtnContainer: {
-        width: scale(100),
-        height: verticalScale(20)
-    },
-    errorText: {
-        color: 'red',
-        fontSize: moderateScale(16),
-        fontFamily: Fonts.medium,
-        textAlign: 'center',
-        paddingHorizontal: scale(20),
-    },
+        fontFamily: Fonts.semiBold,
+        fontSize: FontSizes.sm
+    }
 })
 export default Home

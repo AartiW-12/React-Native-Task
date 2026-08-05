@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     View,
@@ -33,32 +33,26 @@ import QuestionIcon from '../assets/images/svg/QuestionIcon.svg';
 import FilledHeart from '../assets/images/svg/FilledHeart.svg';
 import EmptyHeart from '../assets/images/svg/EmptyHeart.svg';
 import BackIcon from '../assets/images/svg/BackIcon.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../components/button/Button';
 import { showSnackbar } from '../components/snackbar/ShowSnackbar';
+import { fetchAppointments } from '../redux/appointment/appointmentSlice';
+import { fetchSlots } from '../redux/slots/slotSlice';
 
-const availableTime = [
-    { id: 1, availableTime: "09:00 AM", isAvailable: true },
-    { id: 2, availableTime: "09:30 AM", isAvailable: false },
-    { id: 3, availableTime: "10:00 AM", isAvailable: true },
-    { id: 4, availableTime: "10:30 AM", isAvailable: true },
-    { id: 5, availableTime: "11:00 AM", isAvailable: true },
-    { id: 6, availableTime: "11:30 AM", isAvailable: true },
-    { id: 7, availableTime: "12:00 PM", isAvailable: false },
-    { id: 8, availableTime: "12:30 PM", isAvailable: true },
-    { id: 9, availableTime: "01:00 PM", isAvailable: false },
-    { id: 10, availableTime: "01:30 PM", isAvailable: true },
-    { id: 11, availableTime: "02:00 PM", isAvailable: true },
-    { id: 12, availableTime: "02:30 PM", isAvailable: true },
-    { id: 13, availableTime: "03:00 PM", isAvailable: true },
-    { id: 14, availableTime: "03:30 PM", isAvailable: false },
-    { id: 15, availableTime: "04:00 PM", isAvailable: true },
-];
 const ScheduleAppointment = () => {
     const navigation = useNavigation();
     const route = useRoute();
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchSlots())
+        dispatch(fetchAppointments())
+    }, [])
 
     const { user } = useSelector(state => state.auth)
+    const { appointments } = useSelector(state => state.appointments)
+    const { slots } = useSelector(state => state.slots)
+
 
     const { doctor, selectedDate: selectedDateParam } = route.params;
 
@@ -80,12 +74,11 @@ const ScheduleAppointment = () => {
     const baseDate = currentDate
 
     const changeDate = (days) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + days);
-
-    setCurrentDate(newDate);
-    setSelectedDate(newDate.toISOString().split("T")[0]);
-};
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + days);
+        setCurrentDate(newDate);
+        setSelectedDate(newDate.toISOString().split("T")[0]);
+    };
 
     const dates = [];
 
@@ -106,9 +99,11 @@ const ScheduleAppointment = () => {
 
     const rows = [];
 
-    for (let i = 0; i < availableTime.length; i += 5) {
-        rows.push(availableTime.slice(i, i + 5));
-    }
+    console.log("SLOTS", slots)
+
+    for (let i = 0; i < slots.length; i += 5) {
+    rows.push(slots.slice(i, i + 5));
+}
 
     const handleAppointmentFor = (type) => {
         setAppointmentFor(type);
@@ -125,13 +120,13 @@ const ScheduleAppointment = () => {
     };
 
     const handleBookAppointment = () => {
-        
-        const selectedTime = availableTime.find(
-            item => item.id === selectedSlot
-        )?.availableTime;
 
-        if(!selectedDate || !selectedTime || !appointmentFor || !patientName.trim() || !patientAge.trim() || !patientGender){
-            showSnackbar({ msg : "Please fill details"})
+        const selectedTime = slots.find(
+    item => item.id === selectedSlot
+)?.time;
+
+        if (!selectedDate || !selectedTime || !appointmentFor || !patientName.trim() || !patientAge.trim() || !patientGender) {
+            showSnackbar({ msg: "Please fill details" })
             return
         }
 
@@ -156,7 +151,7 @@ const ScheduleAppointment = () => {
                     style={styles.backBtn}
                     onPress={() => navigation.goBack()}
                 >
-                    <BackIcon width={12} height={12} />
+                    <BackIcon width={12} height={12} color={Colors.primary}/>
                 </TouchableOpacity>
                 <View style={styles.scheduleTitleContainer}>
                     <Text style={styles.scheduleHeaderTitle}>
@@ -187,6 +182,14 @@ const ScheduleAppointment = () => {
             </View>
         )
     }
+
+    const bookedSlots = appointments.filter(
+        item =>
+            item.doctorId === doctor.id &&
+            item.date === selectedDate &&
+            item.status === "upcoming"
+    );
+
     return (
         <SafeAreaView style={styles.container}>
             {renderScheduleHeader()}
@@ -213,9 +216,9 @@ const ScheduleAppointment = () => {
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => {
-    setSelectedDate(item.fullDate.toISOString().split("T")[0]);
-    setCurrentDate(item.fullDate);
-}}
+                                    setSelectedDate(item.fullDate.toISOString().split("T")[0]);
+                                    setCurrentDate(item.fullDate);
+                                }}
                                 style={[
                                     styles.dateCard,
                                     item.active && styles.activeDateCard,
@@ -269,34 +272,31 @@ const ScheduleAppointment = () => {
                             style={styles.timeRow}
                         >
                             {row.map((item) => {
-                                const isSelected =
-                                    selectedSlot === item.id;
-
+                                const isSelected = selectedSlot === item.id;
+                                const isBooked = bookedSlots.some(
+                                    slot => slot.time === item.time
+                                );
+                                const isDisabled =
+                                    !item.isAvailable || isBooked;
                                 return (
                                     <TouchableOpacity
                                         key={item.id}
-                                        disabled={!item.isAvailable}
-                                        onPress={() =>
-                                            setSelectedSlot(item.id)
-                                        }
+                                        disabled={isDisabled}
+                                        onPress={() => setSelectedSlot(item.id)}
                                         style={[
                                             styles.timeSlot,
-                                            !item.isAvailable &&
-                                            styles.disabledSlot,
-                                            isSelected &&
-                                            styles.selectedSlot,
+                                            isDisabled && styles.disabledSlot,
+                                            isSelected && styles.selectedSlot,
                                         ]}
                                     >
                                         <Text
                                             style={[
                                                 styles.timeSlotText,
-                                                !item.isAvailable &&
-                                                styles.disabledSlotText,
-                                                isSelected &&
-                                                styles.selectedSlotText,
+                                                isDisabled && styles.disabledSlotText,
+                                                isSelected && styles.selectedSlotText,
                                             ]}
                                         >
-                                            {item.availableTime}
+                                            {item.time}
                                         </Text>
                                     </TouchableOpacity>
                                 );
@@ -306,13 +306,10 @@ const ScheduleAppointment = () => {
                 </View>
                 <View style={styles.line} />
                 <View style={styles.patientDetailsContainer}>
-
                     <Text style={styles.sectionTitle}>
                         Patient Details
                     </Text>
-
                     <View style={styles.optionContainer}>
-
                         <TouchableOpacity
                             onPress={() => handleAppointmentFor('self')}
                             style={[
@@ -417,7 +414,7 @@ const ScheduleAppointment = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:Colors.screenBackground
+        backgroundColor: Colors.screenBackground
     },
     calendarRow: {
         flexDirection: 'row',

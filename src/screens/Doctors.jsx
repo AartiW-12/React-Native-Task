@@ -96,8 +96,8 @@ const Doctors = () => {
         navigation.navigate("DoctorInfo", { doctor, openSchedule : true})
     }
 
-    const handleFavoriteDoctor = (id) => {
-        dispatch(toggleFavorite(id, ))
+    const handleFavoriteDoctor = (id, fav) => {
+        dispatch(toggleFavorite(id,fav ))
     }
 
     const filteredDoctors = useMemo(() => {

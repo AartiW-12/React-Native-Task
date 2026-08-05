@@ -17,7 +17,9 @@ const Colors = {
 
   transparent: 'transparent',
 
-  modalLayout : 'rgba(163, 184, 243, 0.57)'
+  modalLayout : 'rgba(163, 184, 243, 0.57)',
+
+  danger : '#f72d2d'
 };
 
 export default Colors;

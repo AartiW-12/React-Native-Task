@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import api from "../../services/api";
+import api, { mockApi } from "../../services/api";
 
 const initialState = {
   user: null,
@@ -14,7 +14,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ inputValue, password }, { rejectWithValue }) => {
     try {
-      const response = await api.get("/users");
+      const response = await mockApi.get("/users");
 
       const user = response.data.find(
         (item) =>
@@ -46,7 +46,7 @@ export const signUpUser = createAsyncThunk(
   "auth/signUpUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await api.get("/users");
+      const response = await mockApi.get("/users");
 
       const existingUser = response.data.find(
         (item) =>
@@ -58,7 +58,7 @@ export const signUpUser = createAsyncThunk(
         return rejectWithValue("User Already Exists");
       }
 
-      const newUser = await api.post("/users", userData);
+      const newUser = await mockApi.post("/users", userData);
 
       const token = `token_${Date.now()}`;
 
@@ -82,7 +82,7 @@ export const updateProfileUser = createAsyncThunk(
   "auth/updateProfileUser",
   async ({ userId, userData }, { rejectWithValue }) => {
     try {
-      const response = await api.put(
+      const response = await mockApi.put(
         `/users/${userId}`,
         userData
       );
@@ -104,7 +104,7 @@ export const resetPasswordUser = createAsyncThunk(
   "auth/resetPasswordUser",
   async ({ userId, password }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/users/${userId}`, {
+      const response = await mockApi.put(`/users/${userId}`, {
         password,
       });
 
@@ -132,7 +132,7 @@ export const deleteAccount = createAsyncThunk(
   "auth/deleteAccount",
   async (userId, { rejectWithValue }) => {
     try {
-      await api.delete(`/users/${userId}`);
+      await mockApi.delete(`/users/${userId}`);
 
       await AsyncStorage.removeItem("User");
       await AsyncStorage.removeItem("Token");
