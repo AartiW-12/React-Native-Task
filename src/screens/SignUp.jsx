@@ -15,6 +15,7 @@ import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 import CommonStyles from '../components/constants/CommonStyles'
+import Spacing from '../components/style/Spacing'
 
 
 function SignUp({ navigation }) {
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: Colors.screenBackgroundFFF,
+        backgroundColor: Colors.screenBackground,
         paddingHorizontal: scale(30),
     },
 
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     },
 
     socialIcon: {
-        width: scale(24),
+        width: Spacing.xxl,
         height: scale(24),
     },
 

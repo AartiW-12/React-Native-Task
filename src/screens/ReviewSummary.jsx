@@ -16,6 +16,7 @@ import Fonts from '../components/style/Fonts'
 import FilledStar from '../assets/images/svg/FilledStar.svg'
 import CommentIcon from '../assets/images/svg/Comments.svg'
 import StarIcon from '../assets/images/svg/StarIconWhite.svg'
+import Spacing from '../components/style/Spacing'
 
 const ReviewSummary = () => {
 
@@ -26,7 +27,7 @@ const ReviewSummary = () => {
     const { doctor, selectedDate, selectedSlot, appointmentFor } = route.params
 
     const handlePayment = () => {
-        navigation.navigate("PaymentSuccessfull", {doctor, selectedDate, selectedSlot})
+        navigation.navigate("PaymentSuccessfull", {doctor, selectedDate, selectedSlot, appointmentFor})
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginTop:verticalScale(10),
+        marginHorizontal: Spacing.xl,
     },
     name: {
         flex: 1,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.regular,
     },
     blueCircleButton: {
-        width: scale(24),
+        width: Spacing.xxl,
         height: scale(24),
         borderRadius: scale(12),
         backgroundColor: Colors.primary,

@@ -22,13 +22,14 @@ export const fetchAppointments = createAsyncThunk(
 
 export const addAppointment = createAsyncThunk(
   "appointments/addAppointment",
-  async (data) => {
-    const response = await jsonServerApi.post(
-      "/appointments",
-      data
-    );
+  async (data,{ rejectWithValue }) => {
+    try {
+      const response = await jsonServerApi.post("/appointments",data);
 
-    return response.data;
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message)
+    }
   }
 )
 
@@ -75,13 +76,13 @@ const appointmentSlice = createSlice({
 
       .addCase(fetchAppointments.pending, (state) => {
         state.loading = true;
-        state.error= null
+        state.error = null
       })
 
       .addCase(fetchAppointments.fulfilled, (state, action) => {
         state.loading = false;
         state.appointments = action.payload;
-        state.error= null
+        state.error = null
       })
 
       .addCase(fetchAppointments.rejected, (state, action) => {

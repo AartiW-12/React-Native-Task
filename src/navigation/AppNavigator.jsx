@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { restoreSession } from '../redux/auth/authSlice'
 import SplashScreen from '../screens/SplashScreen'
-import { getDoctors } from '../redux/doctors/doctorSlice'
-import { fetchAppointments } from '../redux/appointment/appointmentSlice'
 
 function AppNavigator() {
 
@@ -28,8 +26,6 @@ function AppNavigator() {
                         user: JSON.parse(storedUser)
                     }))
                 }
-                await dispatch(getDoctors())
-                await(dispatch(fetchAppointments()))
             }
             catch (err) {
                 console.log(err)

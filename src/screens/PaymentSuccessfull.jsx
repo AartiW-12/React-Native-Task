@@ -16,28 +16,13 @@ import Fonts from '../components/style/Fonts'
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import { addAppointment } from '../redux/appointment/appointmentSlice'
 
 const PaymentSuccessfull = () => {
     const route = useRoute()
-    const { doctor, selectedDate, selectedSlot } = route.params
-
-    const { user } = useSelector(state => state.auth)
-
-    const dispatch = useDispatch()
+    const { doctor, selectedDate, selectedSlot} = route.params
 
     const navigation = useNavigation()
     useEffect(() => {
-        dispatch(
-            addAppointment({
-                id: Date.now().toString(),
-                userId : user.id,
-                doctorId: doctor.id,
-                status: "upcoming",
-                date: selectedDate,
-                time: selectedSlot,
-            })
-        );
         setTimeout(() => {
             navigation.dispatch(
                 CommonActions.reset({

@@ -19,6 +19,7 @@ import Fonts from "../components/style/Fonts";
 import FontSizes from "../components/style/FontSize";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import Spacing from "../components/style/Spacing";
 
 const initialMessages = [
   {
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.screenBackground,
   },
   messageContainer: {
-    marginBottom: verticalScale(16),
+    marginBottom: Spacing.vlg,
   },
   doctorContainer: {
     alignItems: "flex-start",

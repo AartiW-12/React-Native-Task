@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, RefreshControl } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import SearchBar from '../components/searchbar/SearchBar'
 import Colors from '../components/style/Colors';
 import FontSizes from '../components/style/FontSize';
 import Fonts from '../components/style/Fonts'
 import Button from '../components/button/Button';
+import Spacing from '../components/style/Spacing'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
@@ -20,13 +21,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDoctors, toggleFavorite } from '../redux/doctors/doctorSlice';
 import CommonStyles from '../components/constants/CommonStyles';
 import Strings from '../components/constants/Strings';
+import { fetchAppointments } from '../redux/appointment/appointmentSlice';
 
 // import doctorsList from '../components/doctor/doctorsList'
 function Home() {
 
+
+
     const [search, setSearch] = useState("")
     const [showFav, setShowFav] = useState(false)
-    const [selectedAppointment, setSelectedAppointment] = useState(0);
+    const [refreshing, setrefreshing] = useState(false)
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const [selectedDate, setSelectedDate] = useState(today);
 
     const navigation = useNavigation()
 
@@ -36,7 +44,20 @@ function Home() {
 
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        dispatch(getDoctors())
+        dispatch(fetchAppointments())
+    }, [])
+
+    const onRefresh = useCallback(() => {
+        setrefreshing(true)
+        dispatch(getDoctors())
+        dispatch(fetchAppointments())
+        setrefreshing(false)
+    }, [])
+
     const appointmentsWithDoctor = useMemo(() => {
+        if (!user) return []
         return appointments
             .filter(appointment => String(appointment.userId) === String(user.id) && appointment.status === "upcoming")
             .map(appointment => ({
@@ -48,30 +69,39 @@ function Home() {
             .sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [appointments, doctors, user.id]);
 
-    const currentAppointment =
-        appointmentsWithDoctor[selectedAppointment] || null;
 
-    const currentWeek = useMemo(() => {
-        if (!currentAppointment) return [];
+    const appointmentsByDate = useMemo(() => {
+        return appointmentsWithDoctor.reduce((acc, appointment) => {
 
-        const appointmentDate = new Date(currentAppointment.date);
+            const date = appointment.date.split("T")[0];
 
-        // Start from Sunday
-        const start = new Date(appointmentDate);
-        start.setDate(appointmentDate.getDate() - appointmentDate.getDay());
+            if (!acc[date]) {
+                acc[date] = [];
+            }
 
-        return Array.from({ length: 7 }, (_, index) => {
+            acc[date].push(appointment);
+
+            return acc;
+
+        }, {});
+    }, [appointmentsWithDoctor]);
+    const calendarDates = useMemo(() => {
+        const start = new Date();
+
+        return Array.from({ length: 30 }, (_, index) => {
             const date = new Date(start);
             date.setDate(start.getDate() + index);
 
+            const dateString = date.toISOString().split("T")[0];
+
             return {
-                key: date.toISOString().split("T")[0],
+                key: dateString,
                 fullDate: date,
-                active:
-                    date.toDateString() === appointmentDate.toDateString(),
+                hasAppointment: !!appointmentsByDate[dateString],
+                selected: selectedDate === dateString,
             };
         });
-    }, [currentAppointment]);
+    }, [appointmentsByDate, selectedDate]);
 
     const filteredDOctors = useMemo(() => {
         let filtered = doctors;
@@ -93,6 +123,11 @@ function Home() {
         return filtered;
     }, [doctors, search, showFav]);
 
+
+    const selectedAppointments =
+        appointmentsByDate[selectedDate] || [];
+
+    const firstAppointment = selectedAppointments[0];
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
@@ -164,6 +199,12 @@ function Home() {
                     data={loading || error ? [] : filteredDOctors}
                     keyExtractor={(item) => item.id.toString()}
                     contentContainerStyle={styles.listContainer}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={
                         loading ? (
@@ -181,7 +222,7 @@ function Home() {
                                 </Text>
                                 <View style={styles.retryBtnContainer}>
                                     <Button
-                                        text="Retry"
+                                        text={Strings.retry}
                                         varient="primary"
                                         onPress={() => dispatch(getDoctors())}
                                         style={{ marginTop: 20 }}
@@ -202,21 +243,23 @@ function Home() {
 
                                 <FlatList
                                     horizontal
-                                    data={currentWeek}
+                                    data={calendarDates}
                                     keyExtractor={(_, index) => index.toString()}
                                     showsHorizontalScrollIndicator={false}
                                     contentContainerStyle={styles.calendarList}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
+                                            onPress={() => setSelectedDate(item.key)}
                                             style={[
                                                 styles.dateCard,
-                                                item.active && styles.activeDateCard,
+                                                item.hasAppointment && styles.appointmentDateCard,
+                                                item.selected && styles.selectedCard,
                                             ]}
                                         >
                                             <Text
                                                 style={[
                                                     styles.dateNumber,
-                                                    item.active && styles.activeText,
+                                                    item.selected && styles.selectedText
                                                 ]}
                                             >
                                                 {item.fullDate.getDate()}
@@ -225,55 +268,64 @@ function Home() {
                                             <Text
                                                 style={[
                                                     styles.dateDay,
-                                                    item.active && styles.activeText,
+                                                    item.selected && styles.selectedText
                                                 ]}
                                             >
                                                 {item.fullDate.toLocaleDateString("en-US", {
-                                                    weekday: "short",
+                                                    weekday: "short"
                                                 })}
                                             </Text>
                                         </TouchableOpacity>
                                     )}
                                 />
 
-                                {appointmentsWithDoctor.length > 1 && (
+                                {selectedAppointments.length > 1 && (
                                     <TouchableOpacity
                                         style={styles.viewAllContainer}
-                                        onPress={() => {
-                                            navigation.navigate('Schedule')
-                                        }}
+                                        onPress={() =>
+                                            navigation.navigate("Schedule", {
+                                                selectedDate,
+                                                fromHome:true
+                                            })
+                                        }
                                     >
-                                        <Text
-                                            style={styles.viewAll}
-                                        >{Strings.viewAll}</Text>
+                                        <Text style={styles.viewAll}>
+                                            View All
+                                        </Text>
                                     </TouchableOpacity>
                                 )}
 
-                                <View style={styles.appointmentCard}>
-                                    <Text style={styles.appointmentDate}>
-                                        {new Date(currentAppointment.date).toLocaleDateString("en-US", {
-                                            weekday: "long",
-                                            day: "numeric",
-                                            month: "long",
-                                        })}
+                                {selectedAppointments.length === 0 ? (
+                                    <Text style={CommonStyles.emptyList}>
+                                        No Appointment
                                     </Text>
+                                ) : (
+                                    <View style={styles.appointmentCard}>
+                                        <Text style={styles.appointmentDate}>
+                                            {new Date(firstAppointment.date).toLocaleDateString("en-US", {
+                                                weekday: "long",
+                                                day: "numeric",
+                                                month: "long",
+                                            })}
+                                        </Text>
 
-                                    <View style={styles.appointmentInfo}>
-                                        <View style={CommonStyles.flex1}>
-                                            <Text style={styles.doctorName}>
-                                                {currentAppointment.doctor?.name}
-                                            </Text>
+                                        <View style={styles.appointmentInfo}>
+                                            <View style={CommonStyles.flex1}>
+                                                <Text style={styles.doctorName}>
+                                                    {firstAppointment.doctor?.name}
+                                                </Text>
 
-                                            <Text style={styles.doctorDesc}>
-                                                {currentAppointment.doctor?.specialization}
-                                            </Text>
+                                                <Text style={styles.doctorDesc}>
+                                                    {firstAppointment.doctor?.specialization}
+                                                </Text>
 
-                                            <Text style={styles.doctorDesc}>
-                                                {currentAppointment.time}
-                                            </Text>
+                                                <Text style={styles.doctorDesc}>
+                                                    {firstAppointment.time}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
+                                )}
 
                             </View>
                         ) : null
@@ -342,8 +394,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginHorizontal: 20,
-        marginTop: verticalScale(10)
+        marginHorizontal: Spacing.xl,
+        marginTop: Spacing.vsm
     },
     leftContainer: {
         flexDirection: 'row',
@@ -419,7 +471,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        marginHorizontal: scale(20),
+        marginHorizontal: Spacing.xl,
         flexDirection: 'row',
         backgroundColor: Colors.socialButtonBackground,
         borderRadius: moderateScale(18),
@@ -448,7 +500,7 @@ const styles = StyleSheet.create({
     },
     name: {
         flex: 1,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         color: Colors.primary,
         fontFamily: Fonts.medium,
         fontWeight: '500'
@@ -543,7 +595,7 @@ const styles = StyleSheet.create({
     appointmentCard: {
         minWidth: scale(299),
         marginHorizontal: scale(18),
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
         backgroundColor: Colors.white,
         borderRadius: moderateScale(22),
         padding: moderateScale(16),
@@ -581,15 +633,26 @@ const styles = StyleSheet.create({
     loadingText: CommonStyles.loadingText,
     retryBtnContainer: CommonStyles.retryBtnContainer,
     errorText: CommonStyles.errorText,
-    viewAllContainer : {
+    viewAllContainer: {
         alignSelf: "flex-end",
         paddingHorizontal: scale(30),
-        paddingTop:verticalScale(10)
+        paddingTop: verticalScale(10)
     },
-    viewAll : {
+    viewAll: {
         color: Colors.primary,
         fontFamily: Fonts.semiBold,
         fontSize: FontSizes.sm
-    }
+    },
+    selectedCard: {
+        backgroundColor: Colors.primary,
+    },
+
+    selectedText: {
+        color: Colors.white,
+    },
+    appointmentDateCard: {
+        borderWidth: 2,
+        borderColor: Colors.primary,
+    },
 })
 export default Home

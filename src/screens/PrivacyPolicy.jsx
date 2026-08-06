@@ -6,6 +6,8 @@ import Header from '../components/header/Header'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Colors from '../components/style/Colors'
 import Fonts from '../components/style/Fonts'
+import Spacing from '../components/style/Spacing'
+import FontSizes from '../components/style/FontSize'
 
 const termsConditions = [
     { id: 1, condition: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Et at ea, aspernatur iure debitis rem vel perferendis fugit velit rerum. Minus odio eaque porro quidem.' },
@@ -51,58 +53,58 @@ const styles = StyleSheet.create({
 
     list: {
         flex: 1,
-        marginTop: verticalScale(10),
+        marginTop: Spacing.vsm,
     },
 
     sectionContainer: {
-        marginHorizontal: scale(20),
-        marginTop: verticalScale(20),
-        gap: verticalScale(10),
+        marginHorizontal: Spacing.xl,
+        marginTop: Spacing.vxl,
+        gap: Spacing.vsm,
     },
 
     labelLink: {
         color: Colors.primaryLight,
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(12),
+        fontSize: FontSizes.sm,
     },
 
     label: {
         color: Colors.primary,
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(20),
+        fontSize: FontSizes.xxl,
     },
 
     text: {
         color: Colors.black,
         fontFamily: Fonts.regular,
-        fontSize: moderateScale(14),
-        lineHeight: moderateScale(22),
+        fontSize: FontSizes.md,
+        lineHeight:Spacing.xl,
         textAlign: 'justify',
     },
 
     listContainer: {
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
     },
 
     listItem: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        marginBottom: verticalScale(16),
+        marginBottom: Spacing.vlg,
     },
 
     number: {
-        width: scale(24),
+        width: Spacing.xxl,
         color: Colors.primary,
         fontFamily: Fonts.semiBold,
-        fontSize: moderateScale(15),
+        fontSize: FontSizes.lg,
     },
 
     condition: {
         flex: 1,
         color: Colors.black,
         fontFamily: Fonts.regular,
-        fontSize: moderateScale(14),
-        lineHeight: moderateScale(22),
+        fontSize: FontSizes.md,
+        lineHeight: Spacing.xl,
         textAlign: 'justify',
     },
 });

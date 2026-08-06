@@ -15,11 +15,19 @@ const Strings = {
     dobPlaceholder:"DD / MM /YYY",
     setPassword:"Set Password",
     viewAll:"View All",
+    lookingDoctors:"Looking Doctors",
 
     // Error or loading related texts
     noFavoriteDoctors : "No Favorite Doctors",
     noDoctorsFound:"No Doctors Found",
-    loadingDoctors:"Loading Doctors..."
+    loadingDoctors:"Loading Doctors...",
+    noFavoriteServices : "No Favorite Services",
+
+    //button text
+    retry:"Retry",
+    details:'Details',  
+    reBook: 'Re-Book',
+    book:'Book'
 
 }
 

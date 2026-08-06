@@ -32,29 +32,38 @@ import Header from '../header/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAppointments } from '../../redux/appointment/appointmentSlice'
 import { fetchSlots } from '../../redux/slots/slotSlice'
+import { toggleFavorite } from '../../redux/doctors/doctorSlice'
 
-
+const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 const DoctorInfo = () => {
+
     const route = useRoute()
     const navigation = useNavigation()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(fetchSlots())
-        dispatch(fetchAppointments())
-    }, [])
-
-    const doctor = route.params.doctor
+    const { doctor: routeDoctor } = route.params;
     const openSchedule = route?.params?.openSchedule ?? false
 
     const { slots } = useSelector(state => state.slots)
     const { appointments } = useSelector(state => state.appointments)
+    const doctor = useSelector(state =>
+        state.doctors.doctors.find(
+            item => String(item.id) === String(routeDoctor.id)
+        )
+    );
+
+    const [showSchedule, setShowSchedule] = useState(openSchedule)
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+
+    useEffect(() => {
+        dispatch(fetchSlots())
+    }, [])
 
     const bookedDates = {};
 
     appointments.forEach(item => {
-
         if (
             item.doctorId !== doctor.id ||
             item.status !== "upcoming"
@@ -96,22 +105,8 @@ const DoctorInfo = () => {
                 disableTouchEvent: true,
                 textColor: Colors.disabledText,
             };
-        } else {
-            markedDates[date] = {
-                marked: true,
-                dotColor: Colors.primary,
-            };
         }
     });
-
-
-    const [showSchedule, setShowSchedule] = useState(openSchedule)
-    const [selectedDate, setSelectedDate] = useState(null)
-
-
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-
-    const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
     const goToPreviousMonth = () => {
         const prev = new Date(currentMonth);
@@ -126,11 +121,14 @@ const DoctorInfo = () => {
     };
 
 
-
+    const handleToggleFavorite = () => {
+        dispatch(toggleFavorite({ id: doctor.id, favorite: doctor.favorite }))
+    }
 
     const handleSchedule = () => {
         setShowSchedule(true)
     }
+
     const renderScheduleHeader = () => {
         return (
             <View style={styles.scheduleHeader}>
@@ -154,7 +152,10 @@ const DoctorInfo = () => {
                         <ScheduleVideoCall width={16} height={16} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.blueCircleBtn}>
+                    <TouchableOpacity 
+                        style={styles.blueCircleBtn}
+                        onPress={() => navigation.navigate("Chat",{ doctor})}    
+                    >
                         <ChatIcon width={16} height={16} />
                     </TouchableOpacity>
 
@@ -162,14 +163,16 @@ const DoctorInfo = () => {
                         <QuestionIcon width={16} height={16} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.starCircleBtn}>
+                    <TouchableOpacity 
+                        style={styles.starCircleBtn}
+                        onPress={handleToggleFavorite}    
+                    >
                         {doctor.favorite ? <FilledHeart width={16} height={16} /> : <EmptyHeart width={16} height={16} />}
                     </TouchableOpacity>
                 </View>
             </View>
         )
     }
-    console.log(doctor)
     const renderDoctorCard = () => {
         return (
             <View style={styles.card}>
@@ -253,7 +256,11 @@ const DoctorInfo = () => {
                     <TouchableOpacity style={styles.circleBtn}>
                         <EmptyStar width={14} height={14} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.circleBtn}>
+                    {console.log(doctor, "INSIDE INFO")}
+                    <TouchableOpacity
+                        style={styles.circleBtn}
+                        onPress={handleToggleFavorite}
+                    >
                         {doctor.favorite ? <FilledHeart width={14} height={14} /> : <EmptyHeart width={14} height={14} />}
                     </TouchableOpacity>
                 </View>
@@ -377,6 +384,7 @@ const DoctorInfo = () => {
             </View>
         );
     };
+    
     return (
         <SafeAreaView style={styles.container}>
             {showSchedule ? renderScheduleHeader() : (
@@ -483,7 +491,7 @@ const styles = StyleSheet.create({
     },
     name: {
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         color: Colors.primary,
     },
     specialization: {
@@ -493,7 +501,7 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(2),
     },
     statsRow: {
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -545,21 +553,13 @@ const styles = StyleSheet.create({
         color: Colors.white,
         marginLeft: scale(6),
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
     },
     circleBtn: {
-        width: scale(24),
+        width: Spacing.xxl,
         height: scale(24),
         borderRadius: scale(12),
         backgroundColor: Colors.white,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    starCircleBtn: {
-        width: scale(28),
-        height: scale(28),
-        borderRadius: scale(19),
-        backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.medium,
         paddingVertical: verticalScale(10),
         paddingHorizontal: scale(5),
-        fontSize: moderateScale(14)
+        fontSize: FontSizes.md
     },
     text: {
         color: Colors.black,
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     },
     scheduleHeaderTitle: {
         color: Colors.white,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         fontFamily: Fonts.semiBold,
     },
     scheduleActions: {

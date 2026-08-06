@@ -36,8 +36,9 @@ import BackIcon from '../assets/images/svg/BackIcon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../components/button/Button';
 import { showSnackbar } from '../components/snackbar/ShowSnackbar';
-import { fetchAppointments } from '../redux/appointment/appointmentSlice';
+import { addAppointment, fetchAppointments } from '../redux/appointment/appointmentSlice';
 import { fetchSlots } from '../redux/slots/slotSlice';
+import Strings from '../components/constants/Strings';
 
 const ScheduleAppointment = () => {
     const navigation = useNavigation();
@@ -99,11 +100,9 @@ const ScheduleAppointment = () => {
 
     const rows = [];
 
-    console.log("SLOTS", slots)
-
     for (let i = 0; i < slots.length; i += 5) {
-    rows.push(slots.slice(i, i + 5));
-}
+        rows.push(slots.slice(i, i + 5));
+    }
 
     const handleAppointmentFor = (type) => {
         setAppointmentFor(type);
@@ -122,13 +121,28 @@ const ScheduleAppointment = () => {
     const handleBookAppointment = () => {
 
         const selectedTime = slots.find(
-    item => item.id === selectedSlot
-)?.time;
+            item => item.id === selectedSlot
+        )?.time;
 
         if (!selectedDate || !selectedTime || !appointmentFor || !patientName.trim() || !patientAge.trim() || !patientGender) {
             showSnackbar({ msg: "Please fill details" })
             return
         }
+        dispatch(addAppointment({
+            id: Date.now().toString(),
+            userId: user.id,
+            doctorId: doctor.id,
+            status: "upcoming",
+            date: selectedDate,
+            time: selectedTime,
+            appointmentFor: appointmentFor,
+            patientDetails: {
+                name: patientName,
+                age: patientAge,
+                gender: patientGender,
+                problem,
+            }
+        }))
 
         navigation.navigate("YourAppointment", {
             doctor,
@@ -151,7 +165,7 @@ const ScheduleAppointment = () => {
                     style={styles.backBtn}
                     onPress={() => navigation.goBack()}
                 >
-                    <BackIcon width={12} height={12} color={Colors.primary}/>
+                    <BackIcon width={12} height={12} color={Colors.primary} />
                 </TouchableOpacity>
                 <View style={styles.scheduleTitleContainer}>
                     <Text style={styles.scheduleHeaderTitle}>
@@ -400,7 +414,7 @@ const ScheduleAppointment = () => {
                     />
                     <View style={styles.btnContainer}>
                         <Button
-                            text={'Book'}
+                            text={Strings.book}
                             onPress={() => handleBookAppointment()}
                         />
                     </View>
@@ -475,7 +489,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(20)
     },
     availableTimeTitle: {
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         fontFamily: Fonts.bold,
         color: Colors.primary,
         marginBottom: verticalScale(15),
@@ -533,7 +547,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        gap: scale(8),
+        gap: scale(5),
     },
     blueCircleBtn: {
         width: scale(20),
@@ -552,7 +566,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     patientDetailsContainer: {
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
         paddingHorizontal: scale(35),
     },
     sectionTitle: {
@@ -610,7 +624,8 @@ const styles = StyleSheet.create({
     btnContainer: {
         width: scale(150),
         justifyContent: 'center',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        paddingVertical: verticalScale(20)
     },
     line: {
         height: scale(1),

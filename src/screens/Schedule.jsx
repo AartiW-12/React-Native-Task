@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 import FilledStar from '../assets/images/svg/FilledStar.svg'
@@ -22,6 +22,8 @@ import Button from '../components/button/Button';
 import { cancelAppointment, completeAppointment, fetchAppointments } from '../redux/appointment/appointmentSlice';
 import { toggleFavorite } from '../redux/doctors/doctorSlice';
 import CommonStyles from '../components/constants/CommonStyles';
+import Strings from '../components/constants/Strings';
+import Spacing from '../components/style/Spacing';
 
 
 const TABS = [
@@ -33,11 +35,16 @@ const TABS = [
 const Schedule = () => {
 
   const [activeTab, setActiveTab] = useState('upcoming');
+  const [refreshing, setRefreshing] = useState(false)
+  const [filterDate, setFilterDate] = useState(null);
 
+  const { user } = useSelector(state => state.auth)
   const { doctors } = useSelector(state => state.doctors);
   const { appointments, loading, error } = useSelector(
     state => state.appointments
   );
+
+  const route = useRoute()
 
   const dispatch = useDispatch()
 
@@ -47,12 +54,38 @@ const Schedule = () => {
     dispatch(fetchAppointments())
   }, [])
 
-  console.log("APPOi", appointments)
+  // const { selectedDate } = route?.params || {}
 
-  const filteredAppointments = appointments.filter(
-    item => item.status === activeTab,
-  );
+  const onRefresh = () => {
+    setRefreshing(true)
+    dispatch(fetchAppointments())
+    setRefreshing(false)
+  }
 
+
+  console.log(route.params)
+
+  useEffect(() => {
+    if (route.params?.fromHome) {
+      setFilterDate(route.params.selectedDate);
+    } else {
+      setFilterDate(null);
+    }
+  }, [route.params?.fromHome, route.params?.selectedDate]);
+
+  const filteredAppointments = appointments.filter(item => {
+    const matchUser =
+      String(item.userId) === String(user.id);
+
+    const matchStatus =
+      item.status === activeTab;
+
+    const matchDate =
+      !filterDate ||
+      item.date.split("T")[0] === filterDate;
+
+    return matchUser && matchStatus && matchDate;
+  });
 
   const renderUpcomingCard = ({ item }) => {
     const doctor = doctors.find(d => d.id === item.doctorId);
@@ -83,12 +116,21 @@ const Schedule = () => {
             <Text style={styles.chipText}>{item.time}</Text>
           </View>
         </View>
-
         <View style={styles.bottomRow}>
           <Button
-            text={'Details'}
+            text={Strings.details}
             style={styles.detailsButton}
             textStyle={styles.detailsText}
+            onPress={() => navigation.navigate('YourAppointment', {
+              doctor,
+              selectedDate: item.date,
+              selectedSlot: item.time,
+              patientDetails: item.patientDetails,
+              appointmentFor: item.appointmentFor,
+              showAddAppointmentIcon: false,
+              appointmentId: item.id
+            })
+            }
           />
 
           <TouchableOpacity
@@ -148,7 +190,7 @@ const Schedule = () => {
 
         <View style={styles.buttonRow}>
           <Button
-            text={'Re-Book'}
+            text={Strings.reBook}
             style={styles.secondaryButton}
             textStyle={styles.secondaryText}
             onPress={() => navigation.navigate("DoctorInfo", { doctor, openSchedule: true })}
@@ -225,7 +267,7 @@ const Schedule = () => {
         {error && (
           <View style={styles.centerContainer}>
             <Text style={styles.errorText}>
-              { error}
+              {error}
             </Text>
             <View style={styles.retryBtnContainer}>
               <Button
@@ -237,13 +279,19 @@ const Schedule = () => {
             </View>
           </View>
         )}
-        {filteredAppointments.length <=0 && <Text style={CommonStyles.emptyList}>No Records Found</Text>}
+        {filteredAppointments.length <= 0 && <Text style={CommonStyles.emptyList}>No Records Found</Text>}
         <FlatList
           data={filteredAppointments}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
         />
       </View>
     </SafeAreaView>
@@ -261,7 +309,7 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
   },
   tabSwitcherContainer: {
-    marginBottom: verticalScale(16),
+    marginBottom: Spacing.vlg,
     justifyContent: 'center',
     fontFamily: Fonts.medium
   },
@@ -274,7 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(18),
     paddingHorizontal: scale(14),
     paddingVertical: verticalScale(10),
-    marginBottom: verticalScale(16),
+    marginBottom: Spacing.vlg,
   },
   tabBtn: {
     height: verticalScale(30),

@@ -71,6 +71,15 @@ export default function BottomTabNavigator() {
       <Tab.Screen
         name="Schedule"
         component={Schedule}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Schedule", {
+              fromHome: false,
+              selectedDate: undefined,
+            });
+          },
+        })}
         options={{
           tabBarIcon: ({ focused }) => (
             <CalendarIconWhite
@@ -96,17 +105,17 @@ export default function BottomTabNavigator() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    
+
     position: 'absolute',
-  
-  bottom: 18,
-  height: 55,
-  borderRadius: 28,
-  backgroundColor: Colors.primary,
-  marginHorizontal:moderateScale(40)
+
+    bottom: 18,
+    height: 55,
+    borderRadius: 28,
+    backgroundColor: Colors.primary,
+    marginHorizontal: moderateScale(40)
   },
 
   tabItem: {
-    marginTop:verticalScale(6)
+    marginTop: verticalScale(6)
   },
 });

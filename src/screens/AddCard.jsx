@@ -17,6 +17,7 @@ import { showSnackbar } from '../components/snackbar/ShowSnackbar';
 import Chip from '../assets/images/svg/Chip.svg';
 import Polygon from '../assets/images/svg/Polygon.svg'
 import CommonStyles from '../components/constants/CommonStyles';
+import Spacing from '../components/style/Spacing';
 
 export default function AddCardScreen() {
 
@@ -131,13 +132,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.screenBackground,
-        paddingHorizontal: 24,
+        paddingHorizontal: Spacing.xxl,
     },
     button: { alignSelf: 'center' },
     card: {
-        marginTop: 20,
-        height: 210,
-        borderRadius: 22,
+        marginTop: Spacing.xl,
+        height: Spacing.cardHeight,
+        borderRadius: Spacing.xl,
         backgroundColor: Colors.primary,
         overflow: 'hidden',
         position: 'relative',
@@ -146,35 +147,35 @@ const styles = StyleSheet.create({
     polygon1: {
         position: 'absolute',
         top: -40,
-        left: 0,
-        width: '100%',
-        height: '100%',
+        left: Spacing.zero,
+        width: Spacing.fullWidth,
+        height: Spacing.fullWidth,
     },
 
     polygon2: {
         position: 'absolute',
-        top: 0,
-        right: 0,
+        top: Spacing.zero,
+        right: Spacing.zero,
     },
 
     content: {
         flex: 1,
         justifyContent: 'space-between',
-        padding: 22,
+        padding: Spacing.xl,
     },
     logo: {
-        width: 58,
-        height: 18,
-        borderWidth: 2,
+        width: Spacing.xxxxl,
+        height: Spacing.lg,
+        borderWidth: Spacing.xs / Spacing.xs,
         borderColor: Colors.white,
-        borderRadius: 4,
+        borderRadius: Spacing.vxs,
         alignSelf: 'flex-end',
     },
 
     cardNumber: {
         color: Colors.white,
-        fontSize: 28,
-        letterSpacing: 2,
+        fontSize: FontSizes.title,
+        letterSpacing: Spacing.sm / Spacing.sm,
     },
 
     cardBottom: {
@@ -185,24 +186,24 @@ const styles = StyleSheet.create({
 
     label: {
         color: Colors.white,
-        fontSize: 12,
+        fontSize:FontSizes.sm,
     },
 
     value: {
         color: Colors.white,
-        fontSize: 18,
+        fontSize: FontSizes.lg,
         fontWeight: '700',
     },
 
     chip: {
-        width: 38,
-        height: 32,
+        width: Spacing.cardChipWidth,
+        height: Spacing.xxxl,
     },
 
     heading: {
-        marginTop: 22,
-        marginBottom: 8,
-        fontSize: 18,
+        marginTop: Spacing.xl,
+        marginBottom: Spacing.vsm,
+        fontSize: FontSizes.xl,
         fontWeight: '600',
         color: Colors.black,
         fontFamily: Fonts.regular,
@@ -210,11 +211,11 @@ const styles = StyleSheet.create({
     },
 
     input: {
-        height: 56,
-        borderRadius: 18,
+        height: Spacing.xxxxl,
+        borderRadius: Spacing.lg,
         backgroundColor: Colors.inputBackground,
-        paddingHorizontal: 18,
-        fontSize: 18,
+        paddingHorizontal: Spacing.lg,
+        fontSize: Spacing.lg,
         color: Colors.primary,
     },
 
@@ -225,6 +226,6 @@ const styles = StyleSheet.create({
     },
 
     half: {
-        width: '47%',
+        width: Spacing.cardInputWidth,
     },
 });

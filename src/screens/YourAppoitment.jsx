@@ -16,6 +16,8 @@ import FontSizes from '../components/style/FontSize'
 import EmptyStar from '../assets/images/svg/EmptyStar.svg'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 import ReviewSummary from './ReviewSummary'
+import { useDispatch } from 'react-redux'
+import Spacing from '../components/style/Spacing'
 
 const YourAppoitment = () => {
     const route = useRoute()
@@ -25,6 +27,10 @@ const YourAppoitment = () => {
     const selectedSlot = route.params.selectedSlot
     const patientDetails = route.params.patientDetails
     const appointmentFor = route.params.appointmentFor
+    const showAddAppointmentIcon =route.params?.showAddAppointmentIcon ?? true;
+    const appointmentId = route?.params?.appointmentId ?? null
+
+    const dispatch = useDispatch()
 
     return (
         <SafeAreaView>
@@ -83,14 +89,13 @@ const YourAppoitment = () => {
                         <Text style={styles.dateText}>{selectedDate}</Text>
                     </View>
 
-                    <Text style={styles.timeText}>{selectedSlot || "ABC"}</Text>
+                    <Text style={styles.timeText}>{selectedSlot || "Unable to load slot"}</Text>
                 </View>
 
                 <View style={styles.statusContainer}>
-                    <TouchableOpacity 
+                    {showAddAppointmentIcon && <TouchableOpacity
                         style={styles.statusButton}
                         onPress={() => {
-                            showSnackbar({ msg:'Appointment created'})
                             navigation.navigate("ReviewSummary", {
                                 doctor,
                                 selectedDate,
@@ -101,11 +106,13 @@ const YourAppoitment = () => {
                         }}
                     >
                         <Text style={styles.statusIcon}>✓</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
 
                     <TouchableOpacity 
                         style={styles.statusButton}
-                        onPress={() => showSnackbar({ msg:"Appointment Cancelled"})}
+                        onPress={() => {
+                            !showAddAppointmentIcon? navigation.navigate("CancelAppointment",{ appointmentId:appointmentId}): navigation.goBack()
+                        }}
                     >
                         <Text style={styles.statusIcon}>✕</Text>
                     </TouchableOpacity>
@@ -186,7 +193,7 @@ const styles = StyleSheet.create({
         borderRadius: 13
     },
     name: {
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         color: Colors.primary,
         fontFamily: Fonts.medium,
         fontWeight: '500'
@@ -276,7 +283,7 @@ const styles = StyleSheet.create({
     },
 
     timeText: {
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
         color: Colors.primary,
         fontFamily: Fonts.regular,
         fontSize: FontSizes.md,

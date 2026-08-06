@@ -27,9 +27,12 @@ import DownIcon from '../assets/images/svg/DownIcon.svg'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
-import { getDoctors, toggleFavorite} from '../redux/doctors/doctorSlice'
+import { getDoctors, toggleFavorite } from '../redux/doctors/doctorSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FontSizes from '../components/style/FontSize'
+import CommonStyles from '../components/constants/CommonStyles'
+import Strings from '../components/constants/Strings'
+import Spacing from '../components/style/Spacing'
 
 
 const filterIndex = {
@@ -93,11 +96,11 @@ const Doctors = () => {
     }
 
     const bookAppointment = (doctor) => {
-        navigation.navigate("DoctorInfo", { doctor, openSchedule : true})
+        navigation.navigate("DoctorInfo", { doctor, openSchedule: true })
     }
 
     const handleFavoriteDoctor = (id, fav) => {
-        dispatch(toggleFavorite(id,fav ))
+        dispatch(toggleFavorite(id, fav))
     }
 
     const filteredDoctors = useMemo(() => {
@@ -148,9 +151,9 @@ const Doctors = () => {
                         <TouchableOpacity style={styles.defaultCardCircleButton}>
                             <QuestionIcon style={styles.defaultIconStyle} />
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={styles.defaultCardCircleButton}
-                            onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}    
+                            onPress={() => handleFavoriteDoctor({ id: item.id, favorite: item.favorite })}
                         >
                             {item.favorite ? <FilledHeart style={styles.defaultIconStyle} /> : <EmptyHeart style={styles.defaultIconStyle} />}
                         </TouchableOpacity>
@@ -205,9 +208,9 @@ const Doctors = () => {
                         <View style={styles.ratingCardCircleButton}>
                             <QuestionIcon />
                         </View>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={styles.ratingCardCircleButton}
-                            onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}
+                            onPress={() => handleFavoriteDoctor({ id: item.id, favorite: item.favorite })}
                         >
                             {item.favorite ? <FilledHeart /> : <EmptyHeart />}
                         </TouchableOpacity>
@@ -235,11 +238,11 @@ const Doctors = () => {
                         <Text numberOfLines={1} style={styles.favoriteName}>{item.name}</Text>
                         <Text style={styles.favoriteSpecialization}>{item.specialization}</Text>
                     </View>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.favoriteFavoriteSection}
-                        onPress={() => handleFavoriteDoctor({id : item.id, favorite:item.favorite})}
+                        onPress={() => handleFavoriteDoctor({ id: item.id, favorite: item.favorite })}
                     >
-                        {item.favorite ? <FilledHeart height={16} width={18} /> : <EmptyHeart height={16} width={18}/>}
+                        {item.favorite ? <FilledHeart height={16} width={18} /> : <EmptyHeart height={16} width={18} />}
                     </TouchableOpacity>
                 </View>
                 <View style={styles.favoriteBottomRow}>
@@ -280,9 +283,12 @@ const Doctors = () => {
                             aliquam quibusdam, eos eaque? Sequi corrupti praesentium harum ducimus.
                         </Text>
                     </View>
-                    <View style={styles.serviceDropdownBtn}>
-                        <Text style={styles.serviceBtnText}>Looking Doctors</Text>
-                    </View>
+                    <TouchableOpacity 
+                        style={styles.serviceDropdownBtn}
+                        onPress={() => navigation.navigate("DoctorInfo", {doctor:item, openSchedule:false})}    
+                    >
+                        <Text style={styles.serviceBtnText}>{Strings.lookingDoctors}</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         </View>
@@ -303,39 +309,6 @@ const Doctors = () => {
             default:
                 return renderDefaultCard(item)
         }
-    }
-    if (loading) {
-        return (
-            <View style={styles.centerContainer}>
-                <ActivityIndicator
-                    size="large"
-                    color={Colors.primary}
-                />
-                <Text style={styles.loadingText}>
-                    Loading doctors...
-                </Text>
-            </View>
-        );
-    }
-
-    if (error) {
-        return (
-            <View style={styles.centerContainer}>
-                <Text style={styles.errorText}>
-                    {error}
-                </Text>
-                <View style={styles.retryBtnContainer}>
-                    <Button
-                        text="Retry"
-                        varient="primary"
-                        onPress={() => dispatch(getDoctors())}
-                        style={{ marginTop: 20 }}
-                        textStyle={styles.buttonText}
-                    />
-                </View>
-
-            </View>
-        );
     }
     return (
         <SafeAreaView style={styles.parentContainer}>
@@ -443,6 +416,61 @@ const Doctors = () => {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={renderItem}
                         showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={() => {
+                            if (loading) {
+                                return (
+                                    <View style={styles.centerContainer}>
+                                        <ActivityIndicator
+                                            size="large"
+                                            color={Colors.primary}
+                                        />
+                                        <Text style={styles.loadingText}>
+                                            Loading doctors...
+                                        </Text>
+                                    </View>
+                                );
+                            }
+
+                            if (error) {
+                                return (
+                                    <View style={styles.centerContainer}>
+                                        <Text style={styles.errorText}>
+                                            {error}
+                                        </Text>
+
+                                        <View style={styles.retryBtnContainer}>
+                                            <Button
+                                                text="Retry"
+                                                varient="primary"
+                                                onPress={() => dispatch(getDoctors())}
+                                                style={{ marginTop: 20 }}
+                                                textStyle={styles.buttonText}
+                                            />
+                                        </View>
+                                    </View>
+                                );
+                            }
+
+                            if (activeFilter === filterIndex.FAVORITE) {
+                                if (favoriteTab === favTab.DOCTORS) {
+                                    return (
+                                        <Text style={CommonStyles.emptyList}>
+                                            {Strings.noFavoriteDoctors}
+                                        </Text>
+                                    );
+                                }
+                                return (
+                                    <Text style={CommonStyles.emptyList}>
+                                        {Strings.noFavoriteServices}
+                                    </Text>
+                                );
+                            }
+                            return (
+                                <Text style={CommonStyles.emptyList}>
+                                    {Strings.noDoctorsFound}
+                                </Text>
+                            );
+                        }}
                         contentContainerStyle={styles.listContainer}
                     />
                 </View>
@@ -465,11 +493,11 @@ const styles = StyleSheet.create({
     headerRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: scale(20),
+        marginHorizontal: Spacing.xl,
         marginBottom: verticalScale(10),
     },
     headerContent: {
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         fontFamily: Fonts.medium,
         color: Colors.black,
         marginRight: scale(8),
@@ -504,11 +532,11 @@ const styles = StyleSheet.create({
     listContainer: {
         paddingHorizontal: scale(20),
         paddingTop: verticalScale(15),
-        paddingBottom: verticalScale(30),
+        paddingBottom: verticalScale(50),
     },
 
     favoriteTabContainer: {
-        marginHorizontal: scale(20),
+        marginHorizontal: Spacing.xl,
         marginTop: verticalScale(15),
         marginBottom: verticalScale(12),
         width: 'auto',
@@ -631,7 +659,7 @@ const styles = StyleSheet.create({
     },
     ratingName: {
         flex: 1,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         color: Colors.primary,
         fontFamily: Fonts.medium,
         fontWeight: '500',
@@ -725,7 +753,7 @@ const styles = StyleSheet.create({
     },
     favoriteName: {
         flex: 1,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
         color: Colors.primary,
         fontFamily: Fonts.medium,
         fontWeight: '500',
@@ -786,7 +814,7 @@ const styles = StyleSheet.create({
     serviceDropdownBtn: {
         backgroundColor: Colors.socialButtonBackground,
         marginHorizontal: scale(10),
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
         marginBottom: verticalScale(22),
         padding: moderateScale(10),
         borderRadius: moderateScale(21),
@@ -805,8 +833,8 @@ const styles = StyleSheet.create({
     },
     activeCircleButton: {
         backgroundColor: Colors.primary,
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     centerContainer: {
         flex: 1,
@@ -819,7 +847,7 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(12),
         color: Colors.primary,
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(15),
+        fontSize: FontSizes.lg,
     },
     retryBtnContainer: {
         width: scale(100),

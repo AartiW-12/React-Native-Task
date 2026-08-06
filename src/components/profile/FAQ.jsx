@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         width: scale(95),
     },
     btnText: {
-        fontSize: moderateScale(14)
+        fontSize: FontSizes.md
     },
     serviceBar: {
         flexDirection: 'row',
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     title: {
         color: Colors.black,
         fontFamily: Fonts.regular,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
     
     },
     downBtn: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     },
 
     dropdownContainer: {
-        marginTop: verticalScale(5),
+        marginTop:Spacing.vxs,
     },
 
     dropdown: {

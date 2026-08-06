@@ -10,6 +10,7 @@ import {
   scale,
 } from 'react-native-size-matters';
 import Colors from '../style/Colors';
+import FontSizes from '../style/FontSize';
 
 function SearchBar({
   placeholder = '',
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
 
   searchBar: {
     flex: 1,
-    fontSize: moderateScale(15),
+    fontSize: FontSizes.lg,
     marginLeft:scale(10)
   },
 

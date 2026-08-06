@@ -179,6 +179,7 @@ const Notifications = () => {
   );
 };
 export default Notifications;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -210,27 +211,20 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: Colors.primary,
   },
-
-
   markContainer: {
     alignItems: 'flex-end',
     paddingHorizontal: moderateScale(20),
     paddingVertical:verticalScale(10)
   },
-
   markText: {
     fontFamily: Fonts.medium,
     fontSize: FontSizes.md,
     color: Colors.primary,
   },
-
-
   listContainer: {
     paddingHorizontal: moderateScale(20),
     paddingBottom: moderateScale(20),
   },
-
-
   sectionTitleContainer: {
     alignSelf: 'flex-start',
     backgroundColor: Colors.primaryLight,

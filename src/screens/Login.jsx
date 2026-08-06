@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -60,6 +60,9 @@ function Login({ navigation }) {
         style={CommonStyles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
+        {/* <ScrollView>
+
+        </ScrollView> */}
         <View style={styles.container}>
           <Header text={Strings.login} />
           <Text style={styles.header2}>Welcome</Text>
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
   },
 
   socialIcon: {
-    width: scale(24),
+    width: Spacing.xxl,
     height: scale(24),
   },
 

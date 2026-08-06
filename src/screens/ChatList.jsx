@@ -35,7 +35,7 @@ const ChatList = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header text={'Chat'} />
+            <Header text={'Chat'} backIconColor={Colors.primary}/>
             <View style={styles.listContainer}>
                 <FlatList
                     data={myDoctors}

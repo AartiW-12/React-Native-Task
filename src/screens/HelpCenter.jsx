@@ -14,6 +14,7 @@ import TabSwitcher from '../components/tab-switcher/TabSwitcher'
 
 import FAQ from '../components/profile/FAQ'
 import ContactUs from '../components/profile/ContactUs'
+import FontSizes from '../components/style/FontSize'
 
 const HelpCenter = () => {
     const [search, setSearch] = useState("")
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
 
     helpTabText: {
         fontFamily: Fonts.medium,
-        fontSize: moderateScale(14),
+        fontSize: FontSizes.md,
     },
 })
 export default HelpCenter
