@@ -31,10 +31,59 @@ function SignUp({ navigation }) {
 
     // sign up function 
     const handleSignUp = async () => {
+    // Full Name
+    if (!name.trim()) {
+        showSnackbar({ msg: Strings.fullNameValidation });
+        return;
+    }
+
+    // Email
+    if (!email.trim()) {
+        showSnackbar({ msg: Strings.emailValidation });
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email.trim())) {
+        showSnackbar({ msg: Strings.validEmail });
+        return;
+    }
+
+    // Password
+    if (!password.trim()) {
+        showSnackbar({ msg: Strings.enterPassword });
+        return;
+    }
+
+    if (password.length < 6) {
+        showSnackbar({ msg: Strings.passwordLength });
+        return;
+    }
+
+    // Mobile Number
+    if (!mobileNumber.trim()) {
+        showSnackbar({ msg: Strings.mobileNum });
+        return;
+    }
+
+    const mobileRegex = /^[6-9]\d{9}$/;
+
+    if (!mobileRegex.test(mobileNumber)) {
+        showSnackbar({ msg: Strings.validMobNumber });
+        return;
+    }
+
+    // Date of Birth
+    if (!dob.trim()) {
+        showSnackbar({ msg: Strings.enterDob });
+        return;
+    }
+
     const result = await dispatch(
         signUpUser({
-            name,
-            email,
+            name: name.trim(),
+            email: email.trim(),
             password,
             mobileNumber,
             dob,
@@ -44,7 +93,7 @@ function SignUp({ navigation }) {
 
     if (signUpUser.fulfilled.match(result)) {
         showSnackbar({
-            msg: "Account Created Successfully",
+            msg: Strings.accountCreated,
         });
     } else {
         showSnackbar({
@@ -167,7 +216,7 @@ function SignUp({ navigation }) {
 const styles = StyleSheet.create({
     scrollContainer: {
         flexGrow: 1,
-        paddingBottom: verticalScale(30),
+        paddingBottom: Spacing.vspb30,
         backgroundColor: Colors.screenBackground,
     },
     container: {
@@ -233,7 +282,7 @@ const styles = StyleSheet.create({
     },
 
     socialButton: {
-        width: scale(40),
+        width: Spacing.w40,
         height: scale(40),
         borderRadius: scale(20),
         backgroundColor: Colors.socialButtonBackground,

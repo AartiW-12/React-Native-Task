@@ -16,6 +16,7 @@ import { CommonActions, useNavigation, useRoute } from '@react-navigation/native
 import { useDispatch } from 'react-redux';
 import { cancelAppointment } from '../redux/appointment/appointmentSlice';
 import CommonStyles from '../components/constants/CommonStyles';
+import Spacing from '../components/style/Spacing';
 
 const CancelAppointment = () => {
 
@@ -28,35 +29,34 @@ const CancelAppointment = () => {
 
   const dispatch = useDispatch()
 
+  console.log("APPID", appointmentId)
 
   const navigation = useNavigation()
 
-  const handleCancelAppointment = () => {
-    showSnackbar({ msg: "Appointment Cancelled" })
-    dispatch(cancelAppointment(appointmentId))
-    setTimeout(() => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            {
-              name: 'BottomTabNavigator',
-              state: {
-                routes: [
-                  {
-                    name: "Home",
-                    state: {
-                      routes: [{ name: "Home" }]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        })
-      )
-    }, 1000);
+  const handleCancelAppointment = async () => {
+  try {
+    await dispatch(cancelAppointment(appointmentId)).unwrap();
+
+    showSnackbar({ msg: "Appointment Cancelled" });
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "BottomTabNavigator",
+            state: {
+              routes: [{ name: "Home" }],
+            },
+          },
+        ],
+      })
+    );
+  } catch (err) {
+    console.log(err);
+    showSnackbar({ msg: "Failed to cancel appointment" });
   }
+};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -158,41 +158,41 @@ const styles = StyleSheet.create({
   },
   crollContainer: {
     flexGrow: 1,
-    paddingBottom: verticalScale(30),
+    paddingBottom: Spacing.vspb30,
     backgroundColor: Colors.screenBackground,
   },
   content: {
     flex: 1,
-    paddingHorizontal: scale(24),
-    paddingTop: verticalScale(18),
+    paddingHorizontal: Spacing.xxl,
+    paddingTop: Spacing.vxl,
   },
 
   description: {
     fontSize: FontSizes.sm,
     fontFamily: Fonts.regular,
     color: Colors.black,
-    lineHeight: moderateScale(18),
-    marginBottom: verticalScale(20),
+    lineHeight:Spacing.mlg,
+    marginBottom: Spacing.vxl,
   },
 
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: verticalScale(18),
+    marginBottom: Spacing.xl,
   },
 
   radioOuter: {
-    width: scale(20),
-    height: scale(20),
-    borderRadius: scale(10),
-    borderWidth: 1.5,
+    width: Spacing.xl,
+    height: Spacing.xl,
+    borderRadius: Spacing.md,
+    borderWidth: Spacing.bw1p5,
     borderColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   radioInner: {
-    width: scale(10),
+    width: Spacing.w10,
     height: scale(10),
     borderRadius: scale(5),
     backgroundColor: Colors.primary,

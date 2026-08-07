@@ -6,6 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -39,6 +41,7 @@ import { showSnackbar } from '../components/snackbar/ShowSnackbar';
 import { addAppointment, fetchAppointments } from '../redux/appointment/appointmentSlice';
 import { fetchSlots } from '../redux/slots/slotSlice';
 import Strings from '../components/constants/Strings';
+import Spacing from '../components/style/Spacing';
 
 const ScheduleAppointment = () => {
     const navigation = useNavigation();
@@ -118,44 +121,46 @@ const ScheduleAppointment = () => {
         }
     };
 
-    const handleBookAppointment = () => {
-
+    const handleBookAppointment = async () => {
         const selectedTime = slots.find(
             item => item.id === selectedSlot
         )?.time;
 
-        if (!selectedDate || !selectedTime || !appointmentFor || !patientName.trim() || !patientAge.trim() || !patientGender) {
-            showSnackbar({ msg: "Please fill details" })
-            return
+        if (!selectedDate ||!selectedTime ||!appointmentFor ||!patientName.trim() ||!patientAge.trim() ||!patientGender) {
+            showSnackbar({ msg: Strings.fillDetails});
+            return;
         }
-        dispatch(addAppointment({
-            id: Date.now().toString(),
-            userId: user.id,
-            doctorId: doctor.id,
-            status: "upcoming",
-            date: selectedDate,
-            time: selectedTime,
-            appointmentFor: appointmentFor,
-            patientDetails: {
-                name: patientName,
-                age: patientAge,
-                gender: patientGender,
-                problem,
-            }
-        }))
 
-        navigation.navigate("YourAppointment", {
-            doctor,
-            selectedDate,
-            selectedSlot: selectedTime,
-            appointmentFor,
-            patientDetails: {
-                name: patientName,
-                age: patientAge,
-                gender: patientGender,
-                problem,
-            },
-        });
+        try {
+            const appointment = await dispatch(
+                addAppointment({
+                    userId: user.id,
+                    doctorId: doctor.id,
+                    status: "upcoming",
+                    date: selectedDate,
+                    time: selectedTime,
+                    appointmentFor,
+                    patientDetails: {
+                        name: patientName,
+                        age: patientAge,
+                        gender: patientGender,
+                        problem,
+                    },
+                })
+            ).unwrap();
+
+            navigation.navigate("YourAppointment", {
+                appointmentId: appointment.id,
+                doctor,
+                selectedDate,
+                selectedSlot: selectedTime,
+                appointmentFor,
+                patientDetails: appointment.patientDetails,
+            });
+        } catch (err) {
+            console.log(err);
+            showSnackbar({ msg: Strings.appointmentBookingFailed });
+        }
     };
 
     const renderScheduleHeader = () => {
@@ -204,222 +209,258 @@ const ScheduleAppointment = () => {
             item.status === "upcoming"
     );
 
+    const isPastTimeSlot = (slotTime) => {
+        const today = new Date().toISOString().split("T")[0];
+
+        if (selectedDate !== today) {
+            return false;
+        }
+        const now = new Date();
+
+        const [time, modifier] = slotTime.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (modifier === "PM" && hours !== 12) {
+            hours += 12;
+        }
+
+        if (modifier === "AM" && hours === 12) {
+            hours = 0;
+        }
+
+        const slotDate = new Date();
+        slotDate.setHours(hours, minutes, 0, 0);
+        return slotDate <= now;
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            {renderScheduleHeader()}
-            <View style={styles.calendarListContainer}>
-                <Text style={styles.month}>
-                    {baseDate.toLocaleDateString('default', {
-                        month: 'long',
-                        year: 'numeric',
-                    })}
-                </Text>
-                <View style={styles.calendarRow}>
-                    <TouchableOpacity
-                        style={styles.arrowButton}
-                        onPress={() => changeDate(-1)}
-                    >
-                        <BackIcon width={14} height={14} />
-                    </TouchableOpacity>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.calendarList}
-                    >
-                        {dates.map((item, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => {
-                                    setSelectedDate(item.fullDate.toISOString().split("T")[0]);
-                                    setCurrentDate(item.fullDate);
-                                }}
-                                style={[
-                                    styles.dateCard,
-                                    item.active && styles.activeDateCard,
-                                ]}
-                            >
-                                <Text
-                                    style={[
-                                        styles.dateNumber,
-                                        item.active && styles.activeText,
-                                    ]}
-                                >
-                                    {item.date}
-                                </Text>
-
-                                <Text
-                                    style={[
-                                        styles.dateDay,
-                                        item.active && styles.activeText,
-                                    ]}
-                                >
-                                    {item.day}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                    <TouchableOpacity
-                        style={styles.arrowButton}
-                        onPress={() => changeDate(1)}
-                    >
-                        <BackIcon
-                            width={14}
-                            height={14}
-                            style={{ transform: [{ rotate: '180deg' }] }}
-                        />
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-            <ScrollView
+            <KeyboardAvoidingView
                 style={CommonStyles.flex1}
-                contentContainerStyle={CommonStyles.paddBottom}
-                showsVerticalScrollIndicator={false}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : Spacing.md}
             >
-                <View style={styles.timeSection}>
-                    <Text style={styles.availableTimeTitle}>
-                        Available Time
+                {renderScheduleHeader()}
+                <View style={styles.calendarListContainer}>
+                    <Text style={styles.month}>
+                        {baseDate.toLocaleDateString('default', {
+                            month: 'long',
+                            year: 'numeric',
+                        })}
                     </Text>
-                    {rows.map((row, rowIndex) => (
-                        <View
-                            key={rowIndex}
-                            style={styles.timeRow}
+                    <View style={styles.calendarRow}>
+                        <TouchableOpacity
+                            style={styles.arrowButton}
+                            onPress={() => changeDate(-1)}
                         >
-                            {row.map((item) => {
-                                const isSelected = selectedSlot === item.id;
-                                const isBooked = bookedSlots.some(
-                                    slot => slot.time === item.time
-                                );
-                                const isDisabled =
-                                    !item.isAvailable || isBooked;
-                                return (
-                                    <TouchableOpacity
-                                        key={item.id}
-                                        disabled={isDisabled}
-                                        onPress={() => setSelectedSlot(item.id)}
+                            <BackIcon width={14} height={14} />
+                        </TouchableOpacity>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.calendarList}
+                            keyboardShouldPersistTaps={'handled'}
+                        >
+                            {dates.map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() => {
+                                        setSelectedDate(item.fullDate.toISOString().split("T")[0]);
+                                        setCurrentDate(item.fullDate);
+                                    }}
+                                    style={[
+                                        styles.dateCard,
+                                        item.active && styles.activeDateCard,
+                                    ]}
+                                >
+                                    <Text
                                         style={[
-                                            styles.timeSlot,
-                                            isDisabled && styles.disabledSlot,
-                                            isSelected && styles.selectedSlot,
+                                            styles.dateNumber,
+                                            item.active && styles.activeText,
                                         ]}
                                     >
-                                        <Text
-                                            style={[
-                                                styles.timeSlotText,
-                                                isDisabled && styles.disabledSlotText,
-                                                isSelected && styles.selectedSlotText,
-                                            ]}
-                                        >
-                                            {item.time}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    ))}
-                </View>
-                <View style={styles.line} />
-                <View style={styles.patientDetailsContainer}>
-                    <Text style={styles.sectionTitle}>
-                        Patient Details
-                    </Text>
-                    <View style={styles.optionContainer}>
-                        <TouchableOpacity
-                            onPress={() => handleAppointmentFor('self')}
-                            style={[
-                                styles.optionButton,
-                                appointmentFor === 'self' &&
-                                styles.activeOption,
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.optionText,
-                                    appointmentFor === 'self' &&
-                                    styles.activeOptionText,
-                                ]}
-                            >
-                                Yourself
-                            </Text>
-                        </TouchableOpacity>
+                                        {item.date}
+                                    </Text>
 
+                                    <Text
+                                        style={[
+                                            styles.dateDay,
+                                            item.active && styles.activeText,
+                                        ]}
+                                    >
+                                        {item.day}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
                         <TouchableOpacity
-                            onPress={() => handleAppointmentFor('other')}
-                            style={[
-                                styles.optionButton,
-                                appointmentFor === 'other' &&
-                                styles.activeOption,
-                            ]}
+                            style={styles.arrowButton}
+                            onPress={() => changeDate(1)}
                         >
-                            <Text
-                                style={[
-                                    styles.optionText,
-                                    appointmentFor === 'other' &&
-                                    styles.activeOptionText,
-                                ]}
-                            >
-                                Another
-                            </Text>
+                            <BackIcon
+                                width={14}
+                                height={14}
+                                style={{ transform: [{ rotate: '180deg' }] }}
+                            />
                         </TouchableOpacity>
 
                     </View>
-                    <Text style={styles.inputLabel}>Full Name</Text>
-                    <Input
-                        placeholder="Full Name"
-                        value={patientName}
-                        onChangeText={setPatientName}
-                    />
-                    <Text style={styles.inputLabel}>Age</Text>
-                    <Input
-                        placeholder="Age"
-                        value={patientAge}
-                        keyboardType="numeric"
-                        onChangeText={setPatientAge}
-                    />
-                    <Text style={styles.inputLabel}>Gender</Text>
+                </View>
+                <ScrollView
+                    style={CommonStyles.flex1}
+                    contentContainerStyle={CommonStyles.paddBottom}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps={'handled'}
+                >
+                    <View style={styles.timeSection}>
+                        <Text style={styles.availableTimeTitle}>
+                            Available Time
+                        </Text>
+                        {rows.map((row, rowIndex) => (
+                            <View
+                                key={rowIndex}
+                                style={styles.timeRow}
+                            >
+                                {row.map((item) => {
+                                    const isSelected = selectedSlot === item.id;
+                                    const isBooked = bookedSlots.some(
+                                        slot => slot.time === item.time
+                                    );
+                                    const isPast = isPastTimeSlot(item.time);
 
-                    <View style={styles.genderContainer}>
-                        {['Male', 'Female', 'Other'].map(item => (
+                                    const isDisabled =
+                                        !item.isAvailable ||
+                                        isBooked ||
+                                        isPast;
+                                    return (
+                                        <TouchableOpacity
+                                            key={item.id}
+                                            disabled={isDisabled}
+                                            onPress={() => setSelectedSlot(item.id)}
+                                            style={[
+                                                styles.timeSlot,
+                                                isDisabled && styles.disabledSlot,
+                                                isSelected && styles.selectedSlot,
+                                            ]}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.timeSlotText,
+                                                    isDisabled && styles.disabledSlotText,
+                                                    isSelected && styles.selectedSlotText,
+                                                ]}
+                                            >
+                                                {item.time}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+                        ))}
+                    </View>
+                    <View style={styles.line} />
+                    <View style={styles.patientDetailsContainer}>
+                        <Text style={styles.sectionTitle}>
+                            Patient Details
+                        </Text>
+                        <View style={styles.optionContainer}>
                             <TouchableOpacity
-                                key={item}
-                                onPress={() => setPatientGender(item)}
+                                onPress={() => handleAppointmentFor('self')}
                                 style={[
                                     styles.optionButton,
-                                    patientGender === item && styles.activeOption,
+                                    appointmentFor === 'self' &&
+                                    styles.activeOption,
                                 ]}
                             >
                                 <Text
                                     style={[
                                         styles.optionText,
-                                        patientGender === item &&
+                                        appointmentFor === 'self' &&
                                         styles.activeOptionText,
                                     ]}
                                 >
-                                    {item}
+                                    Yourself
                                 </Text>
                             </TouchableOpacity>
-                        ))}
-                    </View>
-                    <View style={styles.line} />
-                    <Text style={styles.inputLabel}>Describe Your Problem</Text>
-                    <Input
-                        placeholder="Describe your problem here..."
-                        value={problem}
-                        onChangeText={setProblem}
-                        multiline
-                        numberOfLines={5}
-                        textAlignVertical="top"
-                        placeholderTextColor={Colors.black}
-                        style={styles.problemInput}
-                    />
-                    <View style={styles.btnContainer}>
-                        <Button
-                            text={Strings.book}
-                            onPress={() => handleBookAppointment()}
+
+                            <TouchableOpacity
+                                onPress={() => handleAppointmentFor('other')}
+                                style={[
+                                    styles.optionButton,
+                                    appointmentFor === 'other' &&
+                                    styles.activeOption,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.optionText,
+                                        appointmentFor === 'other' &&
+                                        styles.activeOptionText,
+                                    ]}
+                                >
+                                    Another
+                                </Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        <Text style={styles.inputLabel}>Full Name</Text>
+                        <Input
+                            placeholder="Full Name"
+                            value={patientName}
+                            onChangeText={setPatientName}
                         />
+                        <Text style={styles.inputLabel}>Age</Text>
+                        <Input
+                            placeholder="Age"
+                            value={patientAge}
+                            keyboardType="numeric"
+                            onChangeText={setPatientAge}
+                        />
+                        <Text style={styles.inputLabel}>Gender</Text>
+
+                        <View style={styles.genderContainer}>
+                            {['Male', 'Female', 'Other'].map(item => (
+                                <TouchableOpacity
+                                    key={item}
+                                    onPress={() => setPatientGender(item)}
+                                    style={[
+                                        styles.optionButton,
+                                        patientGender === item && styles.activeOption,
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.optionText,
+                                            patientGender === item &&
+                                            styles.activeOptionText,
+                                        ]}
+                                    >
+                                        {item}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                        <View style={styles.line} />
+                        <Text style={styles.inputLabel}>Describe Your Problem</Text>
+                        <Input
+                            placeholder="Describe your problem here..."
+                            value={problem}
+                            onChangeText={setProblem}
+                            multiline
+                            numberOfLines={5}
+                            textAlignVertical="top"
+                            placeholderTextColor={Colors.black}
+                            style={styles.problemInput}
+                        />
+                        <View style={styles.btnContainer}>
+                            <Button
+                                text={Strings.book}
+                                onPress={handleBookAppointment}
+                            />
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
 
     )
@@ -435,8 +476,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     arrowButton: {
-        width: scale(34),
-        height: scale(34),
+        width: Spacing.xxxl,
+        height: Spacing.xxxl,
         borderRadius: scale(17),
         justifyContent: 'center',
         alignItems: 'center',
@@ -459,9 +500,9 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(15),
     },
     dateCard: {
-        width: scale(42),
+        width: Spacing.w42,
         height: verticalScale(64),
-        borderRadius: moderateScale(22),
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
@@ -476,7 +517,7 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.bold,
     },
     dateDay: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         fontSize: moderateScale(11),
         color: Colors.black,
         fontFamily: Fonts.regular,
@@ -525,17 +566,17 @@ const styles = StyleSheet.create({
         color: Colors.disabledText,
     },
     scheduleHeader: {
-        height: verticalScale(60),
+        height: Spacing.h60,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: scale(15),
+        paddingHorizontal: Spacing.lg,
         backgroundColor: Colors.backgroundColor,
     },
     scheduleTitleContainer: {
         backgroundColor: Colors.primary,
         paddingHorizontal: scale(18),
         paddingVertical: verticalScale(4),
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
     },
     scheduleHeaderTitle: {
         color: Colors.white,
@@ -550,23 +591,23 @@ const styles = StyleSheet.create({
         gap: scale(5),
     },
     blueCircleBtn: {
-        width: scale(20),
-        height: scale(20),
-        borderRadius: scale(10),
+        width: Spacing.xl,
+        height: Spacing.xl,
+        borderRadius: Spacing.md,
         backgroundColor: Colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
     },
     starCircleBtn: {
-        width: scale(20),
-        height: scale(20),
-        borderRadius: scale(10),
+        width: Spacing.xl,
+        height: Spacing.xl,
+        borderRadius: Spacing.md,
         backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
     },
     patientDetailsContainer: {
-        marginTop:Spacing.vxs,
+        marginTop: Spacing.vxs,
         paddingHorizontal: scale(35),
     },
     sectionTitle: {
@@ -577,7 +618,7 @@ const styles = StyleSheet.create({
     },
     optionContainer: {
         flexDirection: 'row',
-        marginBottom: verticalScale(20),
+        marginBottom: Spacing.vxl,
     },
     optionButton: {
         paddingHorizontal: scale(2),
@@ -603,7 +644,7 @@ const styles = StyleSheet.create({
     },
 
     problemInput: {
-        height: verticalScale(60),
+        height: Spacing.h60,
         paddingTop: verticalScale(10),
     },
     inputLabel: {

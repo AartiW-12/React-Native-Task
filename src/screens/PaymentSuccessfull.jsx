@@ -16,6 +16,7 @@ import Fonts from '../components/style/Fonts'
 
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
+import Spacing from '../components/style/Spacing'
 
 const PaymentSuccessfull = () => {
     const route = useRoute()
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
         paddingVertical: verticalScale(3),
         paddingHorizontal: scale(5),
         alignSelf: 'center',
-        marginLeft: scale(20),
+        marginLeft: Spacing.xl,
     },
     name: {
         fontFamily: Fonts.bold,

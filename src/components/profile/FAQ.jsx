@@ -10,6 +10,8 @@ import Button from '../button/Button'
 import Colors from '../style/Colors'    
 import Fonts from '../style/Fonts'
 import CommonStyles from '../constants/CommonStyles'
+import Spacing from '../style/Spacing'
+import FontSizes from '../style/FontSize'
 
 const popularTopics = [
   { id: 1, title: 'Popular Topic 1', description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo animi atque unde amet suscipit, facilis quisquam iusto natus earum, incidunt saepe accusamus iste, delectus aliquam.'},
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: scale(20),
-        marginBottom: verticalScale(20),
+        marginBottom: Spacing.vxl,
     },
 
     listContainer: {
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.inputBackground,
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
         paddingHorizontal: scale(16),
         paddingVertical: verticalScale(14),
     },

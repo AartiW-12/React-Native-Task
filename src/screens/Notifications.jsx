@@ -15,6 +15,7 @@ import CalenderIcon from '../assets/images/svg/CalenderIconWhite.svg';
 import NotesIcon from '../assets/images/svg/NotesIcon';
 import HistoryIcon from '../assets/images/svg/HistoryIcon';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
+import Spacing from '../components/style/Spacing';
 
 
 // Data
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.backgroundColor,
     borderRadius: moderateScale(12),
-    padding: moderateScale(12),
+    padding: Spacing.mmd,
     marginBottom: moderateScale(10),
   },
   highlightedCard: {

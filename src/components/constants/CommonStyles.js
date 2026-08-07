@@ -2,6 +2,7 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import Colors from "../style/Colors";
 import Fonts from "../style/Fonts";
 import FontSizes from "../style/FontSize";
+import Spacing from "../style/Spacing";
 
 const { StyleSheet } = require("react-native");
 
@@ -10,7 +11,7 @@ const CommonStyles = StyleSheet.create({
         flex: 1
     },
     paddBottom: {
-        paddingBottom: verticalScale(30)
+        paddingBottom: Spacing.vspb30
     },
     flexGrow1: {
         flexGrow: 1
@@ -44,6 +45,13 @@ const CommonStyles = StyleSheet.create({
         fontFamily:Fonts.medium, 
         fontSize:FontSizes.xl, 
         color:Colors.danger
+    },
+    emptyListText : {
+        fontFamily:Fonts.medium,
+        fontSize:FontSizes.md,
+        color:Colors.danger,
+        alignSelf:'center',
+        paddingVertical:Spacing.xxl
     }
 })
 

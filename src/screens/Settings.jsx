@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { deleteAccount } from '../redux/auth/authSlice';
 import { showSnackbar } from '../components/snackbar/ShowSnackbar';
+import Spacing from '../components/style/Spacing';
 
 const Settings = () => {
 
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: verticalScale(18),
+        marginBottom: Spacing.xl,
     },
 
     leftContainer: {
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     },
 
     iconContainer: {
-        width: scale(42),
+        width: Spacing.w42,
         height: scale(42),
         borderRadius: scale(21),
         justifyContent: 'center',
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     },
     deleteAccountModal: {
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(35),
+        borderRadius:Spacing.mxxxl,
         paddingHorizontal: scale(20),
         paddingVertical: verticalScale(20),
         alignItems: 'center',
@@ -228,14 +229,14 @@ const styles = StyleSheet.create({
     },
 
     cancelButton: {
-        height: verticalScale(40),
-        borderRadius: moderateScale(25),
+        height: Spacing.h40,
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.socialButtonBackground,
     },
 
     deleteButton: {
-        height: verticalScale(40),
-        borderRadius: moderateScale(25),
+        height: Spacing.h40,
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.primary,
     },
 

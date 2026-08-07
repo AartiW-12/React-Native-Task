@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -54,16 +54,17 @@ const Schedule = () => {
     dispatch(fetchAppointments())
   }, [])
 
-  // const { selectedDate } = route?.params || {}
+  useEffect(() => {
+    if (appointments.length > 0) {
+      compltePastAppointments();
+    }
+  }, [userAppointments]);
 
   const onRefresh = () => {
     setRefreshing(true)
     dispatch(fetchAppointments())
     setRefreshing(false)
   }
-
-
-  console.log(route.params)
 
   useEffect(() => {
     if (route.params?.fromHome) {
@@ -73,7 +74,31 @@ const Schedule = () => {
     }
   }, [route.params?.fromHome, route.params?.selectedDate]);
 
-  const filteredAppointments = appointments.filter(item => {
+  const userAppointments = useMemo(() => {
+  if (!user) return [];
+
+  return appointments.filter(
+    item => String(item.userId) === String(user.id)
+  );
+}, [appointments, user]);
+
+  const compltePastAppointments = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    userAppointments.forEach((appointment) => {
+      if (appointment.status !== "upcoming") return;
+
+      const appointmentDate = new Date(appointment.date);
+      appointmentDate.setHours(0, 0, 0, 0);
+
+      if (appointmentDate < today) {
+        dispatch(completeAppointment(appointment.id));
+      }
+    });
+  };
+
+  const filteredAppointments = userAppointments.filter(item => {
     const matchUser =
       String(item.userId) === String(user.id);
 
@@ -307,6 +332,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scale(20),
     paddingVertical: verticalScale(10),
+    marginBottom: verticalScale(50)
   },
   tabSwitcherContainer: {
     marginBottom: Spacing.vlg,
@@ -315,7 +341,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: verticalScale(24),
-    marginTop: verticalScale(20)
+    marginTop: verticalScale(20),
   },
   card: {
     backgroundColor: Colors.socialButtonBackground,
@@ -336,10 +362,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: scale(60),
+    width: Spacing.w60,
     height: scale(60),
     borderRadius: scale(30),
-    backgroundColor: '#DDD',
   },
   infoContainer: {
     flex: 1,
@@ -367,7 +392,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.white,
-    borderRadius: moderateScale(16),
+    borderRadius: Spacing.mlg,
     paddingHorizontal: scale(10),
   },
   chipText: {
@@ -459,7 +484,7 @@ const styles = StyleSheet.create({
     marginLeft: scale(8),
   },
   primaryButtonFull: {
-    height: verticalScale(34),
+    height: Spacing.vxxxl,
     borderRadius: moderateScale(18),
     backgroundColor: Colors.primary,
     justifyContent: 'center',

@@ -15,6 +15,7 @@ import TabSwitcher from '../components/tab-switcher/TabSwitcher'
 import FAQ from '../components/profile/FAQ'
 import ContactUs from '../components/profile/ContactUs'
 import FontSizes from '../components/style/FontSize'
+import Spacing from '../components/style/Spacing'
 
 const HelpCenter = () => {
     const [search, setSearch] = useState("")
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     helpTabButton: {
         width: scale(140),
         height: verticalScale(38),
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
         marginBottom:verticalScale(20)
     },
 

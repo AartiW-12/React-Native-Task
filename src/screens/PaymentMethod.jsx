@@ -13,6 +13,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Fonts from '../components/style/Fonts'
 import FontSizes from '../components/style/FontSize'
 import { useNavigation } from '@react-navigation/native'
+import Spacing from '../components/style/Spacing'
 
 const PaymentMethod = () => {
 
@@ -127,11 +128,11 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         marginTop: verticalScale(20),
-        paddingHorizontal: scale(24),
+        paddingHorizontal: Spacing.xxl,
         paddingTop: verticalScale(10),
     },
     sectionTitle: {
-        marginBottom: verticalScale(18),
+        marginBottom: Spacing.xl,
         fontSize: FontSizes.xxl,
         fontFamily: Fonts.regular,
         color: Colors.black,
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.inputBackground,
         paddingVertical: verticalScale(10),
         paddingHorizontal: scale(20),
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
         height: scale(44),
     },
     leftSection: {
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
         width: scale(22),
         height: scale(22),
         borderRadius: scale(11),
-        borderWidth: 1.5,
+        borderWidth: Spacing.bw1p5,
         borderColor: Colors.primary,
         justifyContent: 'center',
         alignItems: 'center',

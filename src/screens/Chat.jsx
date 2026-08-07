@@ -190,8 +190,8 @@ export default function Chat() {
           onPress={sendMessage}
         >
           <SendIcon
-            width={17}
-            height={17}
+            width={20}
+            height={20}
             stroke={Colors.white}
           />
         </TouchableOpacity>
@@ -217,16 +217,16 @@ const styles = StyleSheet.create({
   },
   bubble: {
     maxWidth: "75%",
-    padding: scale(12),
-    borderRadius: moderateScale(16),
+    padding: Spacing.md,
+    borderRadius: Spacing.mlg
   },
   doctorBubble: {
     backgroundColor: Colors.inputBackground,
-    borderTopLeftRadius: 0,
+    borderTopLeftRadius: Spacing.zero,
   },
   userBubble: {
     backgroundColor: Colors.socialButtonBackground,
-    borderTopRightRadius: 0,
+    borderTopRightRadius: Spacing.zero,
   },
   message: {
     fontSize: FontSizes.md,
@@ -234,34 +234,35 @@ const styles = StyleSheet.create({
     fontFamily:Fonts.medium
   },
   time: {
-    marginTop: moderateScale(4),
+    marginTop:Spacing.mxs,
     fontSize: FontSizes.sm,
     fontFamily:Fonts.regular,
     color: Colors.paymentText,
+
   },
   textInput: {
     flex: 1,
-    height: verticalScale(42),
+    height: Spacing.h42,
     color: Colors.black,
   },
   micButton: {
-    paddingLeft: scale(8),
+    paddingLeft: Spacing.md,
   },
   blueCircleButton: {
-    width: scale(40),
-    height: verticalScale(40),
-    borderRadius: moderateScale(20),
+    width: scale(Spacing.w40),
+    height: Spacing.h40,
+    borderRadius: Spacing.mxl,
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
   header: {
-    height: verticalScale(78),
+    height: Spacing.h78,
     backgroundColor: Colors.primary,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 18,
+    paddingHorizontal: Spacing.md,
   },
 
   backArrow: {
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     flex: 1,
-    marginLeft: scale(20),
+    marginLeft: Spacing.xl,
     color: Colors.white,
     fontSize: FontSizes.xl,
     fontFamily:Fonts.semiBold,
@@ -283,29 +284,29 @@ const styles = StyleSheet.create({
   },
 
   headerIcon: {
-    width: scale(34),
-    height: verticalScale(34),
-    borderRadius: moderateScale(17),
+    width: Spacing.xxxl,
+    height: Spacing.vxxxl,
+    borderRadius: Spacing.mlg,
     backgroundColor: Colors.white,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: scale(10),
+    marginLeft: Spacing.sm,
   },
 
   bottomContainer: {
-    height:verticalScale(72),
+    height:Spacing.h72,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.socialButtonBackground,
-    paddingHorizontal: scale(15),
-    paddingVertical: verticalScale(10),
-    marginBottom:scale(20)
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.vsm,
+    marginBottom:Spacing.xl,
   },
 
   socialCircleButton: {
-    width: scale(40),
-    height: verticalScale(40),
-    borderRadius: moderateScale(20),
+    width: Spacing.w40,
+    height: Spacing.h40,
+    borderRadius: Spacing.mxl,
     backgroundColor: Colors.inputBackground,
     justifyContent: "center",
     alignItems: "center",
@@ -313,13 +314,13 @@ const styles = StyleSheet.create({
 
   inputWrapper: {
     flex: 1,
-    height: verticalScale(42),
-    marginHorizontal: scale(10),
-    borderRadius: moderateScale(22),
+    height: Spacing.h42,
+    marginHorizontal: Spacing.sm,
+    borderRadius: Spacing.mxxl,
     backgroundColor: Colors.white,
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: scale(15),
+    paddingLeft: Spacing.lg,
   },
 
   input: {
@@ -328,13 +329,13 @@ const styles = StyleSheet.create({
   },
 
   micButton: {
-    paddingHorizontal: scale(12),
+    paddingHorizontal: Spacing.md,
   },
 
   sendButton: {
-    width: scale(42),
-    height: verticalScale(42),
-    borderRadius: moderateScale(21),
+    width: Spacing.w40,
+    height: Spacing.h40,
+    borderRadius:Spacing.mxl,
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",

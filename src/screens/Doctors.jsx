@@ -25,7 +25,7 @@ import QuestionIcon from '../assets/images/svg/QuestionIcon.svg'
 import HeartWhite from '../assets/images/svg/HeartWhite.svg'
 import DownIcon from '../assets/images/svg/DownIcon.svg'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import { getDoctors, toggleFavorite } from '../redux/doctors/doctorSlice'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -56,12 +56,15 @@ const favoriteTabs = [
 
 const Doctors = () => {
 
-    const [activeFilter, setActiveFilter] = useState(filterIndex.ALL)
-    const [favoriteTab, setFavoriteTab] = useState(favTab.DOCTORS)
-    const [openServiceId, setOpenServiceId] = useState(null)
-
     const dispatch = useDispatch()
     const navigation = useNavigation()
+    const route = useRoute()
+
+    const initialFilter = route.params?.filterIndex ?? filterIndex.ALL;
+
+    const [activeFilter, setActiveFilter] = useState(initialFilter)
+    const [favoriteTab, setFavoriteTab] = useState(favTab.DOCTORS)
+    const [openServiceId, setOpenServiceId] = useState(null)
 
     const {
         doctors,
@@ -142,7 +145,10 @@ const Doctors = () => {
                         />
                     </View>
                     <View style={styles.defaultIconContainer}>
-                        <TouchableOpacity style={styles.defaultCardCircleButton}>
+                        <TouchableOpacity 
+                            style={styles.defaultCardCircleButton}
+                            onPress={() => navigation.navigate("DoctorInfo",{doctor:item , openSchedule:true})}    
+                        >
                             <CalenderIcon style={styles.defaultIconStyle} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.defaultCardCircleButton}>
@@ -199,9 +205,12 @@ const Doctors = () => {
                         />
                     </View>
                     <View style={styles.ratingIconContainer}>
-                        <View style={styles.ratingCardCircleButton}>
+                        <TouchableOpacity 
+                            style={styles.ratingCardCircleButton}
+                            onPress={() => navigation.navigate("DoctorInfo", {doctor:item, openSchedule:true})}    
+                        >
                             <CalenderIcon />
-                        </View>
+                        </TouchableOpacity>
                         <View style={styles.ratingCardCircleButton}>
                             <InfoIcon />
                         </View>
@@ -549,7 +558,7 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(15),
         backgroundColor: Colors.socialButtonBackground,
         borderRadius: scale(13),
-        paddingHorizontal: scale(12),
+        paddingHorizontal: Spacing.md,
     },
     defaultAvatar: {
         width: 120,
@@ -591,8 +600,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     defaultCardCircleButton: {
-        width: scale(20),
-        height: scale(20),
+        width: Spacing.xl,
+        height: Spacing.xl,
         borderRadius: scale(11),
         backgroundColor: Colors.white,
         justifyContent: 'center',
@@ -612,16 +621,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     ratingAvatar: {
-        width: scale(60),
+        width: Spacing.w60,
         height: scale(60),
         borderRadius: scale(29),
-        marginLeft: scale(10),
+        marginLeft: Spacing.sm,
     },
     ratingDetailsContainer: {
         flex: 1,
         borderRadius: moderateScale(14),
-        paddingHorizontal: scale(12),
-        paddingVertical: verticalScale(8),
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.vsm,
         marginLeft: scale(5),
     },
     ratingRatingContainer: {
@@ -690,8 +699,8 @@ const styles = StyleSheet.create({
         marginLeft: scale(40),
     },
     ratingCardCircleButton: {
-        width: scale(20),
-        height: scale(20),
+        width: Spacing.xl,
+        height: Spacing.xl,
         borderRadius: scale(11),
         backgroundColor: Colors.white,
         justifyContent: 'center',
@@ -706,16 +715,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     favoriteAvatar: {
-        width: scale(60),
+        width: Spacing.w60,
         height: scale(60),
         borderRadius: scale(29),
-        marginLeft: scale(10),
+        marginLeft: Spacing.sm,
     },
     favoriteDetailsContainer: {
         flex: 1,
         borderRadius: moderateScale(14),
-        paddingHorizontal: scale(12),
-        paddingVertical: verticalScale(8),
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.vsm,
         marginLeft: scale(5),
     },
     favoriteRatingContainer: {
@@ -749,7 +758,7 @@ const styles = StyleSheet.create({
     },
     favoriteFavoriteSection: {
         justifyContent: 'center',
-        marginLeft: scale(20),
+        marginLeft: Spacing.xl,
     },
     favoriteName: {
         flex: 1,
@@ -776,9 +785,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.primary,
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
         paddingHorizontal: scale(16),
-        paddingVertical: verticalScale(12),
+        paddingVertical: Spacing.vmd,
         marginBottom: verticalScale(14),
     },
     serviceFavoriteIcon: {
@@ -817,7 +826,7 @@ const styles = StyleSheet.create({
         marginTop:Spacing.vxs,
         marginBottom: verticalScale(22),
         padding: moderateScale(10),
-        borderRadius: moderateScale(21),
+        borderRadius:Spacing.mxl,
     },
     serviceText: {
         fontSize: moderateScale(13),
@@ -866,7 +875,7 @@ const styles = StyleSheet.create({
     },
     favoriteTabButton: {
         height: verticalScale(36),
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
     },
 
     favoriteTabText: {

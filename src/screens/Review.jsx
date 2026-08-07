@@ -19,14 +19,44 @@ import Input from '../components/input/Input'
 import Button from '../components/button/Button'
 import CommonStyles from '../components/constants/CommonStyles'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
+import { useDispatch, useSelector } from 'react-redux'
+import Strings from '../components/constants/Strings'
+import { addDoctorsReview } from '../redux/doctorsReview/doctorsReview'
+import Spacing from '../components/style/Spacing'
 
 const Review = () => {
     const route = useRoute();
     const { doctor } = route.params;
 
+    const { user } = useSelector(state => state.auth)
+
     const navigation = useNavigation()
+    const dispatch = useDispatch()
 
     const [review, setReview] = useState('');
+
+    const handleAddReview = async () => {
+        if (!review) {
+            showSnackbar({ msg: Strings.doctorsReviewEmptyValidation })
+            return
+        }
+        try {
+            await dispatch(addDoctorsReview({
+                id: Date.now(),
+                doctorId: doctor.id,
+                userId: user.id,
+                review: review
+            }))
+            showSnackbar({ msg: Strings.doctorsReviewSuccessMessage })
+
+            setTimeout(() => {
+                navigation.goBack()
+            }, 1000);
+        }
+        catch (er) {
+            showSnackbar({ msg : Strings.doctorsReviewErrorMessage})
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -97,14 +127,9 @@ const Review = () => {
                             style={styles.reviewInput}
                         />
                         <Button
-                            text="Add Review"
+                            text={Strings.addReview}
                             style={styles.button}
-                            onPress={() => {
-                                showSnackbar({ msg : "Review Added Sucessfully"})
-                                setTimeout(() => {
-                                    navigation.goBack()
-                                }, 1000);
-                            }}
+                            onPress={handleAddReview}
                         />
                     </View>
                 </ScrollView>
@@ -127,7 +152,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         alignItems: 'center',
-        paddingHorizontal: scale(24),
+        paddingHorizontal: Spacing.xxl,
         paddingTop: verticalScale(24),
     },
 
@@ -145,7 +170,7 @@ const styles = StyleSheet.create({
     },
 
     specialization: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         fontSize: FontSizes.md,
         fontFamily: Fonts.regular,
         color: Colors.black,
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
     infoRow: {
         flexDirection: 'row',
         marginTop: verticalScale(10),
-        marginBottom: verticalScale(20),
+        marginBottom: Spacing.vxl,
     },
 
     chip: {
@@ -178,7 +203,7 @@ const styles = StyleSheet.create({
     button: {
         marginTop: verticalScale(28),
         height: verticalScale(38),
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
     },
 });
 export default Review

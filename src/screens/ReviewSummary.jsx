@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     },
 
     specialization: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         color: Colors.black,
         fontSize: FontSizes.sm,
         fontFamily: Fonts.regular,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.socialButtonBackground,
-        borderRadius: moderateScale(16),
+        borderRadius: Spacing.mlg,
         paddingHorizontal: scale(10),
         paddingVertical: verticalScale(5),
         marginRight: scale(10),
@@ -270,12 +270,12 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.medium,
     },
     buttonContainer: {
-        paddingHorizontal: scale(24),
+        paddingHorizontal: Spacing.xxl,
         paddingBottom: verticalScale(24),
         backgroundColor: Colors.white,
     },
     button: {
-        height: verticalScale(42),
+        height: Spacing.h42,
         borderRadius: moderateScale(24),
     },
 });

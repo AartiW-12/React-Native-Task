@@ -13,6 +13,7 @@ import Facebook from '../../assets/images/svg/profile/Facebook.svg'
 import Instagram from '../../assets/images/svg/profile/Instagram.svg'
 import DownIcon from '../../assets/images/svg/DownIcon.svg'
 import Colors from '../style/Colors'
+import Spacing from '../style/Spacing'
 
 
 const data = [
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     },
 
     iconContainer: {
-        width: scale(40),
+        width: Spacing.w40,
         height: scale(40),
         borderRadius: scale(20),
         backgroundColor: Colors.socialButtonBackground,

@@ -41,6 +41,7 @@ import FontSizes from '../components/style/FontSize'
 
 
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
+import Spacing from '../components/style/Spacing'
 
 const menuData = [
     {
@@ -150,7 +151,7 @@ const MyProfile = () => {
                                 if (item.screen === 'Logout') {
                                     setOpenModal(true);
                                 }else if(item.screen === 'Favorite'){
-                                    // showSnackbar("Favorite Screen")
+                                    navigation.navigate('Doctors', {filterIndex: 3})
                                 } else {
                                     navigation.navigate(item.screen);
                                 }
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iconContainer: {
-        width: scale(42),
+        width: Spacing.w42,
         height: scale(42),
         borderRadius: scale(21),
         backgroundColor: Colors.backgroundColor,
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
 
     logoutModal: {
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(35),
+        borderRadius:Spacing.mxxxl,
         paddingHorizontal: scale(20),
         paddingVertical: verticalScale(20),
         alignItems: 'center',
@@ -308,14 +309,14 @@ const styles = StyleSheet.create({
     },
 
     cancelButton: {
-        height: verticalScale(40),
-        borderRadius: moderateScale(25),
+        height: Spacing.h40,
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.socialButtonBackground,
     },
 
     logoutButton: {
-        height: verticalScale(40),
-        borderRadius: moderateScale(25),
+        height: Spacing.h40,
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.primary,
     },
 

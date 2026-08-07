@@ -11,6 +11,7 @@ import Fonts from '../components/style/Fonts'
 import Header from '../components/header/Header'
 
 import ChatIcon from '../assets/images/svg/ChatIcon.svg'
+import Spacing from '../components/style/Spacing'
 
 const ChatList = () => {
     const { doctors } = useSelector(state => state.doctors)
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     },
 
     listContainer: {
-        paddingVertical: verticalScale(15),
+        paddingVertical: Spacing.vmd,
         marginBottom:verticalScale(80)
     },
 
@@ -89,20 +90,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: Colors.white,
-        padding: scale(12),
-        marginBottom: scale(10),
-        borderRadius: moderateScale(20),
+        padding: Spacing.md,
+        marginBottom: Spacing.sm,
+        borderRadius: Spacing.mxl,
     },
 
     avatar: {
-        width: scale(60),
-        height: verticalScale(60),
-        borderRadius: moderateScale(35),
+        width: Spacing.w60,
+        height: Spacing.h60,
+        borderRadius:Spacing.mxxxl,
     },
 
     infoContainer: {
         flex: 1,
-        marginLeft: scale(35),
+        marginLeft: Spacing.xxl,
         justifyContent: "center",
     },
 
@@ -113,15 +114,16 @@ const styles = StyleSheet.create({
     },
 
     specialization: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         fontSize: FontSizes.md,
         fontFamily: Fonts.regular,
         color: Colors.black,
     },
+
     chatContainer: {
-        width: scale(34),
-        height: scale(34),
-        borderRadius: scale(17),
+        width: Spacing.xxxl,
+        height: Spacing.xxxl,
+        borderRadius: Spacing.mlg,
         backgroundColor: Colors.primary,
         justifyContent: 'center',
         alignItems: 'center',

@@ -13,49 +13,170 @@
   ],
   "appointments": [
     {
-      "id": "lxVLF8Rygdc",
-      "userId": "11",
+      "userId": "12",
       "doctorId": "1",
-      "status": "upcoming",
-      "date": "2026-08-06",
-      "time": "09:00 AM",
+      "status": "cancelled",
+      "date": "2026-08-13",
+      "time": "10:00 AM",
       "appointmentFor": "self",
       "patientDetails": {
-        "name": "John doe",
-        "age": "22",
-        "gender": "Male",
-        "problem": "Hdu"
-      }
-    },
-    {
-      "id": "aJLyQdTl1f4",
-      "userId": "11",
-      "doctorId": "3",
-      "status": "upcoming",
-      "date": "2026-08-07",
-      "time": "09:00 AM",
-      "appointmentFor": "self",
-      "patientDetails": {
-        "name": "John doe",
+        "name": "Samarth",
         "age": "2",
         "gender": "Male",
-        "problem": "Gzh"
-      }
+        "problem": "Fy"
+      },
+      "id": "TdxCyknfSVk"
     },
     {
-      "id": "bBnY8l0hW5I",
-      "userId": "11",
+      "userId": "12",
       "doctorId": "4",
       "status": "upcoming",
-      "date": "2026-08-06",
+      "date": "2026-08-13",
       "time": "09:30 AM",
       "appointmentFor": "self",
       "patientDetails": {
-        "name": "John doe",
-        "age": "267",
+        "name": "Samarth",
+        "age": "2",
         "gender": "Male",
-        "problem": "Bzj"
-      }
+        "problem": "Tfvj"
+      },
+      "id": "gcoxH8pfgM4"
+    },
+    {
+      "userId": "12",
+      "doctorId": "1",
+      "status": "upcoming",
+      "date": "2026-08-08",
+      "time": "09:00 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Samarth",
+        "age": "25",
+        "gender": "Male",
+        "problem": "Fhhh"
+      },
+      "id": "n4srJsF8Bqk"
+    },
+    {
+      "userId": "12",
+      "doctorId": "1",
+      "status": "cancelled",
+      "date": "2026-08-08",
+      "time": "09:30 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Samarth",
+        "age": "69",
+        "gender": "Male",
+        "problem": "Fybbjj"
+      },
+      "id": "S-BvVFD6DFM"
+    },
+    {
+      "userId": "12",
+      "doctorId": "1",
+      "status": "upcoming",
+      "date": "2026-08-08",
+      "time": "09:30 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Samarth",
+        "age": "69",
+        "gender": "Male",
+        "problem": "Fybbjj"
+      },
+      "id": "iWYN_GGrexY"
+    },
+    {
+      "userId": "13",
+      "doctorId": "2",
+      "status": "upcoming",
+      "date": "2026-08-15",
+      "time": "09:30 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Galti se mistake",
+        "age": "23",
+        "gender": "Female",
+        "problem": "Vhh"
+      },
+      "id": "r1uZoUXFSP0"
+    },
+    {
+      "userId": "13",
+      "doctorId": "2",
+      "status": "cancelled",
+      "date": "2026-08-08",
+      "time": "09:00 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Galti se mistake",
+        "age": "55",
+        "gender": "Male",
+        "problem": "Gghty"
+      },
+      "id": "8Z13u-MfHw0"
+    },
+    {
+      "userId": "13",
+      "doctorId": "2",
+      "status": "upcoming",
+      "date": "2026-08-08",
+      "time": "09:00 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Galti se mistake",
+        "age": "55",
+        "gender": "Male",
+        "problem": "Gghty"
+      },
+      "id": "Trnr10lipMM"
+    },
+    {
+      "userId": "13",
+      "doctorId": "2",
+      "status": "upcoming",
+      "date": "2026-08-08",
+      "time": "09:00 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Galti se mistake",
+        "age": "55",
+        "gender": "Male",
+        "problem": "Gghty"
+      },
+      "id": "gMmM3MKvd2w"
+    },
+    {
+      "userId": "13",
+      "doctorId": "2",
+      "status": "upcoming",
+      "date": "2026-08-08",
+      "time": "09:00 AM",
+      "appointmentFor": "self",
+      "patientDetails": {
+        "name": "Galti se mistake",
+        "age": "55",
+        "gender": "Male",
+        "problem": "Gghty"
+      },
+      "id": "hkzE3JkUNgA"
+    }
+  ],
+  "reviews": [
+    {
+      "doctorId": "1",
+      "userId": "11",
+      "review": "okk",
+      "createdAt": "2026-08-07T05:58:27.540Z",
+      "id": "65payPvN8Co"
+    },
+    {
+      "doctorId": "4",
+      "userId": "11",
+      "review": "Okk",
+      "createdAt": "2026-08-07T05:59:39.094Z",
+      "id": "Ui24scSiDJI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

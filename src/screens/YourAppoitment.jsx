@@ -28,7 +28,7 @@ const YourAppoitment = () => {
     const patientDetails = route.params.patientDetails
     const appointmentFor = route.params.appointmentFor
     const showAddAppointmentIcon =route.params?.showAddAppointmentIcon ?? true;
-    const appointmentId = route?.params?.appointmentId ?? null
+    const appointmentId = route.params.appointmentId
 
     const dispatch = useDispatch()
 
@@ -111,7 +111,7 @@ const YourAppoitment = () => {
                     <TouchableOpacity 
                         style={styles.statusButton}
                         onPress={() => {
-                            !showAddAppointmentIcon? navigation.navigate("CancelAppointment",{ appointmentId:appointmentId}): navigation.goBack()
+                            navigation.navigate("CancelAppointment",{ appointmentId:appointmentId})
                         }}
                     >
                         <Text style={styles.statusIcon}>✕</Text>
@@ -174,17 +174,17 @@ const styles = StyleSheet.create({
     },
 
     avatar: {
-        width: scale(60),
+        width: Spacing.w60,
         height: scale(60),
         borderRadius: scale(29),
-        marginLeft: scale(10)
+        marginLeft: Spacing.sm
     },
 
     detailsContainer: {
         flex: 1,
         borderRadius: moderateScale(14),
-        paddingHorizontal: scale(12),
-        paddingVertical: verticalScale(8),
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.vsm,
         marginLeft: scale(5),
     },
     nameContainer: {
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         paddingHorizontal: scale(30),
-        paddingVertical: verticalScale(12),
+        paddingVertical: Spacing.vmd,
     },
 
     sectionLabel: {

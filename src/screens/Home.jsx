@@ -23,6 +23,7 @@ import CommonStyles from '../components/constants/CommonStyles';
 import Strings from '../components/constants/Strings';
 import { fetchAppointments } from '../redux/appointment/appointmentSlice';
 
+
 // import doctorsList from '../components/doctor/doctorsList'
 function Home() {
 
@@ -40,7 +41,15 @@ function Home() {
 
     const { doctors, loading, error } = useSelector(state => state.doctors)
     const { user } = useSelector(state => state.auth)
-    const { appointments } = useSelector(state => state.appointments)
+    const {appointments} = useSelector(state => state.appointments)
+
+    const userAppointments = useMemo(() => {
+        if (!user) return [];
+
+        return appointments.filter(
+            item => String(item.userId) === String(user.id)
+        );
+    }, [appointments, user]);
 
     const dispatch = useDispatch()
 
@@ -57,17 +66,16 @@ function Home() {
     }, [])
 
     const appointmentsWithDoctor = useMemo(() => {
-        if (!user) return []
-        return appointments
-            .filter(appointment => String(appointment.userId) === String(user.id) && appointment.status === "upcoming")
-            .map(appointment => ({
-                ...appointment,
-                doctor: doctors.find(
-                    doc => String(doc.id) === String(appointment.doctorId)
-                ),
-            }))
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
-    }, [appointments, doctors, user.id]);
+    return userAppointments
+        .filter(item => item.status === "upcoming")
+        .map(item => ({
+            ...item,
+            doctor: doctors.find(
+                doc => String(doc.id) === String(item.doctorId)
+            ),
+        }))
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+}, [userAppointments, doctors]);
 
 
     const appointmentsByDate = useMemo(() => {
@@ -285,19 +293,19 @@ function Home() {
                                         onPress={() =>
                                             navigation.navigate("Schedule", {
                                                 selectedDate,
-                                                fromHome:true
+                                                fromHome: true
                                             })
                                         }
                                     >
                                         <Text style={styles.viewAll}>
-                                            View All
+                                            {Strings.viewAll}
                                         </Text>
                                     </TouchableOpacity>
                                 )}
 
                                 {selectedAppointments.length === 0 ? (
-                                    <Text style={CommonStyles.emptyList}>
-                                        No Appointment
+                                    <Text style={CommonStyles.emptyListText}>
+                                        {Strings.noAppointment}
                                     </Text>
                                 ) : (
                                     <View style={styles.appointmentCard}>
@@ -440,7 +448,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.socialButtonBackground,
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: scale(10),
+        marginLeft: Spacing.sm,
     },
     image: {
         width: scale(17),
@@ -459,7 +467,7 @@ const styles = StyleSheet.create({
     sectionRightContainer: {
         width: scale(190),
         height: verticalScale(33),
-        marginLeft: scale(20),
+        marginLeft: Spacing.xl,
     },
     doctorsList: {
         flex: 1,
@@ -480,17 +488,17 @@ const styles = StyleSheet.create({
     },
 
     avatar: {
-        width: scale(60),
+        width: Spacing.w60,
         height: scale(60),
         borderRadius: scale(29),
-        marginLeft: scale(10)
+        marginLeft: Spacing.sm
     },
 
     detailsContainer: {
         flex: 1,
         borderRadius: moderateScale(14),
-        paddingHorizontal: scale(12),
-        paddingVertical: verticalScale(8),
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.vsm,
         marginLeft: scale(5),
     },
     nameContainer: {
@@ -564,9 +572,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(18),
     },
     dateCard: {
-        width: scale(42),
-        height: verticalScale(60),
-        borderRadius: moderateScale(22),
+        width: Spacing.w42,
+        height: Spacing.h60,
+        borderRadius: Spacing.mxxl,
         backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
@@ -582,7 +590,7 @@ const styles = StyleSheet.create({
     },
 
     dateDay: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         fontSize: moderateScale(11),
         color: Colors.black,
         fontFamily: Fonts.regular,
@@ -595,9 +603,9 @@ const styles = StyleSheet.create({
     appointmentCard: {
         minWidth: scale(299),
         marginHorizontal: scale(18),
-        marginTop:Spacing.vxs,
+        marginTop: Spacing.vxs,
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(22),
+        borderRadius: Spacing.mxxl,
         padding: moderateScale(16),
     },
 
@@ -612,7 +620,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.socialButtonBackground,
-        borderRadius: moderateScale(16),
+        borderRadius: Spacing.mlg,
         padding: moderateScale(14),
     },
 
@@ -623,11 +631,11 @@ const styles = StyleSheet.create({
     },
 
     doctorDesc: {
-        marginTop: verticalScale(4),
+        marginTop: Spacing.vxs,
         color: Colors.black,
         fontSize: moderateScale(12),
         fontFamily: Fonts.regular,
-        lineHeight: moderateScale(18),
+        lineHeight: Spacing.mlg,
     },
     centerContainer: CommonStyles.centerContainer,
     loadingText: CommonStyles.loadingText,

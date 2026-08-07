@@ -9,15 +9,15 @@ const initialState = {
 
 export const fetchSlots = createAsyncThunk(
     "slots/fetchSlots",
-    async (_,{ rejectWithValue }) => {
-        try{
+    async (_, { rejectWithValue }) => {
+        try {
             const response = await jsonServerApi.get("/timeSlots");
-        return response.data;
-        }catch(err){
+            return response.data;
+        } catch (err) {
             console.log(err.message)
             rejectWithValue(err.message)
         }
-        
+
     }
 );
 

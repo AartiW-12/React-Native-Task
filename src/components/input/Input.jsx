@@ -5,6 +5,7 @@ import Colors from '../style/Colors';
 import EyeIcon from '../../assets/images/svg/EyeIcon'
 import OpenEye from '../../assets/images/svg/OpenEye.svg'
 import Fonts from '../style/Fonts';
+import Spacing from '../style/Spacing';
 
 function Input({
   placeholder,
@@ -46,10 +47,9 @@ function Input({
           onPress={() => setHidePassword(!hidePassword)}
         >
           {hidePassword ? (
-            <OpenEye width={20} height={20} />
-
-          ) : (
             <EyeIcon width={20} height={20} />
+          ) : (
+            <OpenEye width={20} height={20} />
           )}
         </TouchableOpacity>
       )}
@@ -59,29 +59,29 @@ function Input({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: Spacing.fullWidth,
     minHeight: 45,
-    borderRadius: 13,
+    borderRadius: Spacing.mmd,
     backgroundColor: Colors.inputBackground,
     flexDirection: 'row',
   },
 
   input: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: Spacing.mmd,
     color: Colors.black,
-    fontFamily:Fonts.regular
+    fontFamily: Fonts.regular
   },
 
   multilineInput: {
     minHeight: 120,
     textAlignVertical: 'top',
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingTop: Spacing.vmd,
+    paddingBottom: Spacing.vmd,
   },
 
   iconContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: Spacing.lg,
     justifyContent: 'center',
     alignItems: 'center',
   },

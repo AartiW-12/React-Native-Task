@@ -30,9 +30,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FontSizes from '../style/FontSize'
 import Header from '../header/Header'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAppointments } from '../../redux/appointment/appointmentSlice'
 import { fetchSlots } from '../../redux/slots/slotSlice'
 import { toggleFavorite } from '../../redux/doctors/doctorSlice'
+import Spacing from '../style/Spacing'
 
 const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -64,31 +64,21 @@ const DoctorInfo = () => {
     const bookedDates = {};
 
     appointments.forEach(item => {
-        if (
-            item.doctorId !== doctor.id ||
-            item.status !== "upcoming"
-        ) {
+        if (item.doctorId !== doctor.id ||item.status !== "upcoming") {
             return;
         }
-
         if (!bookedDates[item.date]) {
             bookedDates[item.date] = [];
         }
-
         bookedDates[item.date].push(item.time);
-
     });
 
     const markedDates = {};
 
     appointments.forEach(item => {
-        if (
-            item.doctorId !== doctor.id ||
-            item.status !== "upcoming"
-        ) {
+        if (item.doctorId !== doctor.id || item.status !== "upcoming") {
             return;
         }
-
         if (!markedDates[item.date]) {
             markedDates[item.date] = [];
         }
@@ -450,7 +440,7 @@ const styles = StyleSheet.create({
     experienceCard: {
         height: verticalScale(38),
         backgroundColor: Colors.primary,
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: scale(10),
@@ -468,7 +458,7 @@ const styles = StyleSheet.create({
     },
     focusCard: {
         backgroundColor: Colors.primary,
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
         padding: moderateScale(10),
         justifyContent: 'flex-start',
     },
@@ -485,7 +475,7 @@ const styles = StyleSheet.create({
     nameContainer: {
         marginTop: verticalScale(10),
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
         paddingVertical: verticalScale(2),
         alignItems: 'center',
     },
@@ -512,7 +502,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
         paddingHorizontal: scale(10),
         height: verticalScale(20),
         minWidth: scale(43),
@@ -527,7 +517,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
         paddingHorizontal: scale(10),
         height: verticalScale(20),
         minWidth: scale(58),
@@ -544,10 +534,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.primary,
-        height: verticalScale(40),
+        height: Spacing.h40,
         width: scale(85),
         height: verticalScale(21),
-        borderRadius: moderateScale(22),
+        borderRadius:Spacing.mxxl,
     },
     scheduleText: {
         color: Colors.white,
@@ -577,17 +567,17 @@ const styles = StyleSheet.create({
         paddingVertical: verticalScale(5)
     },
     scheduleHeader: {
-        height: verticalScale(60),
+        height: Spacing.h60,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: scale(15),
+        paddingHorizontal: Spacing.lg,
         backgroundColor: Colors.backgroundColor,
     },
     scheduleTitleContainer: {
         backgroundColor: Colors.primary,
         paddingHorizontal: scale(18),
         paddingVertical: verticalScale(4),
-        borderRadius: moderateScale(20),
+        borderRadius: Spacing.mxl,
     },
     scheduleHeaderTitle: {
         color: Colors.white,
@@ -625,7 +615,7 @@ const styles = StyleSheet.create({
     },
 
     weekDay: {
-        width: scale(34),
+        width: Spacing.xxxl,
         height: scale(22),
         borderRadius: moderateScale(12),
         backgroundColor: Colors.primary,
@@ -641,8 +631,8 @@ const styles = StyleSheet.create({
 
     dateContainer: {
         backgroundColor: Colors.white,
-        borderRadius: moderateScale(25),
-        padding: moderateScale(12),
+        borderRadius: Spacing.mxxl,
+        padding: Spacing.mmd,
         overflow: "hidden",
         width: "100%",
     },

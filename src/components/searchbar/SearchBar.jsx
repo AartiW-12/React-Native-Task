@@ -11,6 +11,7 @@ import {
 } from 'react-native-size-matters';
 import Colors from '../style/Colors';
 import FontSizes from '../style/FontSize';
+import Spacing from '../style/Spacing';
 
 function SearchBar({
   placeholder = '',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(18),
     height: scale(18),
-    marginLeft: scale(20)
+    marginLeft: Spacing.xl
   },
   leftIcon : {
     width:scale(28),

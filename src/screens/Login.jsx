@@ -14,6 +14,7 @@ import Header from '../components/header/Header'
 import Strings from '../components/constants/Strings'
 import { showSnackbar } from '../components/snackbar/ShowSnackbar'
 import CommonStyles from '../components/constants/CommonStyles'
+import Spacing from '../components/style/Spacing'
 
 function Login({ navigation }) {
   //hoooks to store and update the state 
@@ -25,6 +26,9 @@ function Login({ navigation }) {
 
   // functions 
   const handleLogin = async () => {
+    if(!inputValue || !password){
+      showSnackbar({ msg:Strings.fillDetails})
+    }
     const result = await dispatch(
       loginUser({
         inputValue,
@@ -61,7 +65,6 @@ function Login({ navigation }) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         {/* <ScrollView>
-
         </ScrollView> */}
         <View style={styles.container}>
           <Header text={Strings.login} />
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontFamily: Fonts.regular,
     marginTop: verticalScale(10),
-    lineHeight: moderateScale(18),
+    lineHeight:Spacing.mlg,
   },
 
   label: {
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    paddingHorizontal: scale(15),
+    paddingHorizontal: Spacing.lg,
     fontSize: moderateScale(16),
   },
 
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
   },
 
   socialButton: {
-    width: scale(40),
+    width: Spacing.w40,
     height: scale(40),
     borderRadius: scale(20),
     backgroundColor: Colors.socialButtonBackground,
